@@ -1,1 +1,1 @@
-web: node .
+release: node .
