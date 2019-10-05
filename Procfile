@@ -1,1 +1,1 @@
-release: node .
+worker: node .
