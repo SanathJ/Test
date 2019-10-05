@@ -113,7 +113,7 @@ bot.on('message', msg=>{
                 // can have weird errors if this value isnt high enough 
                 setTimeout(function(){
                     for(var i = 1; i <= opList.length; i++) {
-                        var img = new Attachment(__dirname + '/op' + i + '.png');
+                        var img = new Attachment(__dirname + '\\op' + i + '.png');
                         bot.channels.get(opggChannelID).send(opList[i-1], img);
                     }
                 }, 50000);
@@ -217,7 +217,7 @@ bot.on('message', msg=>{
                 // can have weird errors if this value isnt high enough 
                 setTimeout(function(){
                     for(var i = 1; i <= 8; i++) {
-                        var img = new Attachment(__dirname + '/log' + i + '.png');
+                        var img = new Attachment(__dirname + '\\log' + i + '.png');
                         bot.channels.get(logChannelID).send(img);
                     }
                 }, 50000);
