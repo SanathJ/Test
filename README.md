@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.com/SanathJ/Test.svg?token=zpvipNg2JxgsxVy9rFSB&branch=master)](https://travis-ci.com/SanathJ/Test)
 # **Megu Bot**
 This is a bot for the [Kayle Mains discord server](https://discord.gg/ExyGyS8). 
 
