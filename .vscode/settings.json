@@ -1,4 +1,0 @@
-{
-    "appService.defaultWebAppToDeploy": "/subscriptions/8d780025-bc14-4baf-8478-2debb402797b/resourceGroups/SanathBot/providers/Microsoft.Web/sites/SanathBot",
-    "appService.deploySubpath": ""
-}
