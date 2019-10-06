@@ -276,6 +276,7 @@ bot.on('message', msg=>{
         msg.channel.send('%opgg');
         msg.channel.send('%log');
     }
+    msg.react(message.guild.emojis.get('630545973663498252'));
     
 });
 
