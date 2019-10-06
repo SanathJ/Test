@@ -229,6 +229,10 @@ bot.on('message', msg=>{
                 msg.delete();
                 
                 break;
+            case 'megu':
+                msg.channel.send('%opgg');
+                msg.channel.send('%log');
+
             /*
             case 'stop':
                 if(){
