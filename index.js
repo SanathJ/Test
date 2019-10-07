@@ -276,8 +276,9 @@ bot.on('message', msg=>{
         msg.channel.send('%opgg');
         msg.channel.send('%log');
     }
-    // msg.react('630545973663498252');
-    
+    if(!msg.author.bot) {
+        msg.react('630545907133186049');
+    }
 });
 
 bot.login(token);
