@@ -1,7 +1,3 @@
 .vscode
 .travis.yml
-/op1.png
-/op2.png
-/op3.png
-/op4.png
-/op5.png
+*.png
