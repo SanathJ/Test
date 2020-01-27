@@ -6,10 +6,11 @@
   "scripts": {
     "test": "echo \"No tests\" && exit 0"
   },
-  "author": "Sanath",
+  "author": "SanathJ",
   "license": "ISC",
   "dependencies": {
     "discord.js": "^11.5.1",
+    "jimp": "^0.9.3",
     "webshot": "^0.18.0"
   }
 }

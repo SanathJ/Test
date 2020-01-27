@@ -3,6 +3,7 @@ const bot = new Client();
 
 var webshot = require('webshot');
 // var appshot = require('node-server-screenshot');
+var Jimp = require('jimp');
 
 var options = {
     shotSize: {
@@ -47,26 +48,25 @@ function takeShot(top, bot, site, file, renderer) {
     }
 }
 
+
+// access key is from screenshotlayer api. Change it to your own if you want or you can use mine
+const lolApiUrl = 'http://api.screenshotlayer.com/api/capture?access_key=9b9af7ac099cc1b7109598edc65d40ce&fullpage=1&force=1&viewport=3840x2160&url=https://lolalytics.com/lol/kayle/';
+const logApiUrl = 'http://api.screenshotlayer.com/api/capture?access_key=9b9af7ac099cc1b7109598edc65d40ce&fullpage=1&force=1&viewport=1920x1080&url=https://www.leagueofgraphs.com/champions/stats/kayle';
+
+
+
 const token = 'NTYxNjIwNzU4MDQ0OTk5Njgx.XY6tnQ.GAykfrchu-uWfwEtVGpSEXIPuIM';
 const PREFIX = '%';
 
-// u.gg url
-// const uggStats = 'https://u.gg/lol/champions/kayle/build';
-
-// lolalytics url
-// const lolHistoric = 'https://lolalytics.com/ranked/worldwide/platinum/plus/champion/Kayle/Top/historic/';
 
 // op.gg urls
 const opggTrend = 'https://na.op.gg/champion/kayle/statistics/top/trend';
-const opggHome = 'https://www.op.gg/champion/kayle/statistics/top';
 const opggStats = 'https://na.op.gg/champion/statistics';
 
-// league of graphs url
-// const logStats = 'https://www.leagueofgraphs.com/champions/stats/kayle';
-
-// channel IDs
-// const logChannelID = '627734262107340833'; // '627734262107340833';
-const opggChannelID = '627734130410389505'; // '627734130410389505';
+// channel IDs (comments are for kaylemains ids)
+const logChannelID = '627734262107340833'; // '625893096567341069'; 
+const opggChannelID = '627734130410389505'; // '625764233333833775';
+const lolChannelID = '670861782193274880'; // '625764276572782594';
 
 var today = new Date();
 
@@ -152,60 +152,74 @@ bot.on('message', msg => {
 
             
 
-            /*
+            
             case 'log':
-                msg.channel.sendMessage('EXPLOSION!');
+                // msg.channel.sendMessage('EXPLOSION!');
                 today = new Date();
+                Jimp.read(logApiUrl, (err, image) => {
+                    if (err) throw err;
+                    
+                    // popularity history
+                    imageCopy = image.clone();
+                    imageCopy.crop(629, 482, 1071 - 629, 785 - 482);
+                    imageCopy.normalize();
+                    imageCopy.write('log1.png');
 
-                
+                    // winrate history
+                    imageCopy = image.clone();
+                    imageCopy.crop(629, 806, 1071 - 629, 1109 - 806);
+                    imageCopy.normalize();
+                    imageCopy.write('log2.png');
 
-                // popularity history
-                options.shotOffset.left = 236;
-                options.shotOffset.right = 1024 - 601 + 236;
-                takeShot(528, 4806 - 831 + 528, logStats, 'log1.png', 1);
+                    // banrate history
+                    imageCopy = image.clone();
+                    imageCopy.crop(629, 1130, 1071 - 629, 1433 - 1130);
+                    imageCopy.normalize();
+                    imageCopy.write('log3.png');
 
-                // winrate history
-                options.shotOffset.left = 236;
-                options.shotOffset.right = 1024 - 601 + 236;
-                takeShot(852, 4806 - 1155 + 852, logStats, 'log2.png', 1);
+                    // winrate
+                    imageCopy = image.clone();
+                    imageCopy.crop(629, 1523, 1544 - 629, 1826 - 1523);
+                    imageCopy.normalize();
+                    imageCopy.write('log4.png');
 
-                // banrate history
-                takeShot(1176, 4806 - 1479 + 1176, logStats, 'log3.png', 1);
+                    // duration
+                    imageCopy = image.clone();
+                    imageCopy.crop(629, 1847, 1544 - 629, 2150 - 1847);
+                    imageCopy.normalize();
+                    imageCopy.write('log5.png');
 
-                options.shotOffset.right = 1024 - 996 + 236;
+                    // kills - deaths
+                    imageCopy = image.clone();
+                    imageCopy.crop(629, 2171, 1544 - 629, 2474 - 2171);
+                    imageCopy.normalize();
+                    imageCopy.write('log6.png');
 
-                // winrate
-                takeShot(1692, 4806 - 1995 + 1692, logStats, 'log4.png', 1);
+                    // stats
+                    imageCopy = image.clone();
+                    imageCopy.crop(629, 290, 1544 - 629, 461 - 290);
+                    imageCopy.normalize();
+                    imageCopy.write('log7.png');
 
-                // duration
-                takeShot(2016, 4806 - 2319 + 2016, logStats, 'log5.png', 1);
+                    // Roles
+                    imageCopy = image.clone();
+                    imageCopy.crop(1102, 482, 1544 - 1102, 751 - 482);
+                    imageCopy.normalize();
+                    imageCopy.write('log8.png');
+                    
+                    // Damage
+                    imageCopy = image.clone();
+                    imageCopy.crop(1102, 890, 1544 - 1102, 1007 - 890);
+                    imageCopy.normalize();
+                    imageCopy.write('log9.png');
 
-                // kills - deaths
-                takeShot(2340, 4806 - 2643 + 2340, logStats, 'log6.png', 1);
-
-                // stats
-                options.shotOffset.left = 236;
-                options.shotOffset.right = 1024 - 996 + 236;
-                takeShot(337, 4806 - 507 + 337, logStats, 'log7.png', 1);
-
-                // Roles
-                options.shotOffset.left = 632;
-                options.shotOffset.right = 1024 - 996 + 632;
-                takeShot(528, 4806 - 816 + 528, logStats, 'log8.png', 1);
-                
-                // Damage
-                options.shotOffset.left = 632;
-                options.shotOffset.right = 1024 - 996 + 632;
-                takeShot(955, 4806 - 1074 + 955, logStats, 'log9.png', 1);
-
-                // KDA
-                options.shotOffset.left = 632;
-                options.shotOffset.right = 1024 - 996 + 632;
-                takeShot(1095, 4806 - 1193 + 1095, logStats, 'log10.png', 1);
-
-                // reset options
-                options.shotOffset.left = 2;
-                options.shotOffset.right = 0;
+                    // KDA
+                    imageCopy = image.clone();
+                    imageCopy.crop(1102, 1028, 1544 - 1102, 1125 - 1028);
+                    imageCopy.normalize();
+                    imageCopy.write('log10.png');
+                    
+                });                
 
                 // post images
                 // has a very high timeout to make sure image processing is complete
@@ -217,7 +231,7 @@ bot.on('message', msg => {
                         );
                         bot.channels.get(logChannelID).send(img);
                     }
-                }, 50000);
+                }, 100000);
 
                 // takeShot(0, 0, logStats, 'log.png', 1);
 
@@ -238,14 +252,70 @@ bot.on('message', msg => {
                 msg.delete();
 
                 break;
-            */
-            /*
+
+            case 'lol':
+                // msg.channel.sendMessage('EXPLOSION!');
+                today = new Date();
+                Jimp.read(lolApiUrl, (err, image2) => {
+                    if (err) throw err;
+                    image2.contrast(+0.1);
+                    
+                    
+                    imageCopy = image2.clone();
+                    imageCopy.crop(1976, 49, 2439 - 1976, 194 - 49);
+                    imageCopy.write('lol1.png');
+                    
+                    imageCopy = image2.clone();
+                    imageCopy.crop(1401, 735, 2438 - 1401, 1058 - 735);
+                    imageCopy.write('lol2.png');
+                    
+                    imageCopy = image2.clone();
+                    imageCopy.crop(2137, 1065, 2438 - 2137, 1538 - 1065);
+                    imageCopy.write('lol3.png');
+                })
+
+                // post images
+                // has a very high timeout to make sure image processing is complete
+                // can have weird errors if this value isnt high enough
+                
+                setTimeout(function() {
+                    for (var i = 1; i <= 3; i++) {
+                        var img = new Attachment(
+                            __dirname + '/lol' + i + '.png'
+                        );
+                        bot.channels.get(lolChannelID).send(img);
+                    }
+                }, 100000);
+                
+
+                // prints date
+                bot.channels
+                    .get(lolChannelID)
+                    .send(
+                        '```' +
+                            today.getDate() +
+                            '/' +
+                            (today.getMonth() + 1) +
+                            '/' +
+                            today.getFullYear() +
+                            '```'
+                    );
+
+                // clean up bootstrapping evidence
+                msg.delete();
+
+                break;
+            
+            // works but throws errors. Can probably ignore errors but idk
+            // probably best to not use
             case 'megu':
                 today = new Date();
                 msg.channel.send('%opgg');
                 msg.channel.send('%log');
+                msg.channel.send('%lol');
+                msg.delete();
                 break;
-            */
+            
             /*
             case 'testfile':
                 today = new Date();
@@ -265,9 +335,9 @@ bot.on('message', msg => {
                 // takeShot(0, 0, 'u.gg', 'logstats.png', 2);
                 break;
             */
-            
+
+            // immediately exits without waiting for async operations to complete
             case 'stop':
-                // immediately exits without waiting for async operations to complete
                 process.exit(0);
                 break;
 
