@@ -7,6 +7,8 @@ This is a bot for the [Kayle Mains discord server](https://discord.gg/ExyGyS8).
     Makes bot collect data from [op.gg](https://na.op.gg) and send it to a specified channel 
 - ### %log
     Makes bot collect data from [League of Graphs](https://www.leagueofgraphs.com/) and send it to a specified channel
+- ### %lol
+    Makes bot collect data from [Lolalytics](https://www.lolalytics.com/) and send it to a specified channel
 - ### %time
     Sends server time to same channel as command message
 - ### %megu
