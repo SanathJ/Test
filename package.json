@@ -1,6 +1,6 @@
 {
-  "name": "discord-bot",
-  "version": "1.0.0",
+  "name": "megu-bot",
+  "version": "1.1.0",
   "description": "Testing Bot",
   "main": "index.js",
   "scripts": {
@@ -11,6 +11,14 @@
   "dependencies": {
     "discord.js": "^11.5.1",
     "jimp": "^0.9.3",
-    "webshot": "^0.18.0"
-  }
+    "request": "^2.88.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SanathJ/Test.git"
+  },
+  "bugs": {
+    "url": "https://github.com/SanathJ/Test/issues"
+  },
+  "homepage": "https://github.com/SanathJ/Test#readme"
 }
