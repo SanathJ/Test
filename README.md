@@ -9,7 +9,7 @@ This is a bot for the [Kayle Mains discord server](https://discord.gg/ExyGyS8).
     Sends server time to same channel as command message.
     
 - ### %megu
-    Makes bot act as though it had received 3 commands - `%opgg`, `%lol`, `%log` and `%ugg`.
+    Makes bot act as though it had received 4 commands - `%opgg`, `%lol`, `%log` and `%ugg`.
 
 ## **Usage**
 `%megu` is the easiest way to collect data using the bot.
