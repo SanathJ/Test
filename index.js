@@ -5,20 +5,22 @@ const fs = require('fs');
 
 var Jimp = require('jimp');
 
+let config = JSON.parse(fs.readFileSync('config.json'));
 
-// access key is from screenshotlayer api. Change it to your own if you want or you can use mine
-const lolApiUrl = 'http://api.screenshotlayer.com/api/capture?access_key=9b9af7ac099cc1b7109598edc65d40ce&fullpage=1&force=1&viewport=3840x2160&url=https://lolalytics.com/lol/kayle/';
-const logApiUrl = 'http://api.screenshotlayer.com/api/capture?access_key=9b9af7ac099cc1b7109598edc65d40ce&fullpage=1&force=1&viewport=1920x1080&url=https://www.leagueofgraphs.com/champions/stats/kayle';
-const opggTrendApiUrl = 'http://api.screenshotlayer.com/api/capture?access_key=9b9af7ac099cc1b7109598edc65d40ce&fullpage=1&force=1&viewport=3840x2160&url=https://op.gg/champion/kayle/statistics/top/trend';
+// access key is from screenshotlayer api. Change it to your own in config.json if you want or you can use mine
+const lolApiUrl = 'http://api.screenshotlayer.com/api/capture?access_key=' + config.accessKeys[0] +'&fullpage=1&force=1&viewport=3840x2160&url=https://lolalytics.com/lol/kayle/';
+const logApiUrl = 'http://api.screenshotlayer.com/api/capture?access_key=' + config.accessKeys[0] +'&fullpage=1&force=1&viewport=1920x1080&url=https://www.leagueofgraphs.com/champions/stats/kayle';
+const opggTrendApiUrl = 'http://api.screenshotlayer.com/api/capture?access_key=' + config.accessKeys[0] +'&fullpage=1&force=1&viewport=3840x2160&url=https://op.gg/champion/kayle/statistics/top/trend';
 
 // separate key
-const opggStatsApiUrl = 'http://api.screenshotlayer.com/api/capture?access_key=dbdf7ff19a38fce2e0d5bdb97e5c2396&fullpage=1&force=1&viewport=3840x2160&url=https://op.gg/champion/statistics';
-const uggApiUrl = 'http://api.screenshotlayer.com/api/capture?access_key=dbdf7ff19a38fce2e0d5bdb97e5c2396&user_agent=Mozilla/5.0 (iPhone; CPU iPhone OS 11_0 like Mac OS X) AppleWebKit/604.1.38 (KHTML, like Gecko) Version/11.0 Mobile/15A356 Safari/604.1&fullpage=1&force=1&viewport=3840x2160&url=https://m.u.gg/lol/champions/kayle/build';
+const opggStatsApiUrl = 'http://api.screenshotlayer.com/api/capture?access_key=' + config.accessKeys[1] +'&fullpage=1&force=1&viewport=3840x2160&url=https://op.gg/champion/statistics';
+
+var uggApiUrl = 'http://api.screenshotlayer.com/api/capture?&user_agent=Mozilla/5.0%20(iPhone;%20CPU%20iPhone%20OS%2011_0%20like%20Mac%20OS%20X)%20AppleWebKit/604.1.38%20(KHTML,%20like%20Gecko)%20Version/11.0%20Mobile/15A356%20Safari/604.1&fullpage=1&force=1&viewport=3840x2160&url=https://m.u.gg/lol/champions/kayle/build';
 
 // URL from where patch data is received
 const patchUrl = 'https://raw.githubusercontent.com/CommunityDragon/Data/master/patches.json';
 
-let config = JSON.parse(fs.readFileSync('config.json'));
+
 
 const token = config.token;
 const PREFIX = config.prefix;
