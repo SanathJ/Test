@@ -141,79 +141,79 @@ function calllog(msg){
         imageCopy = image.clone();
         imageCopy.crop(629, 482, 1071 - 629, 785 - 482);
         //imageCopy.normalize();
-        imageCopy.write('log1.png');
+        imageCopy.write('log6.png');
 
         // winrate history
         imageCopy = image.clone();
         imageCopy.crop(629, 806, 1071 - 629, 1109 - 806);
         //imageCopy.normalize();
-        imageCopy.write('log2.png');
+        imageCopy.write('log5.png');
 
         // banrate history
         imageCopy = image.clone();
         imageCopy.crop(629, 1130, 1071 - 629, 1433 - 1130);
         //imageCopy.normalize();
-        imageCopy.write('log3.png');
+        imageCopy.write('log7.png');
 
         // winrate / game duration
         imageCopy = image.clone();
         imageCopy.crop(629, 1523, 1070 - 629, 1825 - 1523);
         //imageCopy.normalize();
-        imageCopy.write('log4.png');
+        imageCopy.write('log8.png');
 
         // winrate / ranked games played
         imageCopy = image.clone();
         imageCopy.crop(1103, 1524, 1543 - 1103, 1825 - 1524);
         //imageCopy.normalize();
-        imageCopy.write('log5.png');
+        imageCopy.write('log13.png');
 
         // kills + assists / game duration
         imageCopy = image.clone();
         imageCopy.crop(630, 1848, 1070 - 630, 2149 - 1848);
         //imageCopy.normalize();
-        imageCopy.write('log6.png');
+        imageCopy.write('log9.png');
 
         // deaths / game duration
         imageCopy = image.clone();
         imageCopy.crop(1103, 1848, 1543 - 1103, 2149 - 1848);
         //imageCopy.normalize();
-        imageCopy.write('log7.png');
+        imageCopy.write('log10.png');
 
         // winrate / (kills - deaths) @10 min
         imageCopy = image.clone();
         imageCopy.crop(630, 2172, 1070 - 630, 2473 - 2172);
         //imageCopy.normalize();
-        imageCopy.write('log8.png');
+        imageCopy.write('log11.png');
 
         // winrate / (kills - deaths) @20 min
         imageCopy = image.clone();
         imageCopy.crop(1103, 2172, 1543 - 1103, 2473 - 2172);
         //imageCopy.normalize();
-        imageCopy.write('log9.png');
+        imageCopy.write('log12.png');
 
         // stats
         imageCopy = image.clone();
         imageCopy.crop(629, 290, 1544 - 629, 461 - 290);
         //imageCopy.normalize();
-        imageCopy.write('log10.png');
+        imageCopy.write('log1.png');
 
         // Roles
         imageCopy = image.clone();
         imageCopy.crop(1102, 482, 1544 - 1102, 751 - 482);
         //imageCopy.normalize();
-        imageCopy.write('log11.png');
+        imageCopy.write('log2.png');
         
         // Damage
         imageCopy = image.clone();
         imageCopy.crop(1102, 890, 1544 - 1102, 1007 - 890);
         //imageCopy.normalize();
-        imageCopy.write('log12.png');
+        imageCopy.write('log3.png');
 
         // KDA and misc stats
         imageCopy = image.clone();
         imageCopy.crop(1103, 1029, 1543 - 1103, 1481 - 1029);
         // imageCopy.normalize();
-        imageCopy.write('log13.png');
+        imageCopy.write('log4.png');
         
     });                
 
@@ -225,7 +225,7 @@ function calllog(msg){
             var img = new Attachment(
                 __dirname + '/log' + i + '.png'
             );
-            bot.channels.get(logChannelID).send(img);
+            setTimeout(sendMessage, (i * 1000), logChannelID, img);
         }
     }, 100000);
 
