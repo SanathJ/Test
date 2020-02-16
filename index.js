@@ -8,14 +8,14 @@ var Jimp = require('jimp');
 let config = JSON.parse(fs.readFileSync('config.json'));
 
 // access key is from screenshotlayer api. Change it to your own in config.json if you want or you can use mine
-const lolApiUrl = 'http://api.screenshotlayer.com/api/capture?access_key=' + config.accessKeys[0] +'&fullpage=1&force=1&viewport=3840x2160&url=https://lolalytics.com/lol/kayle/';
-const logApiUrl = 'http://api.screenshotlayer.com/api/capture?access_key=' + config.accessKeys[0] +'&fullpage=1&force=1&viewport=1920x1080&url=https://www.leagueofgraphs.com/champions/stats/kayle';
-const opggTrendApiUrl = 'http://api.screenshotlayer.com/api/capture?access_key=' + config.accessKeys[0] +'&fullpage=1&force=1&viewport=3840x2160&url=https://op.gg/champion/kayle/statistics/top/trend';
+const lolApiUrl = 'http://api.screenshotlayer.com/api/capture?delay=3&access_key=' + config.accessKeys[0] +'&fullpage=1&force=1&viewport=3840x2160&url=https://lolalytics.com/lol/kayle/';
+const logApiUrl = 'http://api.screenshotlayer.com/api/capture?delay=3&access_key=' + config.accessKeys[0] +'&fullpage=1&force=1&viewport=1920x1080&url=https://www.leagueofgraphs.com/champions/stats/kayle';
+const opggTrendApiUrl = 'http://api.screenshotlayer.com/api/capture?delay=3&access_key=' + config.accessKeys[0] +'&fullpage=1&force=1&viewport=3840x2160&url=https://op.gg/champion/kayle/statistics/top/trend';
 
 // separate key
-const opggStatsApiUrl = 'http://api.screenshotlayer.com/api/capture?access_key=' + config.accessKeys[1] +'&fullpage=1&force=1&viewport=3840x2160&url=https://op.gg/champion/statistics';
+const opggStatsApiUrl = 'http://api.screenshotlayer.com/api/capture?delay=3&access_key=' + config.accessKeys[1] +'&fullpage=1&force=1&viewport=3840x2160&url=https://op.gg/champion/statistics';
 
-var uggApiUrl = 'http://api.screenshotlayer.com/api/capture?&user_agent=Mozilla/5.0%20(iPhone;%20CPU%20iPhone%20OS%2011_0%20like%20Mac%20OS%20X)%20AppleWebKit/604.1.38%20(KHTML,%20like%20Gecko)%20Version/11.0%20Mobile/15A356%20Safari/604.1&fullpage=1&force=1&viewport=3840x2160&access_key=';
+var uggApiUrl = 'http://api.screenshotlayer.com/api/capture?delay=3&user_agent=Mozilla/5.0%20(iPhone;%20CPU%20iPhone%20OS%2011_0%20like%20Mac%20OS%20X)%20AppleWebKit/604.1.38%20(KHTML,%20like%20Gecko)%20Version/11.0%20Mobile/15A356%20Safari/604.1&fullpage=1&force=1&viewport=3840x2160&access_key=';
 
 // URL from where patch data is received
 const patchUrl = 'https://raw.githubusercontent.com/CommunityDragon/Data/master/patches.json';
