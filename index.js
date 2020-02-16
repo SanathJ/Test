@@ -15,7 +15,7 @@ const opggTrendApiUrl = 'http://api.screenshotlayer.com/api/capture?access_key='
 // separate key
 const opggStatsApiUrl = 'http://api.screenshotlayer.com/api/capture?access_key=' + config.accessKeys[1] +'&fullpage=1&force=1&viewport=3840x2160&url=https://op.gg/champion/statistics';
 
-var uggApiUrl = 'http://api.screenshotlayer.com/api/capture?&user_agent=Mozilla/5.0%20(iPhone;%20CPU%20iPhone%20OS%2011_0%20like%20Mac%20OS%20X)%20AppleWebKit/604.1.38%20(KHTML,%20like%20Gecko)%20Version/11.0%20Mobile/15A356%20Safari/604.1&fullpage=1&force=1&viewport=3840x2160&url=https://m.u.gg/lol/champions/kayle/build';
+var uggApiUrl = 'http://api.screenshotlayer.com/api/capture?&user_agent=Mozilla/5.0%20(iPhone;%20CPU%20iPhone%20OS%2011_0%20like%20Mac%20OS%20X)%20AppleWebKit/604.1.38%20(KHTML,%20like%20Gecko)%20Version/11.0%20Mobile/15A356%20Safari/604.1&fullpage=1&force=1&viewport=3840x2160&access_key=';
 
 // URL from where patch data is received
 const patchUrl = 'https://raw.githubusercontent.com/CommunityDragon/Data/master/patches.json';
@@ -29,6 +29,7 @@ const PREFIX = config.prefix;
 const logChannelID = config.channels.leagueofgraphs;
 const opggChannelID = config.channels.opgg;
 const lolChannelID = config.channels.lolalytics;
+const uggChannelID = config.channels.ugg;
 
 var today = new Date();
 
@@ -209,9 +210,9 @@ function calllog(msg){
         //imageCopy.normalize();
         imageCopy.write('log12.png');
 
-        // KDA
+        // KDA and misc stats
         imageCopy = image.clone();
-        imageCopy.crop(1102, 1028, 1544 - 1102, 1125 - 1028);
+        imageCopy.crop(1103, 1029, 1543 - 1103, 1481 - 1029);
         // imageCopy.normalize();
         imageCopy.write('log13.png');
         
@@ -270,7 +271,48 @@ function calllol(msg){
        
 }
 
+function uggHelper(x, final){
+    Jimp.read(final, (err, image) => {
+        if (err) throw err;
+        
+        image.crop(1735, 112, 2104 - 1735, 267 - 112);
+        image.write('ugg'+ x + '.png');
+    });
+}
+
 function callugg(msg){
+    getPatch(printDateAndPatch, uggChannelID);
+
+    var tierList = [
+        'platinum',
+        'platinum_plus',
+        'diamond',
+        'diamond_plus',
+        'master',
+        'master_plus',
+        'grandmaster',
+        'challenger',
+        'overall'
+    ];
+
+    for (var i = 0; i < tierList.length; i++){
+        var finalUrl = uggApiUrl +
+                       config.accessKeys[2 + (i % 5)] + 
+                       '&url=https://m.u.gg/lol/champions/kayle/build?rank=' +
+                       tierList[i];
+        
+        uggHelper(i, finalUrl);
+        
+    }
+
+    setTimeout(function() {
+        for (var i = 0; i < tierList.length; i++) {
+            var img = new Attachment(
+                __dirname + '/ugg' + i + '.png'
+            );
+            bot.channels.get(uggChannelID).send(img);
+        }
+    }, 100000);
 
 }
 
@@ -308,7 +350,13 @@ bot.on('message', msg => {
                 // clean up bootstrapping evidence
                 msg.delete();
                 break;
-            
+                
+            case 'ugg':
+                callugg(msg);
+                // clean up bootstrapping evidence
+                msg.delete();
+                break;
+
             // works but throws errors. Can probably ignore errors but idk
             // probably best to not use
             case 'megu':
@@ -316,6 +364,7 @@ bot.on('message', msg => {
                 calllog(msg);
                 calllol(msg);
                 callopgg(msg);
+                callugg(msg);
                 msg.delete();
                 break;
             
@@ -324,34 +373,25 @@ bot.on('message', msg => {
                 process.exit(0);
                 break;
             
-            case 'test':
-                // msg.channel.send(parseFloat(getPatch()));
-                getPatch(printDateAndPatch, msg.channel.id);
-                break;
-
-            
-        }
-    
-        switch (args[0]) {
             case 'time':
                 let date_ob = new Date();
-
+    
                 // current date
                 // adjust 0 before single digit date
                 let date = ('0' + date_ob.getDate()).slice(-2);
 
                 // current month
                 let month = ('0' + (date_ob.getMonth() + 1)).slice(-2);
-
+    
                 // current year
                 let year = date_ob.getFullYear();
-
+    
                 // current hours
                 let hours = date_ob.getHours();
-
+    
                 // current minutes
                 let minutes = date_ob.getMinutes();
-
+    
                 // current seconds
                 let seconds = ('0' + date_ob.getSeconds()).slice(-2);
                 msg.channel.send(
@@ -369,6 +409,11 @@ bot.on('message', msg => {
                         seconds
                 );
                 break;
+            
+        }
+    
+        switch (args[0]) {
+           
         }
     }
 
