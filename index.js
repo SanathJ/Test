@@ -280,6 +280,10 @@ function uggHelper(x, final){
     });
 }
 
+function sendMessage(channel, image){
+    bot.channels.get(channel).send(image);
+}
+
 function callugg(msg){
     getPatch(printDateAndPatch, uggChannelID);
 
@@ -310,7 +314,7 @@ function callugg(msg){
             var img = new Attachment(
                 __dirname + '/ugg' + i + '.png'
             );
-            bot.channels.get(uggChannelID).send(img);
+            setTimeout(sendMessage, (i * 1000), uggChannelID, img);
         }
     }, 100000);
 
