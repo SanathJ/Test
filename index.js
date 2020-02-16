@@ -1,6 +1,7 @@
 const { Client, Attachment } = require('discord.js');
 const bot = new Client();
 var request = require('request');
+const fs = require('fs');
 
 var Jimp = require('jimp');
 
@@ -12,17 +13,20 @@ const opggTrendApiUrl = 'http://api.screenshotlayer.com/api/capture?access_key=9
 
 // separate key
 const opggStatsApiUrl = 'http://api.screenshotlayer.com/api/capture?access_key=dbdf7ff19a38fce2e0d5bdb97e5c2396&fullpage=1&force=1&viewport=3840x2160&url=https://op.gg/champion/statistics';
+const uggApiUrl = 'http://api.screenshotlayer.com/api/capture?access_key=dbdf7ff19a38fce2e0d5bdb97e5c2396&user_agent=Mozilla/5.0 (iPhone; CPU iPhone OS 11_0 like Mac OS X) AppleWebKit/604.1.38 (KHTML, like Gecko) Version/11.0 Mobile/15A356 Safari/604.1&fullpage=1&force=1&viewport=3840x2160&url=https://m.u.gg/lol/champions/kayle/build';
 
 // URL from where patch data is received
 const patchUrl = 'https://raw.githubusercontent.com/CommunityDragon/Data/master/patches.json';
 
-const token = 'NTYxNjIwNzU4MDQ0OTk5Njgx.XkfTHQ.lPlK-VlzHFwXUEWRhQjcw31wn1s';
-const PREFIX = '%';
+let config = JSON.parse(fs.readFileSync('config.json'));
 
-// channel IDs (comments are for kaylemains ids)
-const logChannelID = '627734262107340833'; // '625893096567341069'; 
-const opggChannelID = '627734130410389505'; // '625764233333833775';
-const lolChannelID = '670861782193274880'; // '625764276572782594';
+const token = config.token;
+const PREFIX = config.prefix;
+
+// channel IDs
+const logChannelID = config.channels.leagueofgraphs;
+const opggChannelID = config.channels.opgg;
+const lolChannelID = config.channels.lolalytics;
 
 var today = new Date();
 
@@ -262,6 +266,10 @@ function calllol(msg){
         }
     }, 100000);
        
+}
+
+function callugg(msg){
+
 }
 
 
