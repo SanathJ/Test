@@ -1,4 +1,4 @@
-# **Megu Bot**
+# **Kegu Bot**
 This is a bot for the [Kayle Mains discord server](https://discord.gg/ExyGyS8). 
 
 ## **Commands**
