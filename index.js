@@ -122,9 +122,8 @@ function callopgg(msg){
             var img = new Attachment(
                 __dirname + '/op' + i + '.png'
             );
-            bot.channels
-                .get(opggChannelID)
-                .send(opList[i - 1], img);
+            setTimeout(sendMessage, (i * 1000), opggChannelID, img, opList[i - 1]);
+                
         }
     }, 100000);  
 
@@ -265,7 +264,7 @@ function calllol(msg){
             var img = new Attachment(
                 __dirname + '/lol' + i + '.png'
             );
-            bot.channels.get(lolChannelID).send(img);
+            setTimeout(sendMessage, (i * 1000), lolChannelID, img);
         }
     }, 100000);
        
@@ -280,8 +279,8 @@ function uggHelper(x, final){
     });
 }
 
-function sendMessage(channel, image){
-    bot.channels.get(channel).send(image);
+function sendMessage(channel, image, text = ''){
+    bot.channels.get(channel).send(text, image);
 }
 
 function callugg(msg){
