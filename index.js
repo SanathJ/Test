@@ -334,7 +334,9 @@ function getPatch(callback, channel){
 
 bot.on('message', msg => {
     let args = msg.content.substring(PREFIX.length).split(' ');
-    if (msg.member.hasPermission(0x00000008)) {
+    
+    msg.guild.fetchMember(msg.author).then(mem =>{
+        if (mem.hasPermission(0x00000008)) {
         switch (args[0]) {
             case 'opgg':
                 callopgg(msg);
@@ -415,10 +417,12 @@ bot.on('message', msg => {
             
         }
     
-        switch (args[0]) {
-           
-        }
-    }
+        
+    }});
+
+
+
+    
 
 });
 
