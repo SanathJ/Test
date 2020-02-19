@@ -340,8 +340,8 @@ function getPatch(callback, channel){
 bot.on('message', msg => {
     // console.log(msg.author);
     let args = msg.content.substring(PREFIX.length).split(' ');
+    let mem = msg.guild.member(msg.author);
     
-    msg.guild.fetchMember(msg).then(mem =>{
         if (mem.hasPermission(0x00000008)) {
         switch (args[0]) {
             case 'opgg':
@@ -368,8 +368,8 @@ bot.on('message', msg => {
                 msg.delete();
                 break;
 
-            // works but throws errors. Can probably ignore errors but idk
-            // probably best to not use
+            
+            // generally used command
             case 'megu':
                 today = new Date();
                 calllog(msg);
@@ -424,8 +424,8 @@ bot.on('message', msg => {
         }
     
         
-    }})
-    .catch();
+    }});
+    
 
 
 
