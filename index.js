@@ -424,7 +424,8 @@ bot.on('message', msg => {
         }
     
         
-    }});
+    }})
+    .catch();
 
 
 
