@@ -33,11 +33,6 @@ const uggChannelID = config.channels.ugg;
 
 var today = new Date();
 
-// Place outside of any other listener in your main file
-// process.on("unhandledRejection", error => {
-//    console.error("Unhandled promise rejection:", error);
-// });
-
 bot.on('ready', () => {
     console.log('Online!');
     // bot.user.setActivity('with explosions');
@@ -338,11 +333,10 @@ function getPatch(callback, channel){
 }
 
 bot.on('message', msg => {
-    // console.log(msg.author);
     let args = msg.content.substring(PREFIX.length).split(' ');
-    let mem = msg.guild.member(msg.author);
     
-    if (mem.hasPermission(0x00000008)) {
+    msg.guild.fetchMember(msg.author).then(mem =>{
+        if (mem.hasPermission(8)) {
         switch (args[0]) {
             case 'opgg':
                 callopgg(msg);
@@ -368,8 +362,8 @@ bot.on('message', msg => {
                 msg.delete();
                 break;
 
-            
-            // generally used command
+            // works but throws errors. Can probably ignore errors but idk
+            // probably best to not use
             case 'megu':
                 today = new Date();
                 calllog(msg);
@@ -424,8 +418,7 @@ bot.on('message', msg => {
         }
     
         
-    }
-    
+    }});
 
 
 
