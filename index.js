@@ -33,6 +33,11 @@ const uggChannelID = config.channels.ugg;
 
 var today = new Date();
 
+// Place outside of any other listener in your main file
+process.on("unhandledRejection", error => {
+    console.error("Unhandled promise rejection:", error);
+});
+
 bot.on('ready', () => {
     console.log('Online!');
     // bot.user.setActivity('with explosions');
@@ -333,6 +338,7 @@ function getPatch(callback, channel){
 }
 
 bot.on('message', msg => {
+    console.log(msg.author);
     let args = msg.content.substring(PREFIX.length).split(' ');
     
     msg.guild.fetchMember(msg.author).then(mem =>{
