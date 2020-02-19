@@ -341,7 +341,7 @@ bot.on('message', msg => {
     console.log(msg.author);
     let args = msg.content.substring(PREFIX.length).split(' ');
     
-    msg.guild.fetchMember(msg.author).then(mem =>{
+    msg.guild.fetchMember(msg.author.id).then(mem =>{
         if (mem.hasPermission(0x00000008)) {
         switch (args[0]) {
             case 'opgg':
