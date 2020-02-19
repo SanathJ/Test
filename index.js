@@ -338,7 +338,7 @@ function getPatch(callback, channel){
 }
 
 bot.on('message', msg => {
-    console.log(msg.author);
+    // console.log(msg.author);
     let args = msg.content.substring(PREFIX.length).split(' ');
     
     msg.guild.fetchMember(msg.author.id).then(mem =>{
