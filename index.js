@@ -34,9 +34,9 @@ const uggChannelID = config.channels.ugg;
 var today = new Date();
 
 // Place outside of any other listener in your main file
-process.on("unhandledRejection", error => {
-    console.error("Unhandled promise rejection:", error);
-});
+// process.on("unhandledRejection", error => {
+//    console.error("Unhandled promise rejection:", error);
+// });
 
 bot.on('ready', () => {
     console.log('Online!');
@@ -341,7 +341,7 @@ bot.on('message', msg => {
     // console.log(msg.author);
     let args = msg.content.substring(PREFIX.length).split(' ');
     
-    msg.guild.fetchMember(msg.author.id).then(mem =>{
+    msg.guild.fetchMember(msg).then(mem =>{
         if (mem.hasPermission(0x00000008)) {
         switch (args[0]) {
             case 'opgg':
