@@ -342,7 +342,7 @@ bot.on('message', msg => {
     let args = msg.content.substring(PREFIX.length).split(' ');
     let mem = msg.guild.member(msg.author);
     
-        if (mem.hasPermission(0x00000008)) {
+    if (mem.hasPermission(0x00000008)) {
         switch (args[0]) {
             case 'opgg':
                 callopgg(msg);
@@ -424,7 +424,7 @@ bot.on('message', msg => {
         }
     
         
-    }});
+    }
     
 
 
