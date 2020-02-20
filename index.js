@@ -334,7 +334,7 @@ function getPatch(callback, channel){
 
 bot.on('message', msg => {
     let args = msg.content.substring(PREFIX.length).split(' ');
-    
+    if (msg.author.bot || !(msg.guild)) return;
     msg.guild.fetchMember(msg.author).then(mem =>{
         if (mem.hasPermission(8)) {
         switch (args[0]) {
