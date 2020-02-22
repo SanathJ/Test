@@ -10,9 +10,9 @@ const config = JSON.parse(fs.readFileSync('config.json'));
 // access key is from screenshotlayer api. Change it to your own in config.json if you want or you can use mine
 const lolApiUrl = 'http://api.screenshotlayer.com/api/capture?delay=3&access_key=' + config.accessKeys[0] + '&fullpage=1&force=1&viewport=3840x2160&url=https://lolalytics.com/lol/kayle/';
 const logApiUrl = 'http://api.screenshotlayer.com/api/capture?delay=3&access_key=' + config.accessKeys[0] + '&fullpage=1&force=1&viewport=1920x1080&url=https://www.leagueofgraphs.com/champions/stats/kayle';
-const opggTrendApiUrl = 'http://api.screenshotlayer.com/api/capture?delay=3&access_key=' + config.accessKeys[0] + '&fullpage=1&force=1&viewport=3840x2160&url=https://op.gg/champion/kayle/statistics/top/trend';
 
 // separate key
+const opggTrendApiUrl = 'http://api.screenshotlayer.com/api/capture?delay=3&access_key=' + config.accessKeys[1] + '&fullpage=1&force=1&viewport=3840x2160&url=https://op.gg/champion/kayle/statistics/top/trend';
 const opggStatsApiUrl = 'http://api.screenshotlayer.com/api/capture?delay=3&access_key=' + config.accessKeys[1] + '&fullpage=1&force=1&viewport=3840x2160&url=https://op.gg/champion/statistics';
 
 const uggApiUrl = 'http://api.screenshotlayer.com/api/capture?delay=3&user_agent=Mozilla/5.0%20(iPhone;%20CPU%20iPhone%20OS%2011_0%20like%20Mac%20OS%20X)%20AppleWebKit/604.1.38%20(KHTML,%20like%20Gecko)%20Version/11.0%20Mobile/15A356%20Safari/604.1&fullpage=1&force=1&viewport=3840x2160&access_key=';
@@ -45,6 +45,8 @@ async function callopgg(msg) {
 	getPatch('', '', false);
 	await sleep(10000);
 
+	const printableDate = getPrintableDate();
+
 	Jimp.read(opggTrendApiUrl, (err, image) => {
 		if (err) throw err;
 
@@ -52,25 +54,25 @@ async function callopgg(msg) {
 		let imageCopy = image.clone();
 		imageCopy.crop(1381, 687, 2458 - 1381, 1019 - 687);
 		// imageCopy.normalize();
-		imageCopy.write('/img/' + patch + '/op1.png');
+		imageCopy.write('./img/' + patch + '/' + printableDate + '/op1.png');
 
 		// pickrate
 		imageCopy = image.clone();
 		imageCopy.crop(1381, 1032, 2458 - 1381, 1364 - 1032);
 		// imageCopy.normalize();
-		imageCopy.write('/img/' + patch + '/op2.png');
+		imageCopy.write('./img/' + patch + '/' + printableDate + '/op2.png');
 
 		// banrate
 		imageCopy = image.clone();
 		imageCopy.crop(1381, 1377, 2458 - 1381, 1709 - 1377);
 		// imageCopy.normalize();
-		imageCopy.write('/img/' + patch + '/op3.png');
+		imageCopy.write('./img/' + patch + '/' + printableDate + '/op3.png');
 
 		// winrate / game length
 		imageCopy = image.clone();
 		imageCopy.crop(1381, 1722, 2458 - 1381, 2000 - 1722);
 		// imageCopy.normalize();
-		imageCopy.write('/img/' + patch + '/op4.png');
+		imageCopy.write('./img/' + patch + '/' + printableDate + '/op4.png');
 	});
 
 	Jimp.read(opggStatsApiUrl, (err, image) => {
@@ -80,7 +82,7 @@ async function callopgg(msg) {
 		const imageCopy = image.clone();
 		imageCopy.crop(1986, 407, 2438 - 1986, 1244 - 407);
 		// imageCopy.normalize();
-		imageCopy.write('/img/' + patch + '/op5.png');
+		imageCopy.write('./img/' + patch + '/' + printableDate + '/op5.png');
 	});
 
 	// post images
@@ -89,7 +91,7 @@ async function callopgg(msg) {
 	setTimeout(function() {
 		for (let i = 1; i <= opList.length; i++) {
 			const img = new Attachment(
-				__dirname + '/img/' + patch + '/op' + i + '.png',
+				__dirname + '/img/' + patch + '/' + printableDate + '/op' + i + '.png',
 			);
 			setTimeout(sendMessage, (i * 1000), msg, opggChannelID, img, opList[i - 1]);
 
@@ -102,6 +104,8 @@ async function calllog(msg) {
 	getPatch('', '', false);
 	await sleep(10000);
 
+	const printableDate = getPrintableDate();
+
 	Jimp.read(logApiUrl, (err, image) => {
 		if (err) throw err;
 
@@ -109,79 +113,79 @@ async function calllog(msg) {
 		let imageCopy = image.clone();
 		imageCopy.crop(629, 482, 1071 - 629, 785 - 482);
 		// imageCopy.normalize();
-		imageCopy.write('/img/' + patch + '/log6.png');
+		imageCopy.write('./img/' + patch + '/' + printableDate + '/log6.png');
 
 		// winrate history
 		imageCopy = image.clone();
 		imageCopy.crop(629, 806, 1071 - 629, 1109 - 806);
 		// imageCopy.normalize();
-		imageCopy.write('/img/' + patch + '/log5.png');
+		imageCopy.write('./img/' + patch + '/' + printableDate + '/log5.png');
 
 		// banrate history
 		imageCopy = image.clone();
 		imageCopy.crop(629, 1130, 1071 - 629, 1433 - 1130);
 		// imageCopy.normalize();
-		imageCopy.write('/img/' + patch + '/log7.png');
+		imageCopy.write('./img/' + patch + '/' + printableDate + '/log7.png');
 
 		// winrate / game duration
 		imageCopy = image.clone();
 		imageCopy.crop(629, 1523, 1070 - 629, 1825 - 1523);
 		// imageCopy.normalize();
-		imageCopy.write('/img/' + patch + '/log8.png');
+		imageCopy.write('./img/' + patch + '/' + printableDate + '/log8.png');
 
 		// winrate / ranked games played
 		imageCopy = image.clone();
 		imageCopy.crop(1103, 1524, 1543 - 1103, 1825 - 1524);
 		// imageCopy.normalize();
-		imageCopy.write('/img/' + patch + '/log13.png');
+		imageCopy.write('./img/' + patch + '/' + printableDate + '/log13.png');
 
 		// kills + assists / game duration
 		imageCopy = image.clone();
 		imageCopy.crop(630, 1848, 1070 - 630, 2149 - 1848);
 		// imageCopy.normalize();
-		imageCopy.write('/img/' + patch + '/log9.png');
+		imageCopy.write('./img/' + patch + '/' + printableDate + '/log9.png');
 
 		// deaths / game duration
 		imageCopy = image.clone();
 		imageCopy.crop(1103, 1848, 1543 - 1103, 2149 - 1848);
 		// imageCopy.normalize();
-		imageCopy.write('/img/' + patch + '/log10.png');
+		imageCopy.write('./img/' + patch + '/' + printableDate + '/log10.png');
 
 		// winrate / (kills - deaths) @10 min
 		imageCopy = image.clone();
 		imageCopy.crop(630, 2172, 1070 - 630, 2473 - 2172);
 		// imageCopy.normalize();
-		imageCopy.write('/img/' + patch + '/log11.png');
+		imageCopy.write('./img/' + patch + '/' + printableDate + '/log11.png');
 
 		// winrate / (kills - deaths) @20 min
 		imageCopy = image.clone();
 		imageCopy.crop(1103, 2172, 1543 - 1103, 2473 - 2172);
 		// imageCopy.normalize();
-		imageCopy.write('/img/' + patch + '/log12.png');
+		imageCopy.write('./img/' + patch + '/' + printableDate + '/log12.png');
 
 		// stats
 		imageCopy = image.clone();
 		imageCopy.crop(629, 290, 1544 - 629, 461 - 290);
 		// imageCopy.normalize();
-		imageCopy.write('/img/' + patch + '/log1.png');
+		imageCopy.write('./img/' + patch + '/' + printableDate + '/log1.png');
 
 		// Roles
 		imageCopy = image.clone();
 		imageCopy.crop(1102, 482, 1544 - 1102, 751 - 482);
 		// imageCopy.normalize();
-		imageCopy.write('/img/' + patch + '/log2.png');
+		imageCopy.write('./img/' + patch + '/' + printableDate + '/log2.png');
 
 		// Damage
 		imageCopy = image.clone();
 		imageCopy.crop(1102, 890, 1544 - 1102, 1007 - 890);
 		// imageCopy.normalize();
-		imageCopy.write('/img/' + patch + '/log3.png');
+		imageCopy.write('./img/' + patch + '/' + printableDate + '/log3.png');
 
 		// KDA and misc stats
 		imageCopy = image.clone();
 		imageCopy.crop(1103, 1029, 1543 - 1103, 1481 - 1029);
 		// imageCopy.normalize();
-		imageCopy.write('/img/' + patch + '/log4.png');
+		imageCopy.write('./img/' + patch + '/' + printableDate + '/log4.png');
 
 	});
 
@@ -191,7 +195,7 @@ async function calllog(msg) {
 	setTimeout(function() {
 		for (let i = 1; i <= 13; i++) {
 			const img = new Attachment(
-				__dirname + '/img/' + patch + '/log' + i + '.png',
+				__dirname + '/img/' + patch + '/' + printableDate + '/log' + i + '.png',
 			);
 			setTimeout(sendMessage, (i * 1000), msg, logChannelID, img);
 		}
@@ -204,21 +208,23 @@ async function calllol(msg) {
 	getPatch('', '', false);
 	await sleep(10000);
 
+	const printableDate = getPrintableDate();
+
 	Jimp.read(lolApiUrl, (err, image2) => {
 		if (err) throw err;
 		image2.contrast(+0.1);
 
 		let imageCopy = image2.clone();
 		imageCopy.crop(1976, 49, 2439 - 1976, 194 - 49);
-		imageCopy.write('/img/' + patch + '/lol1.png');
-		
+		imageCopy.write('./img/' + patch + '/' + printableDate + '/lol1.png');
+
 		imageCopy = image2.clone();
 		imageCopy.crop(1401, 735, 2438 - 1401, 1058 - 735);
-		imageCopy.write('/img/' + patch + '/lol2.png');
+		imageCopy.write('./img/' + patch + '/' + printableDate + '/lol2.png');
 
 		imageCopy = image2.clone();
 		imageCopy.crop(2137, 1065, 2438 - 2137, 1538 - 1065);
-		imageCopy.write('/img/' + patch + '/lol3.png');
+		imageCopy.write('./img/' + patch + '/' + printableDate + '/lol3.png');
 	});
 
 	// post images
@@ -228,7 +234,7 @@ async function calllol(msg) {
 	setTimeout(function() {
 		for (let i = 1; i <= 3; i++) {
 			const img = new Attachment(
-				__dirname + '/img/' + patch + '/lol' + i + '.png',
+				__dirname + '/img/' + patch + '/' + printableDate + '/lol' + i + '.png',
 			);
 			setTimeout(sendMessage, (i * 1000), msg, lolChannelID, img);
 		}
@@ -239,7 +245,9 @@ async function calllol(msg) {
 async function callugg(msg) {
 	getPatch('', '', false);
 	await sleep(10000);
-	
+
+	const printableDate = getPrintableDate();
+
 
 	const tierList = [
 		'platinum',
@@ -266,7 +274,7 @@ async function callugg(msg) {
 	setTimeout(function() {
 		for (let i = 0; i < tierList.length; i++) {
 			const img = new Attachment(
-				__dirname + '/img/' + patch + '/ugg' + i + '.png',
+				__dirname + '/img/' + patch + '/' + printableDate + '/ugg' + i + '.png',
 			);
 			setTimeout(sendMessage, (i * 1000), msg, uggChannelID, img);
 		}
@@ -275,7 +283,7 @@ async function callugg(msg) {
 }
 
 function printDateAndPatch(pat, channel, message) {
-	today = new Date();
+	const today = new Date();
 	// prints date
 	message.client.channels.get(channel).send(
 		'```' +
@@ -288,18 +296,20 @@ function printDateAndPatch(pat, channel, message) {
 			pat +
 			'```',
 	);
-		
+
 }
 
 async function uggHelper(x, final) {
 	getPatch('', '', false);
 	await sleep(10000);
 
+	const printableDate = getPrintableDate();
+
 	Jimp.read(final, (err, image) => {
 		if (err) throw err;
 
 		image.crop(1735, 112, 2104 - 1735, 267 - 112);
-		image.write('/img/' + patch + '/ugg' + x + '.png');
+		image.write('./img/' + patch + '/' + printableDate + '/ugg' + x + '.png');
 	});
 }
 
@@ -307,41 +317,38 @@ function sendMessage(message, channel, image, text = '') {
 	message.client.channels.get(channel).send(text, image);
 }
 
+function getPrintableDate() {
+	const today = new Date();
+	return today.getDate() +
+	'.' +
+	(today.getMonth() + 1) +
+	'.' +
+	today.getFullYear();
+}
+
 function getPatch(channel = '', message = '', print) {
-	
 	request.get(patchUrl, function(error, response, body) {
 		if (!error && response.statusCode == 200) {
 			const data = JSON.parse(body);
-			if(print)
-				return printDateAndPatch(parseFloat(data.patches.slice(-1)[0].name), channel, message);
+
+			if(print) {return printDateAndPatch(parseFloat(data.patches.slice(-1)[0].name), channel, message);}
 			else{
 				patch = data.patches.slice(-1)[0].name;
-				console.log('here');
-
-				try{
-					fs.mkdirSync('/img/' + patch, { recursive: true });
-				} catch (err) {
-					console.log(err);
-				}
-				
-				console.log('/img/' + patch);
 				return patch;
 			}
 		}
-	})
-	
-
+	});
 }
 
 module.exports = {
-    calllog,
-    calllol,
-    callopgg,
+	calllog,
+	calllol,
+	callopgg,
 	callugg,
 	getPatch,
 	printDateAndPatch,
 	logChannelID,
 	lolChannelID,
 	opggChannelID,
-	uggChannelID
+	uggChannelID,
 };

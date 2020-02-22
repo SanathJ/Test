@@ -5,7 +5,7 @@ module.exports = {
 	name: 'ugg',
 	args: false,
 	guildOnly: true,
-    adminOnly: true,
+	adminOnly: true,
 	cooldown: 60,
 	usage: ' ',
 	description: 'Prints u.gg data',

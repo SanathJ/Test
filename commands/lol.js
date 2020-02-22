@@ -5,7 +5,7 @@ module.exports = {
 	args: false,
 	cooldown: 100,
 	guildOnly: true,
-    adminOnly: true,
+	adminOnly: true,
 	usage: ' ',
 	description: 'Prints lolalytics data',
 	execute(message, args) {

@@ -4,7 +4,7 @@ module.exports = {
 	name: 'log',
 	args: false,
 	guildOnly: true,
-    adminOnly: true,
+	adminOnly: true,
 	cooldown: 100,
 	usage: ' ',
 	description: 'Prints league of graphs data',

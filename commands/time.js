@@ -4,7 +4,7 @@ module.exports = {
 	cooldown: 60,
 	usage: ' ',
 	guildOnly: true,
-    adminOnly: true,
+	adminOnly: true,
 	description: 'Prints server time',
 	execute(message, args) {
 		const date_ob = new Date();
