@@ -4,6 +4,8 @@ const bot = new Discord.Client();
 const fs = require('fs');
 bot.commands = new Discord.Collection();
 
+const database = require('./database.js');
+
 const config = JSON.parse(fs.readFileSync('config.json'));
 
 const token = config.token;
@@ -20,8 +22,10 @@ const cooldowns = new Discord.Collection();
 
 process.on('unhandledRejection', error => console.error('Uncaught Promise Rejection', error));
 
-bot.on('ready', () => {
+
+bot.once('ready', () => {
 	console.log('Online!');
+	database.init();
 	// bot.user.setActivity('with explosions');
 });
 
@@ -48,8 +52,10 @@ bot.on('message', async msg => {
 		if(!mem.hasPermission(8)) return;
 	}
 
-	if (command.args && !args.length) {
-		let reply = `You didn't provide any arguments, ${msg.author}!`;
+
+	if (command.args && (args.length < command.minArgLength)) {
+
+		let reply = `You didn't provide sufficient arguments, ${msg.author}!`;
 
 		if (command.usage) {
 			reply += `\nThe proper usage would be: \`${PREFIX}${command.name} ${command.usage}\``;
