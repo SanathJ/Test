@@ -44,27 +44,32 @@ module.exports = {
 			return;
 		}
 
-		// sets desc based on site
+		// sets image and url based on site
 		let image;
-
+		let url;
 		switch (args[0]) {
 		case 'opgg':
 			image = 'https://cdn.discordapp.com/attachments/482911683568861186/682143294465245194/Kayle_opgg.png';
+			url = 'https://na.op.gg/champion/kayle/statistics/top/trend';
 			break;
 		case 'log':
-			image = 'League Of Graphs data';
+			image = '';
+			url = 'https://www.leagueofgraphs.com/champions/stats/kayle';
 			break;
 		case 'lol':
-			image = 'Lolalytics data';
+			image = '';
+			url = 'https://lolalytics.com/lol/kayle/';
 			break;
 		case 'ugg':
-			image = 'U.gg data';
+			image = '';
+			url = 'https://u.gg/lol/champions/kayle/build';
 			break;
 		}
 
 		const embed = new Discord.RichEmbed()
 			.setColor('#ff0000')
 			.setTitle('Kayle Data')
+			.setURL(url)
 			.setImage(image)
 			.addField('Date', row.Date, true)
 			.addField('Patch', row.Patch, true)
