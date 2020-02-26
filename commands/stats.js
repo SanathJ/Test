@@ -36,7 +36,7 @@ module.exports = {
 			message.reply('that\'s not a valid date! The correct format is `DD-MM-YYYY`');
 		}
 
-		const row = await database.test(format('SELECT * FROM %s WHERE Date = ?', args[0]), dateStr);
+		const row = await database.test(format('SELECT * FROM %s WHERE Date = ?', 'opgg'), dateStr);
 
 		if (!row) {
 			message.reply('no data was found for ' + dateStr + '!');
@@ -45,28 +45,30 @@ module.exports = {
 		}
 
 		// sets desc based on site
-		let desc;
+		let image;
+
 		switch (args[0]) {
 		case 'opgg':
-			desc = 'Op.gg data';
+			image = 'https://cdn.discordapp.com/attachments/482911683568861186/682143294465245194/Kayle_opgg.png';
 			break;
 		case 'log':
-			desc = 'League Of Graphs data';
+			image = 'League Of Graphs data';
 			break;
 		case 'lol':
-			desc = 'Lolalytics data';
+			image = 'Lolalytics data';
 			break;
 		case 'ugg':
-			desc = 'U.gg data';
+			image = 'U.gg data';
 			break;
 		}
 
 		const embed = new Discord.RichEmbed()
 			.setColor('#ff0000')
 			.setTitle('Kayle Data')
-			.setDescription(desc)
-			.addField('Date', row.Date)
-			.addField('Patch', row.Patch)
+			.setImage(image)
+			.addField('Date', row.Date, true)
+			.addField('Patch', row.Patch, true)
+			.addBlankField()
 			.addField('Winrate', row.Winrate + '%', true)
 			.addField('Pickrate', row.Pickrate + '%', true)
 			.addField('Banrate', row.Banrate + '%', true);
