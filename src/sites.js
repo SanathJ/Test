@@ -12,11 +12,34 @@ async function opgg() {
 	return arr;
 }
 
+async function log() {
+	const dom = await JSDOM.fromURL('https://www.leagueofgraphs.com/champions/stats/kayle', {});
+	const arr = [];
+
+	// win rate
+	let str = (dom.window.document.getElementById('graphDD2').innerHTML);
+	arr[0] = str.trim();
+
+	// pick rate
+	str = (dom.window.document.getElementById('graphDD1').innerHTML);
+	arr[1] = str.trim();
+
+	// ban rate
+	str = (dom.window.document.getElementById('graphDD3').innerHTML);
+	arr[2] = str.trim();
+
+	// ban rate
+	str = (dom.window.document.getElementById('graphDD4').innerHTML);
+	arr[3] = str.trim();
+
+	return arr;
+}
+
 async function lol() {
-	const dom = await JSDOM.fromURL('https://lolalytics.com/lol/kayle/', {runScripts: "dangerously", resources: "usable"});
+	const dom = await JSDOM.fromURL('https://lolalytics.com/lol/kayle/', { runScripts: 'dangerously', resources: 'usable' });
 	const arr = [];
 	for(let i = 0; i < 5 && i != 2 && i != 1; i++) {
-		const str = dom.serialize();//.window.document;// .getElementsByClassName("championstats").length;// .childNodes[i].innerHTML.split('<br>')[0];
+		const str = dom.serialize();
 		// arr[i] = str;
 		fs.writeFileSync('abc.html', str);
 	}
@@ -26,4 +49,5 @@ async function lol() {
 module.exports = {
 	opgg,
 	lol,
+	log,
 };
