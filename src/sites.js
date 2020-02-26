@@ -12,6 +12,17 @@ async function opgg() {
 	return arr;
 }
 
+async function ugg() {
+	const dom = await JSDOM.fromURL('https://u.gg/lol/champions/kayle/build', {});
+	const arr = [];
+
+	for(let i = 0; i < 4; i++) {
+		const str = (dom.window.document.getElementsByClassName('value').item(i).innerHTML);
+		arr[i] = str.trim();
+	}
+	return arr;
+}
+
 async function log() {
 	const dom = await JSDOM.fromURL('https://www.leagueofgraphs.com/champions/stats/kayle', {});
 	const arr = [];
@@ -50,4 +61,5 @@ module.exports = {
 	opgg,
 	lol,
 	log,
+	ugg
 };
