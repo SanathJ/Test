@@ -41,9 +41,21 @@ function insert(table, values) {
 	});
 }
 
+async function backup() {
+	try{
+		await db.run('VACUUM');
+		const directory = __dirname;
+		await db.run('VACUUM main INTO ?', directory + '/../backup.db');
+	}
+	catch(err) {
+		console.log(err);
+	}
+}
+
 module.exports = {
 	init,
 	close,
 	row,
 	insert,
+	backup,
 };
