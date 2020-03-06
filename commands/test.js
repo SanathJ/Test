@@ -1,4 +1,5 @@
 const sites = require('../src/sites.js');
+const db = require('../src/database.js');
 
 module.exports = {
 	name: 'test',
@@ -9,8 +10,7 @@ module.exports = {
 	usage: ' ',
 	description: 'testing',
 	async execute(message, args) {
-		sites.lol();
-		//console.log(await sites.lol());
+		console.log(await db.insert('opgg', await sites.opgg()));
 		message.delete();
 	},
 };

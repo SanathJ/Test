@@ -1,4 +1,4 @@
-const util = require('../util.js');
+const util = require('../src/util.js');
 
 module.exports = {
 	name: 'megu',

@@ -1,4 +1,4 @@
-const { calllol, getPatch, lolChannelID } = require('../util.js');
+const { calllol, getPatch, lolChannelID } = require('../src/util.js');
 
 module.exports = {
 	name: 'lol',

@@ -1,4 +1,4 @@
-const database = require('../database.js');
+const database = require('../src/database.js');
 const { format } = require('util');
 const Discord = require('discord.js');
 
@@ -9,11 +9,11 @@ module.exports = {
 	guildOnly: false,
 	adminOnly: false,
 	cooldown: 5,
-	usage: '<opgg | ugg | log | lol> <DD-MM-YYYY>',
+	usage: '<opgg | ugg | log> <DD-MM-YYYY>',
 	description: 'Prints kayle data from a site on a certain day',
 	async execute(message, args) {
 
-		const sites = ['opgg', 'ugg', 'log', 'lol'];
+		const sites = ['opgg', 'ugg', 'log'];
 
 		if (!sites.includes(args[0].toLowerCase())) {
 			return message.reply('that\'s not a valid site!');
@@ -36,7 +36,7 @@ module.exports = {
 			message.reply('that\'s not a valid date! The correct format is `DD-MM-YYYY`');
 		}
 
-		const row = await database.test(format('SELECT * FROM %s WHERE Date = ?', 'opgg'), dateStr);
+		const row = await database.row(format('SELECT * FROM %s WHERE Date = ?', args[0]), dateStr);
 
 		if (!row) {
 			message.reply('no data was found for ' + dateStr + '!');

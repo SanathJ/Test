@@ -1,4 +1,4 @@
-const { calllog, getPatch, logChannelID } = require('../util.js');
+const { calllog, getPatch, logChannelID } = require('../src/util.js');
 
 module.exports = {
 	name: 'log',
@@ -8,10 +8,10 @@ module.exports = {
 	cooldown: 100,
 	usage: ' ',
 	description: 'Prints league of graphs data',
-	execute(message, args) {
+	async execute(message, args) {
 		getPatch(logChannelID, message, true);
 		calllog(message);
-		// clean up bootstrapping evidence
+		await db.insert('log', await sites.log())
 		message.delete();
 	},
 };
