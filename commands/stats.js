@@ -1,4 +1,4 @@
-const database = require('../database.js');
+const database = require('../src/database.js');
 const { format } = require('util');
 const Discord = require('discord.js');
 
@@ -9,11 +9,11 @@ module.exports = {
 	guildOnly: false,
 	adminOnly: false,
 	cooldown: 5,
-	usage: '<opgg | ugg | log | lol> <DD-MM-YYYY>',
+	usage: '<opgg | ugg | log> <DD-MM-YYYY>',
 	description: 'Prints kayle data from a site on a certain day',
 	async execute(message, args) {
 
-		const sites = ['opgg', 'ugg', 'log', 'lol'];
+		const sites = ['opgg', 'ugg', 'log'];
 
 		if (!sites.includes(args[0].toLowerCase())) {
 			return message.reply('that\'s not a valid site!');
@@ -33,13 +33,13 @@ module.exports = {
 					+ ('0' + chk.getDate()).slice(-2);
 		}
 		catch(err) {
-			message.reply('that\'s not a valid date! The correct format is `DD-MM-YYYY`');
+			return message.reply('that\'s not a valid date! The correct format is `DD-MM-YYYY`');
 		}
 
-		const row = await database.test(format('SELECT * FROM %s WHERE Date = ?', 'opgg'), dateStr);
+		const row = await database.row(format('SELECT * FROM %s WHERE Date = ?', args[0]), dateStr);
 
 		if (!row) {
-			message.reply('no data was found for ' + dateStr + '!');
+			message.reply('no data was found for ' + args[1] + '!');
 			message.delete();
 			return;
 		}
@@ -47,27 +47,32 @@ module.exports = {
 		// sets image and url based on site
 		let image;
 		let url;
+		let color;
 		switch (args[0]) {
 		case 'opgg':
 			image = 'https://cdn.discordapp.com/attachments/482911683568861186/682143294465245194/Kayle_opgg.png';
 			url = 'https://na.op.gg/champion/kayle/statistics/top/trend';
+			color = '#ff0000';
 			break;
 		case 'log':
-			image = '';
+			image = 'https://cdn.discordapp.com/attachments/482911683568861186/682134344948908073/LoG.png';
 			url = 'https://www.leagueofgraphs.com/champions/stats/kayle';
+			color = '#5775a6';
 			break;
 		case 'lol':
 			image = '';
 			url = 'https://lolalytics.com/lol/kayle/';
+
 			break;
 		case 'ugg':
-			image = '';
+			image = 'https://cdn.discordapp.com/attachments/482911683568861186/682126819524476958/U.gg.png';
 			url = 'https://u.gg/lol/champions/kayle/build';
+			color = '#0060ff';
 			break;
 		}
 
 		const embed = new Discord.RichEmbed()
-			.setColor('#ff0000')
+			.setColor(color)
 			.setTitle('Kayle Data')
 			.setURL(url)
 			.setImage(image)

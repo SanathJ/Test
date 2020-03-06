@@ -1,4 +1,6 @@
-const util = require('../util.js');
+const util = require('../src/util.js');
+const sites = require('../src/sites.js');
+const db = require('../src/database.js');
 
 module.exports = {
 	name: 'megu',
@@ -8,15 +10,21 @@ module.exports = {
 	adminOnly: true,
 	usage: ' ',
 	description: 'Prints op.gg, league of graphs, lolalytics, and u.gg data',
-	execute(message, args) {
+	async execute(message, args) {
 		util.getPatch(util.logChannelID, message, true);
 		util.getPatch(util.lolChannelID, message, true);
 		util.getPatch(util.opggChannelID, message, true);
 		util.getPatch(util.uggChannelID, message, true);
+
 		util.calllog(message);
 		util.calllol(message);
 		util.callopgg(message);
 		util.callugg(message);
+
+		await db.insert('opgg', await sites.opgg());
+		await db.insert('ugg', await sites.ugg());
+		await db.insert('log', await sites.log());
+
 		message.delete();
 	},
 };

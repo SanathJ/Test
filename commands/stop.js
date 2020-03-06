@@ -1,4 +1,4 @@
-const database = require('../database.js');
+const database = require('../src/database.js');
 
 module.exports = {
 	name: 'stop',

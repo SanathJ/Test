@@ -4,7 +4,7 @@ const bot = new Discord.Client();
 const fs = require('fs');
 bot.commands = new Discord.Collection();
 
-const database = require('./database.js');
+const database = require('./src/database.js');
 
 const config = JSON.parse(fs.readFileSync('config.json'));
 

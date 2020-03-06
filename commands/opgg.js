@@ -1,4 +1,6 @@
-const { callopgg, getPatch, opggChannelID } = require('../util.js');
+const { callopgg, getPatch, opggChannelID } = require('../src/util.js');
+const sites = require('../src/sites.js');
+const db = require('../src/database.js');
 
 module.exports = {
 	name: 'opgg',
@@ -8,9 +10,11 @@ module.exports = {
 	adminOnly: true,
 	usage: ' ',
 	description: 'Prints opgg data',
-	execute(message, args) {
+	async execute(message, args) {
 		getPatch(opggChannelID, message, true);
 		callopgg(message);
+
+		await db.insert('opgg', await sites.opgg())
 		// clean up bootstrapping evidence
 		message.delete();
 	},

@@ -1,5 +1,6 @@
-const { callugg, getPatch, uggChannelID } = require('../util.js');
-
+const { callugg, getPatch, uggChannelID } = require('../src/util.js');
+const sites = require('../src/sites.js');
+const db = require('../src/database.js');
 
 module.exports = {
 	name: 'ugg',
@@ -9,10 +10,11 @@ module.exports = {
 	cooldown: 60,
 	usage: ' ',
 	description: 'Prints u.gg data',
-	execute(message, args) {
+	async execute(message, args) {
 		getPatch(uggChannelID, message, true);
 		callugg(message);
-		// clean up bootstrapping evidence
+
+		await db.insert('ugg', await sites.ugg());
 		message.delete();
 	},
 };
