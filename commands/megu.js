@@ -8,6 +8,7 @@ module.exports = {
 	cooldown: 100,
 	guildOnly: true,
 	adminOnly: true,
+	aliases: ['kegu'],
 	usage: ' ',
 	description: 'Prints op.gg, league of graphs, lolalytics, and u.gg data',
 	async execute(message, argsIgnore) {
