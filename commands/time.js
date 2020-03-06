@@ -6,7 +6,7 @@ module.exports = {
 	guildOnly: true,
 	adminOnly: true,
 	description: 'Prints server time',
-	execute(message, args) {
+	execute(message, argsIgnore) {
 		const date_ob = new Date();
 
 		// current date

@@ -8,7 +8,7 @@ module.exports = {
 	adminOnly: true,
 	usage: ' ',
 	description: 'Prints lolalytics data',
-	execute(message, args) {
+	execute(message, argsIgnore) {
 		getPatch(lolChannelID, message, true);
 		calllol(message);
 		// clean up bootstrapping evidence

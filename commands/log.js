@@ -10,7 +10,7 @@ module.exports = {
 	cooldown: 100,
 	usage: ' ',
 	description: 'Prints league of graphs data',
-	async execute(message, args) {
+	async execute(message, argsIgnore) {
 		getPatch(logChannelID, message, true);
 		calllog(message);
 
