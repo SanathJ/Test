@@ -1,4 +1,6 @@
 const { callopgg, getPatch, opggChannelID } = require('../src/util.js');
+const sites = require('../src/sites.js');
+const db = require('../src/database.js');
 
 module.exports = {
 	name: 'opgg',

@@ -1,5 +1,6 @@
 const { callugg, getPatch, uggChannelID } = require('../src/util.js');
-
+const sites = require('../src/sites.js');
+const db = require('../src/database.js');
 
 module.exports = {
 	name: 'ugg',
@@ -12,7 +13,8 @@ module.exports = {
 	async execute(message, args) {
 		getPatch(uggChannelID, message, true);
 		callugg(message);
-		await db.insert('ugg', await sites.ugg())
+
+		await db.insert('ugg', await sites.ugg());
 		message.delete();
 	},
 };
