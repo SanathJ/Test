@@ -7,7 +7,7 @@ module.exports = {
 	guildOnly: true,
 	adminOnly: true,
 	description: 'Stops bot immediately',
-	execute(message, args) {
+	execute(message, argsIgnore) {
 		message.delete();
 		database.close();
 		process.exit(0);

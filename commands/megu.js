@@ -10,7 +10,7 @@ module.exports = {
 	adminOnly: true,
 	usage: ' ',
 	description: 'Prints op.gg, league of graphs, lolalytics, and u.gg data',
-	async execute(message, args) {
+	async execute(message, argsIgnore) {
 		util.getPatch(util.logChannelID, message, true);
 		util.getPatch(util.lolChannelID, message, true);
 		util.getPatch(util.opggChannelID, message, true);

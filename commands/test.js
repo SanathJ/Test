@@ -1,6 +1,3 @@
-const sites = require('../src/sites.js');
-const db = require('../src/database.js');
-
 module.exports = {
 	name: 'test',
 	args: false,
@@ -9,8 +6,7 @@ module.exports = {
 	adminOnly: true,
 	usage: ' ',
 	description: 'testing',
-	async execute(message, args) {
-		console.log(await db.insert('opgg', await sites.opgg()));
+	async execute(message, argsIgnore) {
 		message.delete();
 	},
 };

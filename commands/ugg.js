@@ -10,7 +10,7 @@ module.exports = {
 	cooldown: 60,
 	usage: ' ',
 	description: 'Prints u.gg data',
-	async execute(message, args) {
+	async execute(message, argsIgnore) {
 		getPatch(uggChannelID, message, true);
 		callugg(message);
 
