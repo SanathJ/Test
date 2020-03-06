@@ -39,9 +39,10 @@ bot.on('message', async msg => {
 	const args = msg.content.slice(PREFIX.length).split(/ +/);
 	const commandName = args.shift().toLowerCase();
 
-	if (!bot.commands.has(commandName)) return;
+	const command = bot.commands.get(commandName)
+		|| bot.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName));
 
-	const command = bot.commands.get(commandName);
+	if (!command) return;
 
 	if (command.guildOnly && msg.channel.type !== 'text') {
 		return msg.reply('I can\'t execute that command inside DMs!');
