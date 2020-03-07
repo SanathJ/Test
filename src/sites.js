@@ -1,6 +1,10 @@
 const jsdom = require('jsdom');
 const { JSDOM } = jsdom;
 
+const Jimp = require('jimp');
+
+const Tesseract = require('tesseract.js');
+
 async function opgg() {
 	const dom = await JSDOM.fromURL('https://na.op.gg/champion/kayle/statistics/top/trend', {});
 	const arr = [];
@@ -42,8 +46,29 @@ async function log() {
 	return arr;
 }
 
+async function lol() {
+	const image = await Jimp.read('./img/lol1.png');
+
+	await image.greyscale().invert().writeAsync('./img/prepared.png');
+	const { data: { text } } = await Tesseract.recognize('./img/prepared.png', 'eng');
+
+	const rgx = RegExp('[0-9]{1,2}[.][0-9]{1,2}', 'g');
+
+	const array = [];
+
+	let arr;
+	while ((arr = rgx.exec(text)) !== null) {
+		array.push(arr[0]);
+	}
+
+	array.shift();
+	return array;
+
+}
+
 module.exports = {
 	opgg,
 	log,
 	ugg,
+	lol,
 };
