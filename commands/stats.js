@@ -5,11 +5,11 @@ const Discord = require('discord.js');
 module.exports = {
 	name: 'stats',
 	args: true,
-	minArgLength: 2,
+	minArgLength: 1,
 	guildOnly: false,
 	adminOnly: false,
 	cooldown: 5,
-	usage: '<opgg | ugg | log> <DD-MM-YYYY>',
+	usage: '<opgg | ugg | log> [=today | DD-MM-YYYY]',
 	description: 'Prints kayle data from a site on a certain day',
 	async execute(message, args) {
 
@@ -19,29 +19,35 @@ module.exports = {
 			return message.reply('that\'s not a valid site!');
 		}
 
-		const arr = args[1].split('-');
-		if(args[1].length != 10 || arr.length != 3) {
-			return message.reply('that\'s not a valid date! The correct format is `DD-MM-YYYY`');
-		}
+		let row;
+		if(args[1] && args[1] != 'today') {
+			const arr = args[1].split('-');
+			if(args[1].length != 10 || arr.length != 3) {
+				return message.reply('that\'s not a valid date! The correct format is `DD-MM-YYYY`');
+			}
 
-		let dateStr = arr[2] + '-' + arr[1] + '-' + arr[0];
-		try{
-			let chk = new Date(dateStr).toISOString();
-			chk = new Date(dateStr);
-			dateStr = chk.getFullYear() + '-'
+			let dateStr = arr[2] + '-' + arr[1] + '-' + arr[0];
+			try{
+				let chk = new Date(dateStr).toISOString();
+				chk = new Date(dateStr);
+				dateStr = chk.getFullYear() + '-'
 					+ ('0' + (chk.getMonth() + 1)).slice(-2) + '-'
 					+ ('0' + chk.getDate()).slice(-2);
-		}
-		catch(err) {
-			return message.reply('that\'s not a valid date! The correct format is `DD-MM-YYYY`');
-		}
+			}
+			catch(err) {
+				return message.reply('that\'s not a valid date! The correct format is `DD-MM-YYYY`');
+			}
 
-		const row = await database.row(format('SELECT * FROM %s WHERE Date = ?', args[0]), dateStr);
+			row = await database.row(format('SELECT * FROM %s WHERE Date = ?', args[0]), dateStr);
 
-		if (!row) {
-			message.reply('no data was found for ' + args[1] + '!');
-			message.delete();
-			return;
+			if (!row) {
+				message.reply('no data was found for ' + args[1] + '!');
+				message.delete();
+				return;
+			}
+		}
+		else {
+			row = await database.row(format('SELECT * FROM %s ORDER BY Date DESC LIMIT 1', args[0]));
 		}
 
 		// sets image and url based on site
