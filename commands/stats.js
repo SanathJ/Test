@@ -1,6 +1,8 @@
 const database = require('../src/database.js');
 const { format } = require('util');
 const Discord = require('discord.js');
+const fs = require('fs');
+const config = JSON.parse(fs.readFileSync('config.json'));
 
 module.exports = {
 	name: 'stats',
@@ -92,8 +94,8 @@ module.exports = {
 		message.delete();
 		message.channel.send(embed)
 			.then(msg => {
-				if (msg.guild) {
-					msg.delete(180000);
+				if (msg.guild && msg.channel.id != config.channels.bot) {
+					msg.delete(120000);
 				}
 			});
 	},

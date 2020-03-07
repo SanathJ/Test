@@ -2,8 +2,9 @@ const jsdom = require('jsdom');
 const { JSDOM } = jsdom;
 
 const Jimp = require('jimp');
-
 const Tesseract = require('tesseract.js');
+
+const sleep = require('sleep-promise');
 
 async function opgg() {
 	const dom = await JSDOM.fromURL('https://na.op.gg/champion/kayle/statistics/top/trend', {});
@@ -47,6 +48,8 @@ async function log() {
 }
 
 async function lol() {
+	await sleep(100000);
+
 	const image = await Jimp.read('./img/lol1.png');
 
 	await image.greyscale().invert().writeAsync('./img/prepared.png');
