@@ -14,7 +14,7 @@ module.exports = {
 		getPatch(opggChannelID, message, true);
 		callopgg(message);
 
-		await db.insert('opgg', await sites.opgg());
+		db.insert('opgg', await sites.opgg());
 		// clean up bootstrapping evidence
 		message.delete();
 	},

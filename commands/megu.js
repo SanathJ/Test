@@ -22,9 +22,9 @@ module.exports = {
 		util.callopgg(message);
 		util.callugg(message);
 
-		await db.insert('opgg', await sites.opgg());
-		await db.insert('ugg', await sites.ugg());
-		await db.insert('log', await sites.log());
+		db.insert('opgg', await sites.opgg());
+		db.insert('ugg', await sites.ugg());
+		db.insert('log', await sites.log());
 
 		message.delete();
 	},

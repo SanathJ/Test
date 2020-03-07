@@ -14,7 +14,7 @@ module.exports = {
 		getPatch(logChannelID, message, true);
 		calllog(message);
 
-		await db.insert('log', await sites.log());
+		db.insert('log', await sites.log());
 		message.delete();
 	},
 };

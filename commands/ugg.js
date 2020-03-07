@@ -14,7 +14,7 @@ module.exports = {
 		getPatch(uggChannelID, message, true);
 		callugg(message);
 
-		await db.insert('ugg', await sites.ugg());
+		db.insert('ugg', await sites.ugg());
 		message.delete();
 	},
 };
