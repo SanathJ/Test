@@ -7,7 +7,7 @@ module.exports = {
 	args: false,
 	guildOnly: true,
 	adminOnly: true,
-	cooldown: 60,
+	cooldown: 100,
 	usage: ' ',
 	description: 'Prints u.gg data',
 	async execute(message, argsIgnore) {
