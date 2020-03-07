@@ -9,11 +9,11 @@ module.exports = {
 	guildOnly: false,
 	adminOnly: false,
 	cooldown: 5,
-	usage: '<opgg | ugg | log> [=today | DD-MM-YYYY]',
+	usage: '<opgg | ugg | log | lol> [=today | DD-MM-YYYY]',
 	description: 'Prints kayle data from a site on a certain day',
 	async execute(message, args) {
 
-		const sites = ['opgg', 'ugg', 'log'];
+		const sites = ['opgg', 'ugg', 'log', 'lol'];
 
 		if (!sites.includes(args[0].toLowerCase())) {
 			return message.reply('that\'s not a valid site!');
@@ -66,9 +66,9 @@ module.exports = {
 			color = '#5775a6';
 			break;
 		case 'lol':
-			image = '';
+			image = 'https://cdn.discordapp.com/attachments/482911683568861186/682132205916782662/LoG.png';
 			url = 'https://lolalytics.com/lol/kayle/';
-
+			color = '#d5b240';
 			break;
 		case 'ugg':
 			image = 'https://cdn.discordapp.com/attachments/482911683568861186/682126819524476958/U.gg.png';
