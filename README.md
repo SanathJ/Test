@@ -17,7 +17,7 @@ This is a bot for the [Kayle Mains discord server](https://discord.gg/ExyGyS8).
 ## **Usage**
 `megu` is the easiest way to collect data using the bot. 
 
-`stats <opgg | log | ugg> <DD_MM_YYYY>` can be used to quickly check stats for a certain date.
+`stats <opgg | log | ugg> [=today | DD_MM_YYYY>` can be used to quickly check stats for a certain date.
 
 Use `help <command>` to see more details.
 
