@@ -25,6 +25,7 @@ module.exports = {
 		db.insert('opgg', await sites.opgg());
 		db.insert('ugg', await sites.ugg());
 		db.insert('log', await sites.log());
+		db.insert('lol', await sites.lol());
 
 		message.delete();
 	},
