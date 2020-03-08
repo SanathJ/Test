@@ -2,9 +2,14 @@ const Discord = require('discord.js');
 const bot = new Discord.Client();
 
 const fs = require('fs');
+
+const CronJob = require('cron').CronJob;
+
 bot.commands = new Discord.Collection();
 
 const database = require('./src/database.js');
+
+const { execute } = require('./commands/megu.js');
 
 const config = JSON.parse(fs.readFileSync('config.json'));
 
@@ -94,5 +99,11 @@ bot.on('message', async msg => {
 		msg.reply('there was an error trying to execute that command!');
 	}
 });
+
+const job = new CronJob('0 59 * * * *', function() {
+	const channel = bot.channels.get(config.channels.opgg);
+	execute(channel.lastMessage, undefined);
+});
+job.start();
 
 bot.login(token);
