@@ -6,4 +6,3 @@
 config.json
 .eslintrc.json
 commands/test.js
-*.db
