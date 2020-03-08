@@ -100,8 +100,8 @@ bot.on('message', async msg => {
 	}
 });
 
-const job = new CronJob('0 59 * * * *', function() {
-	const channel = bot.channels.get(config.channels.opgg);
+const job = new CronJob('0 4 * * * *', function() {
+	const channel = bot.channels.get(config.channels.bot);
 	execute(channel.lastMessage, undefined);
 });
 job.start();
