@@ -101,7 +101,7 @@ bot.on('message', async msg => {
 });
 
 const job = new CronJob('0 30 23 * * *', function() {
-	const channel = bot.channels.get(config.channels.bot);
+	const channel = bot.channels.get(config.channels.general);
 	execute(channel.lastMessage, undefined);
 }, null, false, 'Asia/Kolkata');
 job.start();
