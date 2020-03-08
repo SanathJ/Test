@@ -9,6 +9,7 @@
   "author": "SanathJ",
   "license": "ISC",
   "dependencies": {
+    "cron": "^1.8.2",
     "discord.js": "^11.5.1",
     "jimp": "^0.9.3",
     "jsdom": "^16.2.0",
