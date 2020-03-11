@@ -10,7 +10,7 @@ module.exports = {
 	minArgLength: 1,
 	guildOnly: false,
 	adminOnly: false,
-	cooldown: 5,
+	cooldown: 120,
 	usage: '<opgg | ugg | log | lol> [=today | DD-MM-YYYY]',
 	description: 'Prints kayle data from a site on a certain day',
 	async execute(message, args) {
