@@ -40,7 +40,7 @@ async function callopgg(msg) {
 
 
 	Jimp.read(opggTrendApiUrl, (err, image) => {
-		if (err) throw err;
+		if (err) console.log(err);
 
 		// winrate
 		let imageCopy = image.clone();
@@ -68,7 +68,7 @@ async function callopgg(msg) {
 	});
 
 	Jimp.read(opggStatsApiUrl, (err, image) => {
-		if (err) throw err;
+		if (err) console.log(err);
 
 		// leaderboards
 		const imageCopy = image.clone();
@@ -96,7 +96,7 @@ async function calllog(msg) {
 
 
 	Jimp.read(logApiUrl, (err, image) => {
-		if (err) throw err;
+		if (err) console.log(err);
 
 		// popularity history
 		let imageCopy = image.clone();
@@ -197,7 +197,7 @@ async function calllol(msg) {
 
 
 	Jimp.read(lolApiUrl, (err, image2) => {
-		if (err) throw err;
+		if (err) console.log(err);
 		image2.contrast(+0.1);
 
 		let imageCopy = image2.clone();
@@ -285,7 +285,7 @@ async function uggHelper(x, final) {
 
 
 	Jimp.read(final, (err, image) => {
-		if (err) throw err;
+		if (err) console.log(err);
 
 		image.crop(0, 111, 1439 - 0, 268 - 111);
 		image.write('./img/ugg' + x + '.png');
