@@ -15,6 +15,6 @@ module.exports = {
 		calllol(message);
 
 		db.insert('lol', await sites.lol());
-		message.delete();
+		message.delete().catch(() => {});
 	},
 };

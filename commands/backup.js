@@ -30,10 +30,9 @@ module.exports = {
 			.finally(() =>{
 				fs.unlinkSync(__dirname + '/../backup.db');
 			});
-		
-		
+
 
 		// clean up bootstrapping evidence
-		message.delete();
+		message.delete().catch(() => {});
 	},
 };

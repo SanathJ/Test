@@ -15,6 +15,6 @@ module.exports = {
 		calllog(message);
 
 		db.insert('log', await sites.log());
-		message.delete();
+		message.delete().catch(() => {});
 	},
 };

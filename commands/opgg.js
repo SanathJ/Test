@@ -16,6 +16,6 @@ module.exports = {
 
 		db.insert('opgg', await sites.opgg());
 		// clean up bootstrapping evidence
-		message.delete();
+		message.delete().catch(() => {});
 	},
 };

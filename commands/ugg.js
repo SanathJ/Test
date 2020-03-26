@@ -15,6 +15,6 @@ module.exports = {
 		callugg(message);
 
 		db.insert('ugg', await sites.ugg());
-		message.delete();
+		message.delete().catch(() => {});
 	},
 };

@@ -8,7 +8,7 @@ module.exports = {
 	adminOnly: true,
 	description: 'Stops bot immediately',
 	execute(message, argsIgnore) {
-		message.delete();
+		message.delete().catch(() => {});
 		database.close();
 		process.exit(0);
 	},

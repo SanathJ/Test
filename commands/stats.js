@@ -44,7 +44,7 @@ module.exports = {
 
 			if (!row) {
 				message.reply('no data was found for ' + args[1] + '!');
-				message.delete();
+				message.delete().catch(() => {});
 				return;
 			}
 		}
@@ -91,7 +91,7 @@ module.exports = {
 			.addField('Pickrate', row.Pickrate + '%', true)
 			.addField('Banrate', row.Banrate + '%', true);
 
-		message.delete();
+		message.delete().catch(() => {});
 		message.channel.send(embed)
 			.then(msg => {
 				if (msg.guild && msg.channel.id != config.channels.bot) {

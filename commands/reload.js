@@ -28,7 +28,7 @@ module.exports = {
 			message.channel.send(`There was an error while reloading a command \`${commandName}\`:\n\`${error.message}\``);
 		}
 
-		message.delete();
+		message.delete().catch(() => {});
 		message.channel.send(`Command \`${commandName}\` was reloaded!`);
 	},
 };
