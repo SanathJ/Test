@@ -16,7 +16,7 @@
     "request": "^2.88.2",
     "sleep-promise": "^8.0.1",
     "sqlite": "^3.0.3",
-    "tesseract.js": "^2.0.2"
+    "tesseract.js": "^2.1.1"
   },
   "repository": {
     "type": "git",
