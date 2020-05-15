@@ -315,7 +315,7 @@ function getPatch(channel = '', message = '', print) {
 		if (!error && response.statusCode == 200) {
 			const data = JSON.parse(body);
 
-			if(print) {return printDateAndPatch(parseFloat(data.patches.slice(-1)[0].name), channel, message);}
+			if(print) {return printDateAndPatch(parseFloat(data.patches.slice(-1)[0].name).toFixed(2), channel, message);}
 		}
 	});
 }
