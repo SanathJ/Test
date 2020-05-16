@@ -10,6 +10,7 @@ bot.commands = new Discord.Collection();
 const database = require('./src/database.js');
 
 const { execute } = require('./commands/megu.js');
+const { curr } = require('./commands/current.js');
 
 const config = JSON.parse(fs.readFileSync('config.json'));
 
@@ -105,5 +106,11 @@ const job = new CronJob('0 30 23 * * *', function() {
 	execute(channel.lastMessage, undefined);
 }, null, false, 'Asia/Kolkata');
 job.start();
+
+const currJob = new CronJob('0 59 23 * * *', function() {
+	const channel = bot.channels.get(config.channels.general);
+	curr(channel.lastMessage);
+}, null, false, 'Asia/Kolkata');
+currJob.start();
 
 bot.login(token);
