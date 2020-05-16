@@ -10,12 +10,12 @@
   "license": "ISC",
   "dependencies": {
     "cron": "^1.8.2",
-    "discord.js": "^11.5.1",
-    "jimp": "^0.9.3",
+    "discord.js": "^11.6.4",
+    "jimp": "^0.9.8",
     "jsdom": "^16.2.2",
     "request": "^2.88.2",
     "sleep-promise": "^8.0.1",
-    "sqlite": "^3.0.3",
+    "sqlite": "^3.0.6",
     "tesseract.js": "^2.1.1"
   },
   "repository": {
