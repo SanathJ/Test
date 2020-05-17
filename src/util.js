@@ -254,6 +254,18 @@ async function callugg(msg) {
 		'overall',
 	];
 
+	const tierName = [
+		'platinum',
+		'platinum+',
+		'diamond',
+		'diamond+',
+		'master',
+		'master+',
+		'grandmaster',
+		'challenger',
+		'overall',
+	];
+
 	for (let i = 0; i < tierList.length; i++) {
 		const finalUrl = uggApiUrl +
                        config.accessKeys[2 + (i % 5)] +
@@ -269,7 +281,7 @@ async function callugg(msg) {
 			const img = new Attachment(
 				__dirname + '/../img/ugg' + i + '.png',
 			);
-			setTimeout(sendMessage, (i * 1000), msg, uggChannelID, img);
+			setTimeout(sendMessage, (i * 1000), msg, uggChannelID, img, tierName[i]);
 		}
 	}, 100000);
 
@@ -301,7 +313,7 @@ async function uggHelper(x, final) {
 			return;
 		}
 
-		image.crop(0, 111, 1439 - 0, 268 - 111);
+		image.crop(0, 110, 1439 - 0, 158 - 110);
 		image.write('./img/ugg' + x + '.png');
 	});
 }
