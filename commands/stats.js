@@ -58,22 +58,22 @@ module.exports = {
 		let color;
 		switch (args[0]) {
 		case 'opgg':
-			image = 'https://cdn.discordapp.com/attachments/482911683568861186/682143294465245194/Kayle_opgg.png';
+			image = 'https://cdn.discordapp.com/attachments/561116378090700811/711408499388579870/opgg.png';
 			url = 'https://na.op.gg/champion/kayle/statistics/top/trend';
 			color = '#ff0000';
 			break;
 		case 'log':
-			image = 'https://cdn.discordapp.com/attachments/482911683568861186/682134344948908073/LoG.png';
+			image = 'https://cdn.discordapp.com/attachments/561116378090700811/711405113872482334/LoG.png';
 			url = 'https://www.leagueofgraphs.com/champions/stats/kayle';
 			color = '#5775a6';
 			break;
 		case 'lol':
-			image = 'https://cdn.discordapp.com/attachments/482911683568861186/682132205916782662/LoG.png';
+			image = 'https://cdn.discordapp.com/attachments/561116378090700811/711407080871034932/LoLalytics.png';
 			url = 'https://lolalytics.com/lol/kayle/';
 			color = '#d5b240';
 			break;
 		case 'ugg':
-			image = 'https://cdn.discordapp.com/attachments/482911683568861186/682126819524476958/U.gg.png';
+			image = 'https://cdn.discordapp.com/attachments/561116378090700811/711438714290831461/UGG.png';
 			url = 'https://u.gg/lol/champions/kayle/build';
 			color = '#0060ff';
 			break;
