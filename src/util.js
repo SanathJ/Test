@@ -255,15 +255,15 @@ async function callugg(msg) {
 	];
 
 	const tierName = [
-		'platinum',
-		'platinum+',
-		'diamond',
-		'diamond+',
-		'master',
-		'master+',
-		'grandmaster',
-		'challenger',
-		'overall',
+		'Platinum',
+		'Platinum+',
+		'Diamond',
+		'Diamond+',
+		'Master',
+		'Master+',
+		'Grandmaster',
+		'Challenger',
+		'Overall',
 	];
 
 	for (let i = 0; i < tierList.length; i++) {
