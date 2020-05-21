@@ -11,7 +11,7 @@ module.exports = {
 	name: 'current',
 	args: false,
 	guildOnly: true,
-	adminOnly: true,
+	adminOnly: false,
 	cooldown: 60,
 	usage: ' ',
 	description: 'Displays most recent data collected',
