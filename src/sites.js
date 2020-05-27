@@ -1,10 +1,9 @@
 const jsdom = require('jsdom');
 const { JSDOM } = jsdom;
 
-const Jimp = require('jimp');
-const Tesseract = require('tesseract.js');
+const rp = require('request-promise-native');
 
-const sleep = require('sleep-promise');
+const { patchUrl } = require('./util.js');
 
 async function opgg() {
 	const dom = await JSDOM.fromURL('https://na.op.gg/champion/kayle/statistics/top/trend', {});
@@ -48,25 +47,21 @@ async function log() {
 }
 
 async function lol() {
-	await sleep(100000);
+	let JSONstr = await rp(patchUrl);
+	let data = JSON.parse(JSONstr);
+	const patch = parseFloat(data.patches.slice(-1)[0].name).toFixed(2);
 
-	const image = await Jimp.read('./img/lol1.png');
+	const APIurl = 'https://api.op.lol/champion/2/?patch=' + patch + '&cid=10&lane=default&tier=platinum_plus&queue=420&region=all';
+	JSONstr = await rp(APIurl);
+	data = JSON.parse(JSONstr);
 
-	await image.greyscale().invert().writeAsync('./img/prepared.png');
-	const { data: { text } } = await Tesseract.recognize('./img/prepared.png', 'eng');
+	const arr = [];
+	arr[0] = data.display.winRate;
+	arr[1] = data.display.pickRate;
 
-	const rgx = RegExp('[0-9]{1,2}[.][0-9]{1,2}', 'g');
-
-	const array = [];
-
-	let arr;
-	while ((arr = rgx.exec(text)) !== null) {
-		array.push(arr[0]);
-	}
-
-	array.shift();
-	return array;
-
+	// for some reason banrate is a float while the rest are strings
+	arr[2] = parseFloat(data.display.banRate).toFixed(2);
+	return arr;
 }
 
 module.exports = {

@@ -14,9 +14,8 @@
     "jimp": "^0.9.8",
     "jsdom": "^16.2.2",
     "request": "^2.88.2",
-    "sleep-promise": "^8.0.1",
-    "sqlite": "^3.0.6",
-    "tesseract.js": "^2.1.1"
+    "request-promise-native": "^1.0.8",
+    "sqlite": "^3.0.6"
   },
   "repository": {
     "type": "git",
