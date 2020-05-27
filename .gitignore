@@ -6,3 +6,4 @@
 config.json
 .eslintrc.json
 commands/test.js
+commands/reload.js
