@@ -1,7 +1,7 @@
 module.exports = {
 	name: 'time',
 	args: false,
-	cooldown: 60,
+	cooldown: 5,
 	usage: ' ',
 	guildOnly: true,
 	adminOnly: true,
