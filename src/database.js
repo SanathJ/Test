@@ -52,10 +52,35 @@ async function backup() {
 	}
 }
 
+async function runner(command, sql) {
+	try{
+		if(command === 'run') {
+			await db.run(sql);
+			return { 'result':'Executed!' };
+		}
+		else if (command === 'get') {
+			const ans = await db.get(sql);
+			return ans;
+		}
+		else if (command === 'all') {
+			const ans = await db.all(sql);
+			return ans;
+		}
+		else {
+			return { 'result': 'No such database command' };
+		}
+	}
+	catch(err) {
+		return err;
+	}
+}
+
+
 module.exports = {
 	init,
 	close,
 	row,
 	insert,
 	backup,
+	runner,
 };
