@@ -8,13 +8,29 @@ module.exports = {
 	aliases: ['commands'],
 	usage: '[command name]',
 	cooldown: 3,
-	execute(message, args) {
+	async execute(message, args) {
 		const data = [];
 		const { commands } = message.client;
 
 		if (!args.length) {
 			data.push('Here\'s a list of all my commands:');
-			data.push(commands.filter(command => !command.adminOnly).map(command => command.name).join(', '));
+			data.push('```');
+
+			// Hides admin commands if in DM or if user isn't an administrator
+			if(message.channel.type === 'text') {
+				const mem = await message.guild.fetchMember(message.author);
+				if(!mem.hasPermission(8)) {
+					data.push(commands.filter(command => !command.adminOnly).map(command => command.name.charAt(0).toUpperCase() + command.name.substring(1)).join(', '));
+				}
+				else{
+					data.push(commands.map(command => command.name.charAt(0).toUpperCase() + command.name.substring(1)).join(', '));
+				}
+			}
+			else{
+				data.push(commands.filter(command => !command.adminOnly).map(command => command.name.charAt(0).toUpperCase() + command.name.substring(1)).join(', '));
+			}
+
+			data.push('```');
 			data.push(`\nYou can send \`${prefix}help [command name]\` to get info on a specific command!`);
 
 			return message.author.send(data, { split: true })
