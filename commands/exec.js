@@ -8,7 +8,7 @@ module.exports = {
 	cooldown: 10,
 	guildOnly: true,
 	adminOnly: true,
-	description: 'Reloads a command',
+	description: 'Executes a SQL query',
 	async execute(message, args) {
 		let str = '';
 		for(let i = 1; i < args.length; i++) {
