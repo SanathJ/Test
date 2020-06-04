@@ -269,7 +269,7 @@ async function callugg(msg) {
 	for (let i = 0; i < tierList.length; i++) {
 		const finalUrl = uggApiUrl +
                        config.accessKeys[2 + (i % 5)] +
-                       '&url=https://m.u.gg/lol/champions/kayle/build?rank=' +
+                       '&url=https://u.gg/lol/champions/kayle/build?rank=' +
                        tierList[i];
 
 		uggHelper(i, finalUrl);
@@ -313,7 +313,7 @@ async function uggHelper(x, final) {
 			return;
 		}
 
-		image.crop(0, 110, 1439 - 0, 158 - 110);
+		image.crop(83, 513, 1098 - 83, 603 - 513);
 		image.write('./img/ugg' + x + '.png');
 	});
 }
