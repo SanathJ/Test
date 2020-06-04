@@ -56,7 +56,7 @@ bot.on('message', async msg => {
 
 	if (command.adminOnly) {
 		const mem = await msg.guild.fetchMember(msg.author);
-		if(!mem.hasPermission(8)) return;
+		if(mem.id !== config.ownerID && !mem.hasPermission(8)) return;
 	}
 
 
