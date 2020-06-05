@@ -13,7 +13,7 @@ const logApiUrl = 'http://api.screenshotlayer.com/api/capture?delay=3&access_key
 const opggTrendApiUrl = 'http://api.screenshotlayer.com/api/capture?delay=3&access_key=' + config.accessKeys[1] + '&fullpage=1&force=1&viewport=3840x2160&url=https://op.gg/champion/kayle/statistics/top/trend';
 const opggStatsApiUrl = 'http://api.screenshotlayer.com/api/capture?delay=3&access_key=' + config.accessKeys[1] + '&fullpage=1&force=1&viewport=3840x2160&url=https://op.gg/champion/statistics';
 
-const uggApiUrl = 'http://api.screenshotlayer.com/api/capture?delay=3&user_agent=Mozilla/5.0%20(iPhone;%20CPU%20iPhone%20OS%2011_0%20like%20Mac%20OS%20X)%20AppleWebKit/604.1.38%20(KHTML,%20like%20Gecko)%20Version/11.0%20Mobile/15A356%20Safari/604.1&fullpage=1&force=1&access_key=';
+const uggApiUrl = 'http://api.screenshotlayer.com/api/capture?delay=2&user_agent=Mozilla/5.0%20(iPhone;%20CPU%20iPhone%20OS%2011_0%20like%20Mac%20OS%20X)%20AppleWebKit/604.1.38%20(KHTML,%20like%20Gecko)%20Version/11.0%20Mobile/15A356%20Safari/604.1&fullpage=1&force=1&access_key=';
 
 // URL from where patch data is received
 const patchUrl = 'https://raw.githubusercontent.com/CommunityDragon/Data/master/patches.json';
@@ -46,25 +46,25 @@ async function callopgg(msg) {
 		}
 		// winrate
 		let imageCopy = image.clone();
-		imageCopy.crop(1381, 687, 2458 - 1381, 1019 - 687);
+		imageCopy.crop(1380, 727, 2458 - 1380, 1019 - 727);
 		// imageCopy.normalize();
 		imageCopy.write('./img/op1.png');
 
 		// pickrate
 		imageCopy = image.clone();
-		imageCopy.crop(1381, 1032, 2458 - 1381, 1364 - 1032);
+		imageCopy.crop(1380, 1071, 2459 - 1380, 1405 - 1071);
 		// imageCopy.normalize();
 		imageCopy.write('./img/op2.png');
 
 		// banrate
 		imageCopy = image.clone();
-		imageCopy.crop(1381, 1377, 2458 - 1381, 1709 - 1377);
+		imageCopy.crop(1380, 1416, 2459 - 1416, 1750 - 1416);
 		// imageCopy.normalize();
 		imageCopy.write('./img/op3.png');
 
 		// winrate / game length
 		imageCopy = image.clone();
-		imageCopy.crop(1381, 1722, 2458 - 1381, 2000 - 1722);
+		imageCopy.crop(1380, 1761, 2459 - 1380, 2041 - 1761);
 		// imageCopy.normalize();
 		imageCopy.write('./img/op4.png');
 	});
@@ -77,7 +77,7 @@ async function callopgg(msg) {
 
 		// leaderboards
 		const imageCopy = image.clone();
-		imageCopy.crop(1986, 407, 2438 - 1986, 1244 - 407);
+		imageCopy.crop(1985, 444, 2439 - 1985, 1283 - 444);
 		// imageCopy.normalize();
 		imageCopy.write('./img/op5.png');
 	});
@@ -126,37 +126,37 @@ async function calllog(msg) {
 
 		// winrate / game duration
 		imageCopy = image.clone();
-		imageCopy.crop(629, 1523, 1070 - 629, 1825 - 1523);
+		imageCopy.crop(629, 1578, 1071 - 629, 1881 - 1578);
 		// imageCopy.normalize();
 		imageCopy.write('./img/log8.png');
 
 		// winrate / ranked games played
 		imageCopy = image.clone();
-		imageCopy.crop(1103, 1524, 1543 - 1103, 1825 - 1524);
+		imageCopy.crop(1102, 1578, 1544 - 1102, 1881 - 1578);
 		// imageCopy.normalize();
 		imageCopy.write('./img/log13.png');
 
 		// kills + assists / game duration
 		imageCopy = image.clone();
-		imageCopy.crop(630, 1848, 1070 - 630, 2149 - 1848);
+		imageCopy.crop(629, 1902, 1071 - 629, 2205 - 1902);
 		// imageCopy.normalize();
 		imageCopy.write('./img/log9.png');
 
 		// deaths / game duration
 		imageCopy = image.clone();
-		imageCopy.crop(1103, 1848, 1543 - 1103, 2149 - 1848);
+		imageCopy.crop(1102, 1902, 1544 - 1102, 2205 - 1902);
 		// imageCopy.normalize();
 		imageCopy.write('./img/log10.png');
 
 		// winrate / (kills - deaths) @10 min
 		imageCopy = image.clone();
-		imageCopy.crop(630, 2172, 1070 - 630, 2473 - 2172);
+		imageCopy.crop(629, 2226, 1071 - 629, 2529 - 2226);
 		// imageCopy.normalize();
 		imageCopy.write('./img/log11.png');
 
 		// winrate / (kills - deaths) @20 min
 		imageCopy = image.clone();
-		imageCopy.crop(1103, 2172, 1543 - 1103, 2473 - 2172);
+		imageCopy.crop(1102, 2226, 1544 - 1103, 2529 - 2226);
 		// imageCopy.normalize();
 		imageCopy.write('./img/log12.png');
 
@@ -174,13 +174,13 @@ async function calllog(msg) {
 
 		// Damage
 		imageCopy = image.clone();
-		imageCopy.crop(1102, 890, 1544 - 1102, 1007 - 890);
+		imageCopy.crop(1102, 945, 1544 - 1102, 1062 - 945);
 		// imageCopy.normalize();
 		imageCopy.write('./img/log3.png');
 
 		// KDA and misc stats
 		imageCopy = image.clone();
-		imageCopy.crop(1103, 1029, 1543 - 1103, 1481 - 1029);
+		imageCopy.crop(1102, 1083, 1544 - 1102, 1537 - 1083);
 		// imageCopy.normalize();
 		imageCopy.write('./img/log4.png');
 
