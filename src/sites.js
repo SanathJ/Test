@@ -55,6 +55,11 @@ async function lol() {
 	JSONstr = await rp(APIurl);
 	data = JSON.parse(JSONstr);
 
+	// if data is empty
+	if(Object.keys(data).length === 0) {
+		return {};
+	}
+
 	const arr = [];
 	arr[0] = data.display.winRate;
 	arr[1] = data.display.pickRate;

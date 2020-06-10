@@ -53,6 +53,11 @@ async function curr() {
 			break;
 		}
 
+		// if dataArr is empty
+		if(Object.keys(dataArr).length === 0) {
+			continue;
+		}
+
 		// todays date (formatted DD-MM-YYYY)
 		const today = new Date();
 		const currDate =
