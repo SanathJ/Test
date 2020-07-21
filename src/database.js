@@ -1,3 +1,4 @@
+const sqlite3 = require('sqlite3');
 const sqlite = require('sqlite');
 const { format } = require('util');
 const { patchUrl } = require('./util.js');
@@ -6,7 +7,10 @@ const request = require('request');
 let db;
 
 async function init() {
-	db = await sqlite.open('./data.db');
+	db = await sqlite.open({
+		filename: './data.db',
+		driver: sqlite3.Database,
+	});
 	console.log('Connected to the data database.');
 }
 
