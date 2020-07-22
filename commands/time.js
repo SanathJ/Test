@@ -1,3 +1,5 @@
+const { version } = require('../package.json');
+
 module.exports = {
 	name: 'time',
 	args: false,
@@ -28,18 +30,10 @@ module.exports = {
 		// current seconds
 		const seconds = ('0' + date_ob.getSeconds()).slice(-2);
 		message.channel.send(
-			'Server Time: ' +
-                        date +
-                        '/' +
-                        month +
-                        '/' +
-                        year +
-                        ' ' +
-                        hours +
-                        ':' +
-                        minutes +
-                        ':' +
-                        seconds,
+			'```Server Time: ' +
+                        date + '/' + month + '/' + year + ' ' +
+                        hours + ':' + minutes + ':' + seconds +
+						'\nVersion: ' + version + '```',
 		);
 	},
 };

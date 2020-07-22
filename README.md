@@ -6,7 +6,7 @@ This is a bot for the [Kayle Mains discord server](https://discord.gg/ExyGyS8).
     Makes bot collect data from [op.gg](https://na.op.gg), [League of Graphs](https://www.leagueofgraphs.com/),  [Lolalytics](https://www.lolalytics.com/) and [u.gg](https://u.gg/) and send it to a specified channel.
 
 - ### time
-    Displays server time.
+    Displays server time and bot version.
 
 - ### stats
     Used to check stats from database. See [Usage](#Usage) for more details.
