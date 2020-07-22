@@ -30,6 +30,10 @@ async function row(sql, date) {
 }
 
 function insert(table, values) {
+	// lolalytics sometimes doesn't have data
+	if (Object.keys(values).length === 0) {
+		return;
+	}
 	// formats present date as YYYY-MM_DD
 	const today = new Date();
 	const chk = today.getFullYear() + '-'

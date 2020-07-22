@@ -1,6 +1,6 @@
 const db = require('../src/database.js');
 const fs = require('fs');
-const { Attachment } = require('discord.js');
+const { MessageAttachment } = require('discord.js');
 
 
 module.exports = {
@@ -14,7 +14,7 @@ module.exports = {
 	async execute(message, argsIgnore) {
 		await db.backup();
 
-		const file = new Attachment(
+		const file = new MessageAttachment(
 			__dirname + '/../backup.db',
 		);
 

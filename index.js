@@ -55,7 +55,7 @@ bot.on('message', async msg => {
 	}
 
 	if (command.adminOnly) {
-		const mem = await msg.guild.fetchMember(msg.author);
+		const mem = await msg.guild.members.fetch(msg.author);
 		if(mem.id !== config.ownerID && !mem.hasPermission(8)) return;
 	}
 
@@ -102,13 +102,13 @@ bot.on('message', async msg => {
 });
 
 const job = new CronJob('0 30 23 * * *', function() {
-	const channel = bot.channels.get(config.channels.general);
+	const channel = bot.channels.fetch(config.channels.general);
 	execute(channel.lastMessage, undefined);
 }, null, false, 'Asia/Kolkata');
 job.start();
 
 const currJob = new CronJob('0 59 23 * * *', function() {
-	const channel = bot.channels.get(config.channels.general);
+	const channel = bot.channels.fetch(config.channels.general);
 	curr(channel.lastMessage);
 }, null, false, 'Asia/Kolkata');
 currJob.start();
