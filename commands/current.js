@@ -17,7 +17,7 @@ function filter(reaction, user) {
 let lastClient;
 
 async function curr() {
-	lastClient.channels.get(config.channels.current).bulkDelete(40);
+	lastClient.channels.fetch(config.channels.current).then(channel => channel.bulkDelete(40));
 	const siteArr = ['opgg', 'ugg', 'lol', 'log'];
 	for (let i = 0; i < siteArr.length; i++) {
 		const row = {};
@@ -77,22 +77,22 @@ async function curr() {
 		row.Pickrate = dataArr[1];
 		row.Banrate = dataArr[2];
 
-		const embed = new Discord.RichEmbed()
+		const embed = new Discord.MessageEmbed()
 			.setColor(color)
 			.setTitle('Kayle Data')
 			.setURL(url)
 			.setImage(image)
 			.addField('Date', row.Date, true)
 			.addField('Patch', row.Patch, true)
-			.addBlankField()
+			.addField('\u200b', '\u200b')
 			.addField('Winrate', row.Winrate + '%', true)
 			.addField('Pickrate', row.Pickrate + '%', true)
 			.addField('Banrate', row.Banrate + '%', true);
 
-		await lastClient.channels.get(config.channels.current).send(embed);
+		await lastClient.channels.fetch(config.channels.current).then(channel => channel.send(embed));
 	}
 
-	const sentMsg = await lastClient.channels.get(config.channels.current).send('```Refresh```');
+	const sentMsg = await lastClient.channels.fetch(config.channels.current).then(channel => channel.send('```Refresh```'));
 	sentMsg.react(config.emojiID);
 	const collector = sentMsg.createReactionCollector(filter, { max: 1 });
 

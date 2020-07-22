@@ -79,14 +79,14 @@ module.exports = {
 			break;
 		}
 
-		const embed = new Discord.RichEmbed()
+		const embed = new Discord.MessageEmbed()
 			.setColor(color)
 			.setTitle('Kayle Data')
 			.setURL(url)
 			.setImage(image)
 			.addField('Date', row.Date, true)
 			.addField('Patch', row.Patch, true)
-			.addBlankField()
+			.addField('\u200b', '\u200b')
 			.addField('Winrate', row.Winrate + '%', true)
 			.addField('Pickrate', row.Pickrate + '%', true)
 			.addField('Banrate', row.Banrate + '%', true);
@@ -95,7 +95,7 @@ module.exports = {
 		message.channel.send(embed)
 			.then(msg => {
 				if (msg.guild && msg.channel.id != config.channels.bot) {
-					msg.delete(120000);
+					msg.delete({ timeout: 120000 });
 				}
 			});
 	},

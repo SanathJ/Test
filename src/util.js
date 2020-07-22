@@ -1,4 +1,4 @@
-const { Attachment } = require('discord.js');
+const { MessageAttachment } = require('discord.js');
 const request = require('request');
 const Jimp = require('jimp');
 const fs = require('fs');
@@ -87,7 +87,7 @@ async function callopgg(msg) {
 	// can have weird errors if this value isnt high enough
 	setTimeout(function() {
 		for (let i = 1; i <= opList.length; i++) {
-			const img = new Attachment(
+			const img = new MessageAttachment(
 				__dirname + '/../img/op' + i + '.png',
 			);
 			setTimeout(sendMessage, (i * 1000), msg, opggChannelID, img, opList[i - 1]);
@@ -191,7 +191,7 @@ async function calllog(msg) {
 	// can have weird errors if this value isnt high enough
 	setTimeout(function() {
 		for (let i = 1; i <= 13; i++) {
-			const img = new Attachment(
+			const img = new MessageAttachment(
 				__dirname + '/../img/log' + i + '.png',
 			);
 			setTimeout(sendMessage, (i * 1000), msg, logChannelID, img);
@@ -230,7 +230,7 @@ async function calllol(msg) {
 
 	setTimeout(function() {
 		for (let i = 1; i <= 3; i++) {
-			const img = new Attachment(
+			const img = new MessageAttachment(
 				__dirname + '/../img/lol' + i + '.png',
 			);
 			setTimeout(sendMessage, (i * 1000), msg, lolChannelID, img);
@@ -278,7 +278,7 @@ async function callugg(msg) {
 
 	setTimeout(function() {
 		for (let i = 0; i < tierList.length; i++) {
-			const img = new Attachment(
+			const img = new MessageAttachment(
 				__dirname + '/../img/ugg' + i + '.png',
 			);
 			setTimeout(sendMessage, (i * 1000), msg, uggChannelID, img, tierName[i]);
@@ -290,7 +290,7 @@ async function callugg(msg) {
 function printDateAndPatch(pat, channel, message) {
 	const today = new Date();
 	// prints date
-	message.client.channels.get(channel).send(
+	message.client.channels.fetch(channel).then(c => c.send(
 		'```' +
 			today.getDate() +
 			'/' +
@@ -300,7 +300,7 @@ function printDateAndPatch(pat, channel, message) {
 			', Patch ' +
 			pat +
 			'```',
-	);
+	));
 
 }
 
@@ -319,7 +319,7 @@ async function uggHelper(x, final) {
 }
 
 function sendMessage(message, channel, image, text = '') {
-	message.client.channels.get(channel).send(text, image);
+	message.client.channels.fetch(channel).then(c => c.send(text, image));
 }
 
 function getPatch(channel = '', message = '', print) {

@@ -18,7 +18,7 @@ module.exports = {
 
 			// Hides admin commands if in DM or if user isn't an administrator
 			if(message.channel.type === 'text') {
-				const mem = await message.guild.fetchMember(message.author);
+				const mem = await message.guild.members.fetch(message.author);
 				if(!mem.hasPermission(8)) {
 					data.push(commands.filter(command => !command.adminOnly).map(command => command.name.charAt(0).toUpperCase() + command.name.substring(1)).join(', '));
 				}

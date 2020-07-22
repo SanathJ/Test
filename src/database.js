@@ -1,3 +1,4 @@
+const sqlite3 = require('sqlite3');
 const sqlite = require('sqlite');
 const { format } = require('util');
 const { patchUrl } = require('./util.js');
@@ -6,7 +7,10 @@ const request = require('request');
 let db;
 
 async function init() {
-	db = await sqlite.open('./data.db');
+	db = await sqlite.open({
+		filename: './data.db',
+		driver: sqlite3.Database,
+	});
 	console.log('Connected to the data database.');
 }
 
@@ -26,6 +30,10 @@ async function row(sql, date) {
 }
 
 function insert(table, values) {
+	// lolalytics sometimes doesn't have data
+	if (Object.keys(values).length === 0) {
+		return;
+	}
 	// formats present date as YYYY-MM_DD
 	const today = new Date();
 	const chk = today.getFullYear() + '-'
