@@ -10,6 +10,9 @@ This is a bot for the [Kayle Mains discord server](https://discord.gg/ExyGyS8).
 
 - ### stats
     Used to check stats from database. See [Usage](#Usage) for more details.
+
+- ### current
+    Updates the `current` discord channel with every site's stats. See [stats](#stats) and [usage](#Usage) for more details.
     
 - ### megu
     Makes bot act as though it had received 4 commands - `opgg`, `lol`, `log` and `ugg`.
@@ -18,6 +21,8 @@ This is a bot for the [Kayle Mains discord server](https://discord.gg/ExyGyS8).
 Bot will automatically collect data and send it to the specified channels every 24 hours (at 18:00 UTC).
 
 `stats <opgg | log | ugg | lol> [=today | DD_MM_YYYY]` can be used to quickly check stats for a certain date.
+
+Reacting to the 'refresh' message in the `current` channel will also refresh the stats presented.
 
 Use `help <command>` to see more details.
 
