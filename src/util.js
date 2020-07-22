@@ -46,25 +46,25 @@ async function callopgg(msg) {
 		}
 		// winrate
 		let imageCopy = image.clone();
-		imageCopy.crop(1380, 727, 2458 - 1380, 1019 - 727);
+		imageCopy.crop(1379, 727, 2460 - 1379, 1061 - 727);
 		// imageCopy.normalize();
 		imageCopy.write('./img/op1.png');
 
 		// pickrate
 		imageCopy = image.clone();
-		imageCopy.crop(1380, 1071, 2459 - 1380, 1405 - 1071);
+		imageCopy.crop(1379, 1070, 2460 - 1379, 1406 - 1070);
 		// imageCopy.normalize();
 		imageCopy.write('./img/op2.png');
 
 		// banrate
 		imageCopy = image.clone();
-		imageCopy.crop(1380, 1416, 2459 - 1416, 1750 - 1416);
+		imageCopy.crop(1379, 1415, 2460 - 1379, 1751 - 1415);
 		// imageCopy.normalize();
 		imageCopy.write('./img/op3.png');
 
 		// winrate / game length
 		imageCopy = image.clone();
-		imageCopy.crop(1380, 1761, 2459 - 1380, 2041 - 1761);
+		imageCopy.crop(1379, 1760, 2460 - 1379, 2042 - 1760);
 		// imageCopy.normalize();
 		imageCopy.write('./img/op4.png');
 	});
@@ -77,7 +77,7 @@ async function callopgg(msg) {
 
 		// leaderboards
 		const imageCopy = image.clone();
-		imageCopy.crop(1985, 444, 2439 - 1985, 1283 - 444);
+		imageCopy.crop(1984, 445, 2460 - 1985, 1286 - 444);
 		// imageCopy.normalize();
 		imageCopy.write('./img/op5.png');
 	});
