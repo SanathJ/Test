@@ -2,6 +2,10 @@ const { MessageAttachment } = require('discord.js');
 const request = require('request');
 const Jimp = require('jimp');
 const fs = require('fs');
+const jsdom = require('jsdom');
+const { JSDOM } = jsdom;
+
+const { createCanvas } = require('canvas');
 
 const config = JSON.parse(fs.readFileSync('config.json'));
 
@@ -247,6 +251,7 @@ async function callugg(msg) {
 		'platinum_plus',
 		'diamond',
 		'diamond_plus',
+		'diamond_2_plus',
 		'master',
 		'master_plus',
 		'grandmaster',
@@ -259,6 +264,7 @@ async function callugg(msg) {
 		'Platinum+',
 		'Diamond',
 		'Diamond+',
+		'Diamond 2+',
 		'Master',
 		'Master+',
 		'Grandmaster',
@@ -266,25 +272,52 @@ async function callugg(msg) {
 		'Overall',
 	];
 
+	const xCoords = [121, 315, 507, 700, 893];
+	const labels = ['Win Rate', 'Rank', 'Pick Rate', 'Ban Rate', 'Matches'];
+	const wrColors = { 'shinggo-tier' : '#ff4e50', 'meh-tier':'#ffa1a2',
+		'okay-tier': '#ffffff', 'good-tier':'#75cdff',
+		'great-tier':'#08a6ff', 'volxd-tier':'#ff9b00',
+	};
+
 	for (let i = 0; i < tierList.length; i++) {
-		const finalUrl = uggApiUrl +
-                       config.accessKeys[2 + (i % 5)] +
-                       '&url=https://u.gg/lol/champions/kayle/build?rank=' +
-                       tierList[i];
+		const dom = await JSDOM.fromURL('https://u.gg/lol/champions/kayle/build?rank=' + tierList[i], {});
+		const arr = [];
 
-		uggHelper(i, finalUrl);
-
-	}
-
-	setTimeout(function() {
-		for (let i = 0; i < tierList.length; i++) {
-			const img = new MessageAttachment(
-				__dirname + '/../img/ugg' + i + '.png',
-			);
-			setTimeout(sendMessage, (i * 1000), msg, uggChannelID, img, tierName[i]);
+		for(let j = 0; j < 5; j++) {
+			const str = (dom.window.document.getElementsByClassName('value').item(j).innerHTML);
+			arr[j] = str.trim();
 		}
-	}, 100000);
 
+		const canvas = createCanvas(1015, 90);
+		const ctx = canvas.getContext('2d');
+
+		ctx.fillStyle = '#222238';
+		ctx.fillRect(0, 0, 1015, 90);
+
+		ctx.textBaseline = 'top';
+		ctx.textAlign = 'center';
+
+		ctx.font = '18px Arial';
+
+		// color win rate appropriately
+		const winRateTier = dom.window.document.getElementsByClassName('win-rate').item(0).classList;
+		ctx.fillStyle = String(wrColors[winRateTier[1].toString()]);
+		ctx.fillText(arr[0], xCoords[0], 30);
+
+		ctx.fillStyle = '#ffffff';
+		for(let j = 1; j < 5; j++) {
+			ctx.fillText(arr[j], xCoords[j], 30);
+		}
+
+		ctx.fillStyle = '#92929d';
+		ctx.font = '11px Arial';
+		for(let j = 0; j < 5; j++) {
+			ctx.fillText(labels[j], xCoords[j], 51);
+		}
+
+		const img = new MessageAttachment(canvas.toBuffer('image/png'), tierName[i] + '.png');
+		setTimeout(sendMessage, (i * 1000), msg, uggChannelID, img, tierName[i]);
+	}
 }
 
 function printDateAndPatch(pat, channel, message) {
@@ -302,20 +335,6 @@ function printDateAndPatch(pat, channel, message) {
 			'```',
 	));
 
-}
-
-async function uggHelper(x, final) {
-
-
-	Jimp.read(final, (err, image) => {
-		if (err) {
-			console.log(err);
-			return;
-		}
-
-		image.crop(83, 513, 1098 - 83, 603 - 513);
-		image.write('./img/ugg' + x + '.png');
-	});
 }
 
 function sendMessage(message, channel, image, text = '') {
