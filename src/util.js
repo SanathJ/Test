@@ -5,7 +5,8 @@ const fs = require('fs');
 const jsdom = require('jsdom');
 const { JSDOM } = jsdom;
 
-const { createCanvas } = require('canvas');
+const { createCanvas, registerFont } = require('canvas');
+registerFont(__dirname + '/../fonts/HelveticaNeue-Bold.otf', { family: 'HelveticaNeue', weight: '700' });
 
 const config = JSON.parse(fs.readFileSync('config.json'));
 
@@ -295,7 +296,7 @@ async function callugg(msg) {
 		ctx.textBaseline = 'top';
 		ctx.textAlign = 'center';
 
-		ctx.font = '18px Arial';
+		ctx.font = '700 18px HelveticaNeue';
 
 		// color win rate appropriately
 		const winRateTier = dom.window.document.getElementsByClassName('win-rate').item(0).classList;
@@ -308,7 +309,7 @@ async function callugg(msg) {
 		}
 
 		ctx.fillStyle = '#92929d';
-		ctx.font = '11px Arial';
+		ctx.font = '700 11px HelveticaNeue';
 		for(let j = 0; j < 5; j++) {
 			ctx.fillText(labels[j], xCoords[j], 51);
 		}
