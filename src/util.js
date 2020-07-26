@@ -32,6 +32,13 @@ const opggChannelID = config.channels.opgg;
 const lolChannelID = config.channels.lolalytics;
 const uggChannelID = config.channels.ugg;
 
+// color constants
+const LOGBgColor = '#3a4556';
+const LOGDividerColor = '#2d3848';
+const LOGGreen = '#2DEB90';
+const LOGRed = '#ff5859';
+const LOGBlue = '#2AA3CC';
+
 async function callopgg(msg) {
 	/*
      * op.gg
@@ -110,7 +117,7 @@ async function log1(dom, channel, n) {
 	const canvas = createCanvas(800, 200);
 
 	const ctx = canvas.getContext('2d');
-	ctx.fillStyle = '#3a4556';
+	ctx.fillStyle = LOGBgColor;
 	ctx.fillRect(0, 0, 800, 200);
 
 	const chart = d3.arc().innerRadius(55).outerRadius(60);
@@ -119,7 +126,7 @@ async function log1(dom, channel, n) {
 
 	// pie charts
 	const arr = [];
-	const chartColors = ['#2AA3CC', '#2DEB90', '#ff5859', '#FDB05F'];
+	const chartColors = [LOGBlue, LOGGreen, LOGRed, '#FDB05F'];
 	const labelArr = ['Popularity', 'Win Rate', 'Ban Rate', 'Mained By'];
 	for(let i = 0; i < 4; i++) {
 		arr[i]	= Number((dom.window.document.getElementById('graphDD' + (i + 1)).innerHTML).trim().replace('%', ''));
@@ -200,7 +207,7 @@ async function log2(dom, channel, n) {
 
 	const canvas = createCanvas(553, 389);
 	const ctx = canvas.getContext('2d');
-	ctx.fillStyle = '#3a4556';
+	ctx.fillStyle = LOGBgColor;
 	ctx.fillRect(0, 0, 553, 389);
 
 	// Title
@@ -211,7 +218,7 @@ async function log2(dom, channel, n) {
 	ctx.fillText('Roles', 23, 13);
 
 	// divider (x = 22 to x = 525)
-	ctx.strokeStyle = '#2d3848';
+	ctx.strokeStyle = LOGDividerColor;
 	drawLine(ctx, 22, 48, 525 - 22);
 
 	// get spritesheet
@@ -253,7 +260,7 @@ async function log2(dom, channel, n) {
 		ctx.fillStyle = '#2f3b4b';
 		ctx.fillRect(171, 112 + yOffset, 150, 15);
 		// actual data bar
-		ctx.fillStyle = '#2AA3CC';
+		ctx.fillStyle = LOGBlue;
 		ctx.fillRect(171, 112 + yOffset, data[i].popularity / 100 * 150, 15);
 		// label
 		ctx.fillStyle = '#ffffff';
@@ -265,7 +272,7 @@ async function log2(dom, channel, n) {
 		// grey underlying bar
 		ctx.fillRect(353, 112 + yOffset, 150, 15);
 		// actual data bar
-		ctx.fillStyle = '#2DEB90';
+		ctx.fillStyle = LOGGreen;
 		ctx.fillRect(353, 112 + yOffset, data[i].winrate / 100 * 150, 15);
 		// label
 		ctx.fillStyle = '#ffffff';
