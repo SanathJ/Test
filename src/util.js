@@ -6,7 +6,7 @@ const jsdom = require('jsdom');
 const { JSDOM } = jsdom;
 const d3 = require('d3');
 
-const { createCanvas, registerFont } = require('canvas');
+const { createCanvas, registerFont, loadImage } = require('canvas');
 // fonts
 registerFont(__dirname + '/../fonts/HelveticaNeue-Bold.otf', { family: 'HelveticaNeue', weight: '700' });
 registerFont(__dirname + '/../fonts/Roboto-Regular.ttf', { family: 'Roboto', weight: '400' });
@@ -161,11 +161,137 @@ async function log1(dom, channel, n) {
 
 }
 
+// draws a line in ctx at (x, y) of specified width
+function drawLine(ctx, x, y, width) {
+	ctx.beginPath();
+	ctx.moveTo(x, y);
+	ctx.lineTo(x + width, y);
+	ctx.stroke();
+}
+
+async function log2(dom, channel, n) {
+
+	// data collection from dom
+	const coll = dom.window.document.getElementsByTagName('progressbar');
+	const data = [];
+	for(let i = 0; i < coll.length / 2; i++) {
+		data[i] = {};
+		data[i].popularity = coll[2 * i].getAttribute('data-value') * 100;
+		data[i].winrate = coll[2 * i + 1].getAttribute('data-value') * 100;
+	}
+
+	// gets data rows
+	const rowColl = dom.window.document.getElementsByClassName('sortable_table')[0]
+		.getElementsByTagName('tbody')[0]
+		.getElementsByTagName('tr');
+
+	for(let i = 1; i < rowColl.length; i++) {
+		data[i - 1].position = rowColl[i].getElementsByTagName('td')[0].getElementsByTagName('a')[0].textContent.trim();
+	}
+
+
+	const spriteYCoords = {
+		Top: 150,
+		Mid: 90,
+		Support: 120,
+		'AD Carry': 0,
+		Jungler: 60,
+	};
+
+	const canvas = createCanvas(553, 389);
+	const ctx = canvas.getContext('2d');
+	ctx.fillStyle = '#3a4556';
+	ctx.fillRect(0, 0, 553, 389);
+
+	// Title
+	ctx.textBaseline = 'top';
+	ctx.textAlign = 'left';
+	ctx.font = '500 24px Roboto';
+	ctx.fillStyle = '#ffffff';
+	ctx.fillText('Roles', 23, 13);
+
+	// divider (x = 22 to x = 525)
+	ctx.strokeStyle = '#2d3848';
+	drawLine(ctx, 22, 48, 525 - 22);
+
+	// get spritesheet
+	const spritesheet = await loadImage(__dirname + '/../img/log_lanes.png');
+
+	// headers
+	const start = 37;
+	ctx.textAlign = 'left';
+	ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
+
+	// aligns headers to be placed at their category's center
+	ctx.textAlign = 'center';
+	ctx.font = '400 14px Roboto';
+	ctx.fillText('Role', start + 60, 112 - 40);
+	ctx.fillText('Winrate', 353 + (150 / 2), 112 - 40);
+	// popularity rendered as bold to show its the sorting predicate
+	ctx.font = '700 14px Roboto';
+	ctx.fillStyle = '#ffffff';
+	ctx.fillText('Popularity', 171 + (150 / 2), 112 - 40);
+
+	// chart
+	ctx.textAlign = 'left';
+	let yOffset = 0;
+	ctx.font = '400 12px Roboto';
+	for(let i = 0; i < 5; i++) {
+
+		// draw lane
+		ctx.drawImage(spritesheet, 0, spriteYCoords[data[i].position], 30, 30,
+			171 - 134, 112 - 2 + yOffset, 30, 30);
+
+		// draw label
+		ctx.fillStyle = '#ffffff';
+		ctx.textBaseline = 'middle';
+		ctx.fillText(data[i].position, (171 - 134) + 30 + 4, (112 - 2) + yOffset + (30 / 2));
+
+		ctx.textBaseline = 'top';
+		// popularity
+		// grey underlying bar
+		ctx.fillStyle = '#2f3b4b';
+		ctx.fillRect(171, 112 + yOffset, 150, 15);
+		// actual data bar
+		ctx.fillStyle = '#2AA3CC';
+		ctx.fillRect(171, 112 + yOffset, data[i].popularity / 100 * 150, 15);
+		// label
+		ctx.fillStyle = '#ffffff';
+		ctx.fillText(parseFloat(data[i].popularity).toFixed(1) + '%', 171, 131 + yOffset);
+		// set to default
+		ctx.fillStyle = '#2f3b4b';
+
+		// winrate
+		// grey underlying bar
+		ctx.fillRect(353, 112 + yOffset, 150, 15);
+		// actual data bar
+		ctx.fillStyle = '#2DEB90';
+		ctx.fillRect(353, 112 + yOffset, data[i].winrate / 100 * 150, 15);
+		// label
+		ctx.fillStyle = '#ffffff';
+		ctx.fillText(parseFloat(data[i].winrate).toFixed(1) + '%', 353, 131 + yOffset);
+		// set to default
+		ctx.fillStyle = '#2f3b4b';
+
+		// draw dividers only between categories
+		if (i != 4) {
+			// divider
+			drawLine(ctx, 22, 112 + 44 + yOffset, 525 - 22);
+		}
+
+		yOffset += 55;
+	}
+
+	const img = new MessageAttachment(canvas.toBuffer('image/png'), 'log' + n + '.png');
+	return channel.send('', img);
+}
+
 async function calllog(msg) {
 	const dom = await JSDOM.fromURL('https://www.leagueofgraphs.com/champions/stats/kayle', {});
 	const channel = await msg.client.channels.fetch(logChannelID);
 
 	await log1(dom, channel, 1);
+	await log2(dom, channel, 2);
 }
 
 async function calllol(msg) {
