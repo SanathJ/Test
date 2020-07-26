@@ -4,15 +4,20 @@ const Jimp = require('jimp');
 const fs = require('fs');
 const jsdom = require('jsdom');
 const { JSDOM } = jsdom;
+const d3 = require('d3');
 
 const { createCanvas, registerFont } = require('canvas');
+// fonts
 registerFont(__dirname + '/../fonts/HelveticaNeue-Bold.otf', { family: 'HelveticaNeue', weight: '700' });
+registerFont(__dirname + '/../fonts/Roboto-Regular.ttf', { family: 'Roboto', weight: '400' });
+registerFont(__dirname + '/../fonts/Roboto-Light.ttf', { family: 'Roboto', weight: '300' });
+registerFont(__dirname + '/../fonts/Roboto-Medium.ttf', { family: 'Roboto', weight: '500' });
+registerFont(__dirname + '/../fonts/Roboto-Bold.ttf', { family: 'Roboto', weight: '700' });
 
 const config = JSON.parse(fs.readFileSync('config.json'));
 
 // access key is from screenshotlayer api. Change it to your own in config.json if you want or you can use mine
 const lolApiUrl = 'http://api.screenshotlayer.com/api/capture?delay=3&access_key=' + config.accessKeys[0] + '&fullpage=1&force=1&viewport=3840x2160&url=https://lolalytics.com/lol/kayle/';
-const logApiUrl = 'http://api.screenshotlayer.com/api/capture?delay=3&access_key=' + config.accessKeys[0] + '&fullpage=1&force=1&viewport=1920x1080&url=https://www.leagueofgraphs.com/champions/stats/kayle';
 
 // separate key
 const opggTrendApiUrl = 'http://api.screenshotlayer.com/api/capture?delay=3&access_key=' + config.accessKeys[1] + '&fullpage=1&force=1&viewport=3840x2160&url=https://op.gg/champion/kayle/statistics/top/trend';
@@ -100,108 +105,67 @@ async function callopgg(msg) {
 
 }
 
+// pie charts for stats
+async function log1(dom, channel, n) {
+	const canvas = createCanvas(800, 200);
+
+	const ctx = canvas.getContext('2d');
+	ctx.fillStyle = '#3a4556';
+	ctx.fillRect(0, 0, 800, 200);
+
+	const chart = d3.arc().innerRadius(55).outerRadius(60);
+	ctx.translate(100, 100);
+	chart.context(ctx);
+
+	// pie charts
+	const arr = [];
+	const chartColors = ['#2AA3CC', '#2DEB90', '#ff5859', '#FDB05F'];
+	const labelArr = ['Popularity', 'Win Rate', 'Ban Rate', 'Mained By'];
+	for(let i = 0; i < 4; i++) {
+		arr[i]	= Number((dom.window.document.getElementById('graphDD' + (i + 1)).innerHTML).trim().replace('%', ''));
+
+		const data = [{ value:arr[i], index:0 }, { value:100 - arr[i], index:1 }];
+		const arcs = d3.pie()
+			.value(function(d) { return d.value;})
+			.sort(function(a, b) { return a.index < b.index; })(data);
+
+		ctx.translate((i ? 200 : 0), 0);
+		chart.context(ctx);
+
+		ctx.fillStyle = chartColors[i];
+		ctx.beginPath();
+		chart(arcs[0]);
+		ctx.fill();
+		ctx.closePath();
+
+		ctx.beginPath();
+		ctx.fillStyle = '#485363';
+		chart(arcs[1]);
+		ctx.fill();
+		ctx.closePath();
+
+		ctx.textBaseline = 'middle';
+		ctx.textAlign = 'center';
+		ctx.font = '300 24px Roboto';
+		ctx.fillStyle = '#ffffff';
+		ctx.fillText(arr[i] + '%', 0, 0);
+
+		ctx.fillStyle = '#ffffff';
+		ctx.font = '300 20px Roboto';
+		ctx.fillText(labelArr[i], 0, 80);
+	}
+
+
+	const img = new MessageAttachment(canvas.toBuffer('image/png'), 'log' + n + '.png');
+	return channel.send('', img);
+
+}
+
 async function calllog(msg) {
+	const dom = await JSDOM.fromURL('https://www.leagueofgraphs.com/champions/stats/kayle', {});
+	const channel = await msg.client.channels.fetch(logChannelID);
 
-
-	Jimp.read(logApiUrl, (err, image) => {
-		if (err) {
-			console.log(err);
-			return;
-		}
-
-		// popularity history
-		let imageCopy = image.clone();
-		imageCopy.crop(629, 482, 1071 - 629, 785 - 482);
-		// imageCopy.normalize();
-		imageCopy.write('./img/log6.png');
-
-		// winrate history
-		imageCopy = image.clone();
-		imageCopy.crop(629, 806, 1071 - 629, 1109 - 806);
-		// imageCopy.normalize();
-		imageCopy.write('./img/log5.png');
-
-		// banrate history
-		imageCopy = image.clone();
-		imageCopy.crop(629, 1130, 1071 - 629, 1433 - 1130);
-		// imageCopy.normalize();
-		imageCopy.write('./img/log7.png');
-
-		// winrate / game duration
-		imageCopy = image.clone();
-		imageCopy.crop(629, 1578, 1071 - 629, 1881 - 1578);
-		// imageCopy.normalize();
-		imageCopy.write('./img/log8.png');
-
-		// winrate / ranked games played
-		imageCopy = image.clone();
-		imageCopy.crop(1102, 1578, 1544 - 1102, 1881 - 1578);
-		// imageCopy.normalize();
-		imageCopy.write('./img/log13.png');
-
-		// kills + assists / game duration
-		imageCopy = image.clone();
-		imageCopy.crop(629, 1902, 1071 - 629, 2205 - 1902);
-		// imageCopy.normalize();
-		imageCopy.write('./img/log9.png');
-
-		// deaths / game duration
-		imageCopy = image.clone();
-		imageCopy.crop(1102, 1902, 1544 - 1102, 2205 - 1902);
-		// imageCopy.normalize();
-		imageCopy.write('./img/log10.png');
-
-		// winrate / (kills - deaths) @10 min
-		imageCopy = image.clone();
-		imageCopy.crop(629, 2226, 1071 - 629, 2529 - 2226);
-		// imageCopy.normalize();
-		imageCopy.write('./img/log11.png');
-
-		// winrate / (kills - deaths) @20 min
-		imageCopy = image.clone();
-		imageCopy.crop(1102, 2226, 1544 - 1103, 2529 - 2226);
-		// imageCopy.normalize();
-		imageCopy.write('./img/log12.png');
-
-		// stats
-		imageCopy = image.clone();
-		imageCopy.crop(629, 290, 1544 - 629, 461 - 290);
-		// imageCopy.normalize();
-		imageCopy.write('./img/log1.png');
-
-		// Roles
-		imageCopy = image.clone();
-		imageCopy.crop(1102, 482, 1544 - 1102, 751 - 482);
-		// imageCopy.normalize();
-		imageCopy.write('./img/log2.png');
-
-		// Damage
-		imageCopy = image.clone();
-		imageCopy.crop(1102, 945, 1544 - 1102, 1062 - 945);
-		// imageCopy.normalize();
-		imageCopy.write('./img/log3.png');
-
-		// KDA and misc stats
-		imageCopy = image.clone();
-		imageCopy.crop(1102, 1083, 1544 - 1102, 1537 - 1083);
-		// imageCopy.normalize();
-		imageCopy.write('./img/log4.png');
-
-	});
-
-	// post images
-	// has a very high timeout to make sure image processing is complete
-	// can have weird errors if this value isnt high enough
-	setTimeout(function() {
-		for (let i = 1; i <= 13; i++) {
-			const img = new MessageAttachment(
-				__dirname + '/../img/log' + i + '.png',
-			);
-			setTimeout(sendMessage, (i * 1000), msg, logChannelID, img);
-		}
-	}, 100000);
-
-
+	await log1(dom, channel, 1);
 }
 
 async function calllol(msg) {
@@ -316,7 +280,7 @@ async function callugg(msg) {
 
 		const img = new MessageAttachment(canvas.toBuffer('image/png'), tierName[i] + '.png');
 		const c = await msg.client.channels.fetch(uggChannelID);
-		await c.send(tierName[i], img)
+		await c.send(tierName[i], img);
 	}
 }
 
