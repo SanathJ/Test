@@ -293,12 +293,90 @@ async function log2(dom, channel, n) {
 	return channel.send('', img);
 }
 
+async function log3(dom, channel, n) {
+
+	// only need physical and magic damage, the rest is true
+	const data = [];
+	const bars = dom.window.document.getElementsByClassName('stacked_bar')[0]
+		.getElementsByClassName('stacked_bar_area');
+	for(const i of bars) {
+		data.push(parseFloat(i.getAttribute('tooltip')));
+	}
+
+	const canvas = createCanvas(600, 150);
+	const ctx = canvas.getContext('2d');
+	ctx.fillStyle = LOGBgColor;
+	ctx.fillRect(0, 0, 600, 150);
+
+	// Title
+	ctx.textBaseline = 'top';
+	ctx.textAlign = 'left';
+	ctx.font = '500 24px Roboto';
+	ctx.fillStyle = '#ffffff';
+	ctx.fillText('Damage Dealt', 20, 15);
+
+	ctx.strokeStyle = LOGDividerColor;
+	drawLine(ctx, 20 - 2, 15 + 40, 600 - 2 * (20 - 2));
+
+	// full bar width and height
+	const barWidth = 600 - 2 * (20 - 2) - 2 * 10;
+	const barHeight = 40;
+
+	// draw bars
+	// true damage
+	ctx.fillStyle = '#aaaaaa';
+	ctx.fillRect(20 + 5, 15 + 40 + 15, barWidth, barHeight);
+	// magic damage
+	ctx.fillStyle = LOGBlue;
+	ctx.fillRect(20 + 5, 15 + 40 + 15, ((data[0] + data[1]) / 100) * barWidth, barHeight);
+	// physical damage
+	ctx.fillStyle = LOGRed;
+	ctx.fillRect(20 + 5, 15 + 40 + 15, (data[0] / 100) * barWidth, barHeight);
+
+	// legend text
+	ctx.fillStyle = '#ffffff';
+	ctx.font = '400 12px Roboto';
+	const legendSize = 16;
+	const leftPadding = 2;
+	const rightPadding = 5;
+
+	// draw legend
+	// physical
+	let textWidth = ctx.measureText('Physical').width;
+	ctx.fillText('Physical', 600 / 2 - (legendSize / 2) - rightPadding - textWidth,
+		15 + 40 + 15 + barHeight + 10);
+	ctx.fillStyle = LOGRed;
+	ctx.fillRect(600 / 2 - (legendSize / 2) - rightPadding - textWidth - leftPadding - legendSize,
+		15 + 40 + 15 + barHeight + 10 - 2, legendSize, legendSize);
+
+	// magic
+	ctx.fillStyle = '#ffffff';
+	ctx.fillText('Magic', 600 / 2 + (legendSize / 2) + leftPadding, 15 + 40 + 15 + barHeight + 10);
+	ctx.fillStyle = LOGBlue;
+	ctx.fillRect(600 / 2 - (legendSize / 2), 15 + 40 + 15 + barHeight + 10 - 2,
+		legendSize, legendSize);
+
+	// true
+	textWidth = ctx.measureText('Magic').width;
+	ctx.fillStyle = '#ffffff';
+	ctx.fillText('True', 600 / 2 + (legendSize / 2) + leftPadding + textWidth + rightPadding + legendSize + leftPadding,
+		15 + 40 + 15 + barHeight + 10);
+	ctx.fillStyle = '#aaaaaa';
+	ctx.fillRect(600 / 2 + (legendSize / 2) + leftPadding + textWidth + rightPadding, 15 + 40 + 15 + barHeight + 10 - 2,
+		legendSize, legendSize);
+
+	const img = new MessageAttachment(canvas.toBuffer('image/png'), 'log' + n + '.png');
+	return channel.send('', img);
+}
+
+
 async function calllog(msg) {
 	const dom = await JSDOM.fromURL('https://www.leagueofgraphs.com/champions/stats/kayle', {});
 	const channel = await msg.client.channels.fetch(logChannelID);
 
 	await log1(dom, channel, 1);
 	await log2(dom, channel, 2);
+	await log3(dom, channel, 3);
 }
 
 async function calllol(msg) {
