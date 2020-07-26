@@ -315,7 +315,8 @@ async function callugg(msg) {
 		}
 
 		const img = new MessageAttachment(canvas.toBuffer('image/png'), tierName[i] + '.png');
-		setTimeout(sendMessage, (i * 1000), msg, uggChannelID, img, tierName[i]);
+		const c = await msg.client.channels.fetch(uggChannelID);
+		await c.send(tierName[i], img)
 	}
 }
 
