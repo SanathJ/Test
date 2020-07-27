@@ -38,6 +38,7 @@ const LOGDividerColor = '#2d3848';
 const LOGGreen = '#2DEB90';
 const LOGRed = '#ff5859';
 const LOGBlue = '#2AA3CC';
+const LOGYellow = '#FDB05F';
 
 async function callopgg(msg) {
 	/*
@@ -126,7 +127,7 @@ async function log1(dom, channel, n) {
 
 	// pie charts
 	const arr = [];
-	const chartColors = [LOGBlue, LOGGreen, LOGRed, '#FDB05F'];
+	const chartColors = [LOGBlue, LOGGreen, LOGRed, LOGYellow];
 	const labelArr = ['Popularity', 'Win Rate', 'Ban Rate', 'Mained By'];
 	for(let i = 0; i < 4; i++) {
 		arr[i]	= Number((dom.window.document.getElementById('graphDD' + (i + 1)).innerHTML).trim().replace('%', ''));
