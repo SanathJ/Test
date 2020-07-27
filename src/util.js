@@ -370,6 +370,164 @@ async function log3(dom, channel, n) {
 	return channel.send('', img);
 }
 
+function log4helper(ctx, data) {
+	const labels = ['PentaKill', 'Gold', 'Minions', 'Wards', 'Damage Dealt'];
+	const indices = ['penta', 'gold', 'minions', 'wards', 'damage'];
+	const xOffsets = [0, 0, 420, 0, 420];
+	const yOffsets = [0, 210, 210, 420, 420];
+
+	for (let i = 0; i < 5; i++) {
+		// value
+		ctx.textAlign = 'center';
+		ctx.font = '300 56px Roboto';
+		ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
+		ctx.fillText(data[indices[i]].value, (800 - 40) / 4 + xOffsets[i], 10 + 210 + 170 / 2 + yOffsets[i]);
+		// label
+		ctx.textAlign = 'left';
+		ctx.font = '300 36px Roboto';
+		let fullTextWidth = ctx.measureText(labels[i] + ' ').width;
+		ctx.font = '300 24px Roboto';
+		fullTextWidth += ctx.measureText(data[indices[i]].rank).width;
+		ctx.font = '300 36px Roboto';
+		ctx.fillStyle = 'rgba(255, 255, 255, 0.43)';
+		ctx.fillText(labels[i], (800 - 40) / 4 - fullTextWidth / 2 + xOffsets[i], 10 + 210 + 170 / 2 + 50 + yOffsets[i]);
+		// rank
+		const partialTextWidth = ctx.measureText(labels[i] + ' ').width;
+		ctx.font = '300 24px Roboto';
+		ctx.fillStyle = 'rgba(255, 255, 255, 0.3)';
+		ctx.fillText(data[indices[i]].rank, (800 - 40) / 4 - fullTextWidth / 2 + partialTextWidth + xOffsets[i],
+			4 + 210 + 170 / 2 + 50 + yOffsets[i]);
+	}
+}
+
+function log4(dom, channel, n) {
+	const canvas = createCanvas(800, 800);
+	const ctx = canvas.getContext('2d');
+
+
+	/**
+	 * parse data
+	 */
+	const data = {
+		kda: {},
+		penta: {},
+		gold: {},
+		minions: {},
+		wards: {},
+		damage: {},
+		multiKills: {
+			quadra: {},
+			triple: {},
+			double: {},
+		},
+	};
+
+	data.kda.kills = dom.window.document.getElementsByClassName('kills')[0].innerHTML;
+	data.kda.deaths = dom.window.document.getElementsByClassName('deaths')[0].innerHTML;
+	data.kda.assists = dom.window.document.getElementsByClassName('assists')[0].innerHTML;
+
+	const labels = ['penta', 'gold', 'minions', 'wards', 'damage'];
+	for(let i = 2; i < dom.window.document.getElementsByClassName('number').length; i++) {
+		data[labels[i - 2]].value = dom.window.document.getElementsByClassName('number')[i].innerHTML.trim();
+		data[labels[i - 2]].rank = dom.window.document.getElementsByClassName('number-legend')[i - 2].innerHTML.trim();
+	}
+	const smallLabels = ['quadra', 'triple', 'double'];
+	for(let i = 1; i < dom.window.document.getElementsByClassName('number-small').length; i++) {
+		data.multiKills[smallLabels[i - 1]].value = parseFloat(dom.window.document.getElementsByClassName('number-small')[i].textContent).toFixed(4);
+	}
+	for(let i = 0; i < dom.window.document.getElementsByClassName('number-legend-small').length; i++) {
+		data.multiKills[smallLabels[i]].rank = dom.window.document.getElementsByClassName('number-legend-small')[i].innerHTML.trim();
+	}
+
+	// background
+	ctx.fillStyle = LOGBgColor;
+	ctx.fillRect(0, 0, 800, 800);
+
+	// dividers
+	ctx.fillStyle = LOGDividerColor;
+	ctx.fillRect(0, 170, 800, 40);
+	ctx.fillRect(0, 170 + 210, 800, 40);
+	ctx.fillRect(0, 170 + 420, 800, 40);
+	ctx.fillRect(800 / 2 - 40 / 2, 170, 40, 800 - 170);
+
+
+	/**
+	 * KDA
+	 */
+	ctx.fillStyle = LOGGreen;
+	ctx.font = '400 56px Roboto';
+	ctx.textAlign = 'center';
+	ctx.textBaseline = 'bottom';
+	const fullTextWidth = ctx.measureText(data.kda.kills + ' / ' + data.kda.deaths + ' / ' + data.kda.assists).width;
+	ctx.textAlign = 'left';
+	// kills
+	ctx.fillText(data.kda.kills, 800 / 2 - fullTextWidth / 2, 170 / 2 + 10);
+	// separator
+	ctx.font = '300 56px Roboto';
+	ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
+	let partialTextWidth = ctx.measureText(data.kda.kills + ' ').width;
+	ctx.fillText('/', 800 / 2 - fullTextWidth / 2 + partialTextWidth, 170 / 2 + 10);
+	// deaths
+	ctx.font = '400 56px Roboto';
+	ctx.fillStyle = LOGRed;
+	partialTextWidth = ctx.measureText(data.kda.kills + ' / ').width;
+	ctx.fillText(data.kda.deaths, 800 / 2 - fullTextWidth / 2 + partialTextWidth, 170 / 2 + 10);
+	// separator
+	ctx.font = '300 56px Roboto';
+	ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
+	partialTextWidth = ctx.measureText(data.kda.kills + ' / ' + data.kda.deaths + ' ').width;
+	ctx.fillText('/', 800 / 2 - fullTextWidth / 2 + partialTextWidth, 170 / 2 + 10);
+	// assists
+	ctx.font = '400 56px Roboto';
+	ctx.fillStyle = LOGYellow;
+	partialTextWidth = ctx.measureText(data.kda.kills + ' / ' + data.kda.deaths + ' / ').width;
+	ctx.fillText(data.kda.assists, 800 / 2 - fullTextWidth / 2 + partialTextWidth, 170 / 2 + 10);
+	// label
+	ctx.textAlign = 'center';
+	ctx.font = '300 36px Roboto';
+	ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
+	ctx.fillText('Average KDA', 800 / 2, 170 / 2 + 60);
+
+
+	// draw most data except multikills
+	log4helper(ctx, data);
+
+	/**
+	 * multikills
+	 */
+	const initialX = 15 + (800 - 40) / 2 + 40;
+	// can get centered y values by: topY + (boxSize / 6)(2n + 1)
+	const topY = 170 + 40;
+	ctx.textBaseline = 'middle';
+	const types = ['Quadra', 'Triple', 'Double'];
+
+	for (let i = 0; i < 3; i++) {
+		const currentY = topY + (170 / 6) * (2 * i + 1);
+		// value
+		ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
+		ctx.font = '300 32px Roboto';
+		ctx.fillText(parseFloat(data.multiKills[types[i].toLowerCase()].value).toFixed(4), initialX, currentY);
+		partialTextWidth = ctx.measureText(parseFloat(data.multiKills[types[i].toLowerCase()].value).toFixed(4) + ' ').width;
+		// label
+		ctx.fillStyle = 'rgba(255, 255, 255, 0.43)';
+		ctx.font = '300 24px Roboto';
+		ctx.fillText(types[i] + ' Kill', initialX + partialTextWidth, currentY);
+		partialTextWidth += ctx.measureText(types[i] + ' Kill ').width;
+		// rank
+		ctx.fillStyle = 'rgba(255, 255, 255, 0.3)';
+		ctx.font = '300 21px Roboto';
+		ctx.fillText(data.multiKills[types[i].toLowerCase()].rank, initialX + partialTextWidth, currentY);
+	}
+
+
+	/**
+	 *
+	 */
+
+	const img = new MessageAttachment(canvas.toBuffer('image/png'), 'log' + n + '.png');
+	return channel.send('', img);
+}
+
 
 async function calllog(msg) {
 	const dom = await JSDOM.fromURL('https://www.leagueofgraphs.com/champions/stats/kayle', {});
@@ -378,6 +536,7 @@ async function calllog(msg) {
 	await log1(dom, channel, 1);
 	await log2(dom, channel, 2);
 	await log3(dom, channel, 3);
+	await log4(dom, channel, 4);
 }
 
 async function calllol(msg) {
