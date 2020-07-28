@@ -1,6 +1,7 @@
 const { MessageAttachment } = require('discord.js');
 const request = require('request');
 const Jimp = require('jimp');
+const rp = require('request-promise-native');
 const fs = require('fs');
 const jsdom = require('jsdom');
 const { JSDOM } = jsdom;
@@ -686,6 +687,40 @@ function getPatch(channel = '', message = '', print) {
 	});
 }
 
+
+const championJson = {};
+
+async function getLatestChampionDDragon(language = 'en_US') {
+	if (championJson[language]) {
+		return championJson[language].data;
+	}
+
+	let response;
+	let versionIndex = 0;
+	// I loop over versions because 9.22.1 is broken
+	do {
+		const data = JSON.parse(await rp('http://ddragon.leagueoflegends.com/api/versions.json'));
+		const version = data[versionIndex++];
+
+		try {
+			response = await rp(`https://ddragon.leagueoflegends.com/cdn/${version}/data/${language}/champion.json`, {});
+			break;
+		}
+		catch {
+			console.log('ddragon doesn\'t have data, trying another patch');
+		}
+	} while(!response);
+
+	championJson[language] = JSON.parse(response);
+	return championJson[language].data;
+}
+
+// NOTE: IN DDRAGON THE ID IS THE CLEAN NAME!!! It's also super-inconsistent, and broken at times.
+// Cho'gath => Chogath, Wukong => Monkeyking, Fiddlesticks => Fiddlesticks/FiddleSticks (depending on what mood DDragon is in this patch)
+async function getChampionByID(name, language = 'en_US') {
+	return (await getLatestChampionDDragon(language))[name];
+}
+
 module.exports = {
 	calllog,
 	calllol,
@@ -693,6 +728,7 @@ module.exports = {
 	callugg,
 	getPatch,
 	printDateAndPatch,
+	getChampionByID,
 	logChannelID,
 	lolChannelID,
 	opggChannelID,
