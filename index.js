@@ -101,15 +101,15 @@ bot.on('message', async msg => {
 	}
 });
 
-const job = new CronJob('0 30 23 * * *', function() {
-	const channel = bot.channels.fetch(config.channels.general);
+const job = new CronJob('0 30 23 * * *', async function() {
+	const channel = await bot.channels.fetch(config.channels.general);
 	execute(channel.lastMessage, undefined);
 }, null, false, 'Asia/Kolkata');
 job.start();
 
-const currJob = new CronJob('0 59 23 * * *', function() {
-	const channel = bot.channels.fetch(config.channels.general);
-	curr(channel.lastMessage);
+const currJob = new CronJob('0 30 23 * * *', async function() {
+	const channel = await bot.channels.fetch(config.channels.general);
+	curr(bot);
 }, null, false, 'Asia/Kolkata');
 currJob.start();
 

@@ -16,7 +16,9 @@ function filter(reaction, user) {
 
 let lastClient;
 
-async function curr() {
+async function curr(client) {
+	if(!lastClient) lastClient = client;
+
 	lastClient.channels.fetch(config.channels.current).then(channel => channel.bulkDelete(40));
 	const siteArr = ['opgg', 'ugg', 'lol', 'log'];
 	for (let i = 0; i < siteArr.length; i++) {
