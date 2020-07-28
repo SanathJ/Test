@@ -1,9 +1,10 @@
+/* eslint-disable no-useless-escape */
 const jsdom = require('jsdom');
 const { JSDOM } = jsdom;
 
 const rp = require('request-promise-native');
 
-const { patchUrl } = require('./util.js');
+const { patchUrl, getChampionByID } = require('./util.js');
 
 async function opgg() {
 	const dom = await JSDOM.fromURL('https://na.op.gg/champion/kayle/statistics/top/trend', {});
@@ -19,11 +20,26 @@ async function ugg() {
 	const dom = await JSDOM.fromURL('https://u.gg/lol/champions/kayle/build', {});
 	const arr = [];
 
-	for(let i = 0; i < 4; i++) {
-		const str = (dom.window.document.getElementsByClassName('value').item(i).innerHTML);
-		arr[i] = str.trim().replace('%', '');
-	}
-	arr.splice(1, 1);
+	const rank = 'platinum_plus';
+	const positions = ['jungle', 'supp', 'adc', 'top', 'mid'];
+
+	// TODO: dynamically figure out id
+
+	const champId = (await getChampionByID('Kayle')).key;
+
+	// figure out popular position
+	let rgx = RegExp('"' + champId + '" *: *\[[0-5 ,]+]');
+	const preferred = JSON.parse('{' + dom.serialize().match(rgx).toString() + '}');
+	const pos = positions[preferred[champId.toString()][0] - 1];
+
+	rgx = RegExp('world_' + rank + '_' + pos + '": *{[\n "a-zA-Z0-9:,_.]*?"counters":');
+	const fullJson = JSON.parse(dom.serialize().match(rgx).toString().replace(/, *"counters" *: */, '}')
+		.replace(RegExp('world_' + rank + '_' + pos + '": *'), ''));
+
+	arr[0] = (fullJson.win_rate);
+	arr[1] = (fullJson.pick_rate);
+	arr[2] = (fullJson.ban_rate);
+
 	return arr;
 }
 
