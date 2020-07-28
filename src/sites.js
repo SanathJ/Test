@@ -67,7 +67,7 @@ async function lol() {
 	let data = JSON.parse(JSONstr);
 	const patch = parseFloat(data.patches.slice(-1)[0].name).toFixed(2);
 
-	const APIurl = 'https://api.op.lol/champion/2/?patch=' + patch + '&cid=10&lane=default&tier=platinum_plus&queue=420&region=all';
+	const APIurl = 'https://api.op.lol/champion/3/?patch=' + patch + '&cid=10&lane=default&tier=platinum_plus&queue=420&region=all';
 	JSONstr = await rp(APIurl);
 	data = JSON.parse(JSONstr);
 
