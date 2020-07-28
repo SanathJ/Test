@@ -314,7 +314,7 @@ async function uggHelper(x, final) {
 			return;
 		}
 
-		image.crop(83, 513, 1098 - 83, 603 - 513);
+		image.crop(83, 409, 1098 - 83, 498 - 409);
 		image.write('./img/ugg' + x + '.png');
 	});
 }
