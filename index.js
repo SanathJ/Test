@@ -106,7 +106,6 @@ const job = new CronJob('0 30 23 * * *', async function() {
 job.start();
 
 const currJob = new CronJob('0 30 23 * * *', async function() {
-	const channel = await bot.channels.fetch(config.channels.general);
 	curr(bot);
 }, null, false, 'Asia/Kolkata');
 currJob.start();
