@@ -28,11 +28,9 @@ const cooldowns = new Discord.Collection();
 
 process.on('unhandledRejection', error => console.error('Uncaught Promise Rejection', error));
 
-
 bot.once('ready', () => {
 	console.log('Online!');
-	database.init();
-	// bot.user.setActivity('with explosions');
+	database.init().then(() => curr(bot));
 });
 
 bot.on('error', console.error);
