@@ -618,10 +618,25 @@ async function callugg(msg) {
 		const dom = await JSDOM.fromURL('https://u.gg/lol/champions/kayle/build?rank=' + tierList[i], {});
 		const arr = [];
 
-		for(let j = 0; j < 5; j++) {
-			const str = (dom.window.document.getElementsByClassName('value').item(j).innerHTML);
-			arr[j] = str.trim();
-		}
+		const positions = ['jungle', 'supp', 'adc', 'top', 'mid'];
+		const champId = (await getChampionByID('Kayle')).key;
+
+		// figure out popular position
+		let rgx = RegExp('"' + champId + '" *: *\[[0-5 ,]+]');
+		const preferred = JSON.parse('{' + dom.serialize().match(rgx).toString() + '}');
+		const pos = positions[preferred[champId.toString()][0] - 1];
+
+		rgx = RegExp('world_' + tierList[i] + '_' + pos + '": *{[\n "a-zA-Z0-9:,_.]*?"counters":');
+		const fullJson = JSON.parse(dom.serialize().match(rgx).toString().replace(/, *"counters" *: */, '}')
+			.replace(RegExp('world_' + tierList[i] + '_' + pos + '": *'), ''));
+
+		console.log(fullJson);
+		arr[0] = fullJson.win_rate;
+		arr[1] = `${fullJson.rank !== null ? fullJson.rank : '?'} / ${fullJson.total_rank !== null ? fullJson.total_rank : '?'}`;
+		arr[2] = fullJson.pick_rate + '%';
+		arr[3] = fullJson.ban_rate + '%';
+		arr[4] = new Intl.NumberFormat('en-US').format(fullJson.matches);
+
 
 		const canvas = createCanvas(1015, 90);
 		const ctx = canvas.getContext('2d');
@@ -635,9 +650,12 @@ async function callugg(msg) {
 		ctx.font = '700 18px HelveticaNeue';
 
 		// color win rate appropriately
-		const winRateTier = dom.window.document.getElementsByClassName('win-rate').item(0).classList;
-		ctx.fillStyle = String(wrColors[winRateTier[1].toString()]);
-		ctx.fillText(arr[0], xCoords[0], 30);
+		const winrateTier = !arr[0] || isNaN(arr[0]) ? '' : arr[0] < 45 ?
+			'shinggo-tier' : arr[0] < 48.5 ? 'meh-tier' : arr[0] < 51.5 ?
+				'okay-tier' : arr[0] < 53 ? 'good-tier' : arr[0] < 55 ? 'great-tier' : 'volxd-tier';
+
+		ctx.fillStyle = String(wrColors[winrateTier]);
+		ctx.fillText(arr[0] + '%', xCoords[0], 30);
 
 		ctx.fillStyle = '#ffffff';
 		for(let j = 1; j < 5; j++) {
