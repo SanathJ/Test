@@ -4,7 +4,7 @@ const { MessageEmbed } = require('discord.js');
 module.exports = {
 	name: 'suggest',
 	guildOnly: true,
-	adminOnly: true,
+	adminOnly: false,
 	description: 'List all of my commands or info about a specific command.',
 	aliases: ['suggestion'],
 	usage: '<suggestion>',
