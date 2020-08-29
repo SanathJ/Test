@@ -1,4 +1,5 @@
 const config = require('../config.json');
+const { MessageEmbed } = require('discord.js');
 
 module.exports = {
 	name: 'suggest',
@@ -14,8 +15,15 @@ module.exports = {
 			return false;
 		}
 
-		await message.react('749195645658726481');
-		await message.react('749195645902127224');
+
+		// copy message into embed
+		const embed = new MessageEmbed()
+			.setAuthor(message.author.tag, message.author.displayAvatarURL())
+			.setDescription(args.join(' '));
+		const sentMsg = await message.channel.send(embed);
+		await sentMsg.react('749195645658726481');
+		await sentMsg.react('749195645902127224');
+
 		await message.delete().catch(() => {});
 	},
 };
