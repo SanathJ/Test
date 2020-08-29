@@ -1,0 +1,35 @@
+module.exports = {
+	name: 'rules',
+	guildOnly: true,
+	adminOnly: true,
+	description: 'List all of my commands or info about a specific command.',
+	aliases: ['rule'],
+	usage: '[rule number]',
+	cooldown: 3,
+	async execute(message, args) {
+		const rules = [
+			'#1.) Civility. We would ask for respectful exchanges between server members.',
+			'#2.) Swearing. You can do it, but if you sound like a sailor, you may be over doing it.',
+			'#3.) Do not spam. We want quality content over quantity.',
+			'#4.) Negativity. We want to encourage communication, and excessive negativity doesn\'t do anything for anyone.',
+			'#5.) Stereotyping and Labels. We look to learn and help grow with our community. This inhibits our mission.',
+			'#6.) Channels. Contain things to the appropriate channels. Especially NSFW.',
+			'#7.) Politics. This is a gaming server - Politics are disallowed.',
+			'#8.) Against Riot\'s TOS. Account selling and illegal activities are an immediate ban on this discord.',
+			'#9.) Against Discord\'s TOS. https://discord.com/guidelines',
+			'#10.) Dealing with rule breakers If anyone starts topics that you do not think are appropriate to a gaming server, do not engage with that person -- just report it to the mod',
+		];
+		if (args.length) {
+			try {
+				message.channel.send(`\`\`\`\nDiscord & Community Rules\n\n${rules[parseInt(args[0]) - 1]}\`\`\``);
+			}
+			catch (err) {
+				message.channel.send(err);
+			}
+		}
+		else {
+			message.channel.send(`\`\`\`\nDiscord & Community Rules\n\n${rules.join('\n')}\`\`\``);
+		}
+		message.delete().catch(() => {});
+	},
+};
