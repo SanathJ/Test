@@ -2,7 +2,7 @@ module.exports = {
 	name: 'rules',
 	guildOnly: true,
 	adminOnly: true,
-	description: 'List all of my commands or info about a specific command.',
+	description: 'Display rules / specific rule',
 	aliases: ['rule'],
 	usage: '[rule number]',
 	cooldown: 3,
