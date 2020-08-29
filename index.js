@@ -35,12 +35,16 @@ bot.once('ready', () => {
 
 bot.on('error', console.error);
 
+const escapeRegex = str => str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
 bot.on('message', async msg => {
 
-	if (!msg.content.startsWith(PREFIX) || msg.author.bot) return;
+	const prefixRegex = new RegExp(`^(<@!?${bot.user.id}>|${escapeRegex(PREFIX)})\\s*`);
 
+	if (!prefixRegex.test(msg.content)) return;
 
-	const args = msg.content.slice(PREFIX.length).split(/ +/);
+	const [, matchedPrefix] = msg.content.match(prefixRegex);
+	const args = msg.content.slice(matchedPrefix.length).trim().split(/ +/);
 	const commandName = args.shift().toLowerCase();
 
 	const command = bot.commands.get(commandName)
