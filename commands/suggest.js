@@ -11,16 +11,12 @@ module.exports = {
 	minArgLength: 1,
 	cooldown: 3,
 	async execute(message, args) {
-		if (message.channel.id !== config.channels.suggestions) {
-			return false;
-		}
-
-
 		// copy message into embed
 		const embed = new MessageEmbed()
 			.setAuthor(message.author.tag, message.author.displayAvatarURL())
 			.setDescription(args.join(' '));
-		const sentMsg = await message.channel.send(embed);
+		const sentMsg = await message.client.channels.fetch(config.channels.suggestions)
+			.then(channel => channel.send(embed));
 		await sentMsg.react('749195645658726481');
 		await sentMsg.react('749195645902127224');
 
