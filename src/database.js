@@ -63,15 +63,14 @@ async function backup() {
 async function runner(command, sql, values) {
 	try{
 		if(command === 'run') {
-			await db.run(sql, values);
-			return { 'result':'Executed!' };
+			return await db.run(sql, values);
 		}
 		else if (command === 'get') {
-			const ans = await db.get(sql);
+			const ans = await db.get(sql, values);
 			return ans;
 		}
 		else if (command === 'all') {
-			const ans = await db.all(sql);
+			const ans = await db.all(sql, values);
 			return ans;
 		}
 		else {
