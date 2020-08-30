@@ -60,10 +60,10 @@ async function backup() {
 	}
 }
 
-async function runner(command, sql) {
+async function runner(command, sql, values) {
 	try{
 		if(command === 'run') {
-			await db.run(sql);
+			await db.run(sql, values);
 			return { 'result':'Executed!' };
 		}
 		else if (command === 'get') {
@@ -83,6 +83,17 @@ async function runner(command, sql) {
 	}
 }
 
+async function rawInsert(table, values) {
+	const template = [];
+	template.length = values.length;
+	template.fill('?', 0, values.length).join(', ');
+	try {
+		return await db.run(`INSERT INTO ${table} VALUES(${template})`, values);
+	}
+	catch (err) {
+		return err.errno;
+	}
+}
 
 module.exports = {
 	init,
@@ -91,4 +102,5 @@ module.exports = {
 	insert,
 	backup,
 	runner,
+	rawInsert,
 };
