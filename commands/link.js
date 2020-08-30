@@ -1,14 +1,14 @@
 const db = require('../src/database.js');
 const { prefix } = require('../config.json');
 
-const usage = `add <link> <name>\` or \`${prefix}link <remove | delete> <name>\` or \`${prefix}link show [name or 'all']`;
+const usage = 'add <link> <name>` or `' + prefix + 'link <remove | delete> <name>';
 const name = 'link';
 
 module.exports = {
 	name,
 	guildOnly: true,
-	adminOnly: false,
-	description: 'adds link to be referred by a shorter name with `show`, removes it or shows the link',
+	adminOnly: true,
+	description: 'adds link to be referred by a shorter name with `show`, or removes it',
 	aliases: ['links'],
 	usage,
 	minArgLength: 1,
@@ -71,31 +71,6 @@ module.exports = {
 			}
 			catch (error) {
 				message.reply('There was an error. Make sure a link with such a name exists');
-			}
-			await message.delete().catch(() => {});
-		}
-		else if(subcommand === 'show') {
-			let data;
-			if (args.length === 0 || args[0].toLowerCase() === 'all') {
-				data = await db.runner('all', 'SELECT * FROM links');
-			}
-			else {
-				const linkName = args.join(' ').toLowerCase();
-				data = [await db.runner('get', 'SELECT * FROM links WHERE name=?', linkName)];
-			}
-			if (data === undefined) {
-				message.channel.send('No such link name exists.');
-			}
-			else {
-				const text = [];
-				for (const datum of data) {
-					const entry = `**${datum.name}:** ${datum.link}`;
-					text.push(entry);
-				}
-				const msg = await message.channel.send(text.join('\n'));
-				if (data.length > 1) {
-					msg.suppressEmbeds(true);
-				}
 			}
 			await message.delete().catch(() => {});
 		}
