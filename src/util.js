@@ -386,18 +386,9 @@ function log4helper(ctx, data) {
 		// label
 		ctx.textAlign = 'left';
 		ctx.font = '300 36px Roboto';
-		let fullTextWidth = ctx.measureText(labels[i] + ' ').width;
-		ctx.font = '300 24px Roboto';
-		fullTextWidth += ctx.measureText(data[indices[i]].rank).width;
-		ctx.font = '300 36px Roboto';
+		const fullTextWidth = ctx.measureText(labels[i]).width;
 		ctx.fillStyle = 'rgba(255, 255, 255, 0.43)';
 		ctx.fillText(labels[i], (800 - 40) / 4 - fullTextWidth / 2 + xOffsets[i], 10 + 210 + 170 / 2 + 50 + yOffsets[i]);
-		// rank
-		const partialTextWidth = ctx.measureText(labels[i] + ' ').width;
-		ctx.font = '300 24px Roboto';
-		ctx.fillStyle = 'rgba(255, 255, 255, 0.3)';
-		ctx.fillText(data[indices[i]].rank, (800 - 40) / 4 - fullTextWidth / 2 + partialTextWidth + xOffsets[i],
-			4 + 210 + 170 / 2 + 50 + yOffsets[i]);
 	}
 }
 
@@ -430,7 +421,6 @@ function log4(dom, channel, n) {
 	const labels = ['penta', 'gold', 'minions', 'wards', 'damage'];
 	for(let i = 2; i < dom.window.document.getElementsByClassName('number').length; i++) {
 		data[labels[i - 2]].value = dom.window.document.getElementsByClassName('number')[i].innerHTML.trim();
-		data[labels[i - 2]].rank = dom.window.document.getElementsByClassName('number-legend')[i - 2].innerHTML.trim();
 	}
 	const smallLabels = ['quadra', 'triple', 'double'];
 	for(let i = 1; i < dom.window.document.getElementsByClassName('number-small').length; i++) {
@@ -514,10 +504,6 @@ function log4(dom, channel, n) {
 		ctx.font = '300 24px Roboto';
 		ctx.fillText(types[i] + ' Kill', initialX + partialTextWidth, currentY);
 		partialTextWidth += ctx.measureText(types[i] + ' Kill ').width;
-		// rank
-		ctx.fillStyle = 'rgba(255, 255, 255, 0.3)';
-		ctx.font = '300 21px Roboto';
-		ctx.fillText(data.multiKills[types[i].toLowerCase()].rank, initialX + partialTextWidth, currentY);
 	}
 
 
