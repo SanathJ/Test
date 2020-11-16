@@ -1610,9 +1610,9 @@
       "optional": true
     },
     "sqlite": {
-      "version": "4.0.14",
-      "resolved": "https://registry.npmjs.org/sqlite/-/sqlite-4.0.14.tgz",
-      "integrity": "sha512-U80Xp7ERil4kWr2MDR51S0AR+A8CzPjYMXnWdtkD5e34vUCZCE48hSIxJsOQSI84mGI1Y4N4qty4NNPhIDHJwQ=="
+      "version": "4.0.17",
+      "resolved": "https://registry.npmjs.org/sqlite/-/sqlite-4.0.17.tgz",
+      "integrity": "sha512-PaXTQPFHxM83cjblDm5RLzzqW86UFfR2C3RYghUDzweAsZRwTZAc20CrDrr1vrAh2X61nyAnUaS7XITFuyuzvQ=="
     },
     "sqlite3": {
       "version": "5.0.0",
