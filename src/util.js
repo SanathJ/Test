@@ -534,7 +534,7 @@ async function log5(dom, channel, n, data) {
 	// divider
 	ctx.strokeStyle = LOGDividerColor;
 	const margin = 30;
-	drawLine(ctx, margin, 50, width - margin, 50);
+	drawLine(ctx, margin / 2, 50, width - margin / 2, 50);
 
 	const x = d3.scaleUtc()
 		.domain(d3.extent(data, d => d[0]))
@@ -551,6 +551,7 @@ async function log5(dom, channel, n, data) {
 
 	// y-axis
 	ctx.textBaseline = 'middle';
+	ctx.strokeStyle = 'rgba(45, 56, 72, 0.7)';
 	const ymin = y(d3.min(data, d => d[1]));
 	const ymax = y(Math.ceil(d3.max(data, d => d[1]) / 5) * 5);
 	const yslope = (ymax - ymin) / (Math.ceil(d3.max(data, d => d[1]) / 5) * 5 - d3.min(data, d => d[1]));
@@ -561,10 +562,13 @@ async function log5(dom, channel, n, data) {
 		drawLine(ctx, margin, f(d), width - margin, f(d));
 		ctx.fillText(d.toString() + '%', 15, f(d));
 	}
+	ctx.strokeStyle = LOGDividerColor;
 	drawLine(ctx, margin, ymin, width - margin, ymin);
+	drawLine(ctx, margin, ymax, width - margin, ymax);
 
 	// x-axis
 	ctx.textBaseline = 'top';
+	ctx.strokeStyle = 'rgba(45, 56, 72, 0.7)';
 	const xmin = x(d3.min(data, d => d[0]));
 	const xmax = x(d3.max(data, d => d[0]));
 	const xslope = (xmax - xmin) / (d3.max(data, d => d[0]) - d3.min(data, d => d[0]));
@@ -576,6 +580,7 @@ async function log5(dom, channel, n, data) {
 		drawLine(ctx, f(d), height - 30, f(d), 70);
 		ctx.fillText(year.toString(), f(d), height - 30 + 6);
 	}
+	ctx.strokeStyle = LOGDividerColor;
 	drawLine(ctx, xmin, height - 30, xmin, 70);
 	drawLine(ctx, xmax, height - 30, xmax, 70);
 
@@ -596,7 +601,107 @@ async function log5(dom, channel, n, data) {
 		.y0(y(d3.min(data, d => d[1])))
 		.context(ctx);
 
-	ctx.fillStyle = 'rgba(45, 235, 144, 0.3)';
+	ctx.fillStyle = 'rgba(45, 235, 144, 0.25)';
+	ctx.beginPath();
+	area(data);
+	ctx.fill();
+
+	/**
+	 * Send image
+	 */
+
+	const img = new MessageAttachment(canvas.toBuffer('image/png'), 'log' + n + '.png');
+	return channel.send('', img);
+}
+
+async function log6(dom, channel, n, data) {
+	// initialise canvas
+	const width = 500;
+	const height = 400;
+	const canvas = createCanvas(width, height);
+	const ctx = canvas.getContext('2d');
+	ctx.fillStyle = LOGBgColor;
+	ctx.fillRect(0, 0, width, height);
+
+	// Title
+	ctx.textBaseline = 'top';
+	ctx.textAlign = 'left';
+	ctx.font = '500 24px Roboto';
+	ctx.fillStyle = '#ffffff';
+	ctx.fillText('Popularity History', 23, 13);
+
+	// divider
+	ctx.strokeStyle = LOGDividerColor;
+	const margin = 30;
+	drawLine(ctx, margin / 2, 50, width - margin / 2, 50);
+
+	const x = d3.scaleUtc()
+		.domain(d3.extent(data, d => d[0]))
+		.range([margin, width - margin]);
+
+	const y = d3.scaleLinear()
+		.domain([d3.min(data, d => d[1]), Math.ceil(d3.max(data, d => d[1]) / 5) * 5])
+		.range([height - 30, 70]);
+
+
+	ctx.textAlign = 'center';
+	ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
+	ctx.font = '400 12px Roboto';
+
+	// y-axis
+	ctx.textBaseline = 'middle';
+	ctx.strokeStyle = 'rgba(45, 56, 72, 0.7)';
+	const ymin = y(d3.min(data, d => d[1]));
+	const ymax = y(Math.ceil(d3.max(data, d => d[1]) / 5) * 5);
+	const yslope = (ymax - ymin) / (Math.ceil(d3.max(data, d => d[1]) / 5) * 5 - d3.min(data, d => d[1]));
+	const yc = ymax - (Math.ceil(d3.max(data, d => d[1]) / 5) * 5) * yslope;
+	let f = d => yslope * d + yc;
+
+	for(let d = Math.ceil(d3.max(data, e => e[1]) / 5) * 5; d > d3.min(data, e => e[1]); d -= 5) {
+		drawLine(ctx, margin, f(d), width - margin, f(d));
+		ctx.fillText(d.toString() + '%', 15, f(d));
+	}
+	ctx.strokeStyle = LOGDividerColor;
+	drawLine(ctx, margin, ymin, width - margin, ymin);
+	ctx.fillText(Math.round(d3.min(data, d => d[1])).toString() + '%', 15, ymin);
+	drawLine(ctx, margin, ymax, width - margin, ymax);
+
+	// x-axis
+	ctx.textBaseline = 'top';
+	ctx.strokeStyle = 'rgba(45, 56, 72, 0.7)';
+	const xmin = x(d3.min(data, d => d[0]));
+	const xmax = x(d3.max(data, d => d[0]));
+	const xslope = (xmax - xmin) / (d3.max(data, d => d[0]) - d3.min(data, d => d[0]));
+	const xc = xmax - d3.max(data, d => d[0]) * xslope;
+	f = d => xslope * d + xc;
+
+	// starts at 2015, 1 per year
+	for(let d = 1420070400000, year = 2015; d < d3.max(data, e => e[0]); d += 31536000000, year++) {
+		drawLine(ctx, f(d), height - 30, f(d), 70);
+		ctx.fillText(year.toString(), f(d), height - 30 + 6);
+	}
+	ctx.strokeStyle = LOGDividerColor;
+	drawLine(ctx, xmin, height - 30, xmin, 70);
+	drawLine(ctx, xmax, height - 30, xmax, 70);
+
+	const line = d3.line()
+		.x(d => x(d[0]))
+		.y(d => y(d[1]))
+		.context(ctx);
+
+	ctx.strokeStyle = LOGBlue;
+	ctx.lineWidth = 2;
+	ctx.beginPath();
+	line(data);
+	ctx.stroke();
+
+	const area = d3.area()
+		.x(d => x(d[0]))
+		.y1(d => y(d[1]))
+		.y0(y(d3.min(data, d => d[1])))
+		.context(ctx);
+
+	ctx.fillStyle = 'rgba(42, 163, 204, 0.25)';
 	ctx.beginPath();
 	area(data);
 	ctx.fill();
@@ -624,6 +729,7 @@ async function calllog(msg) {
 
 	// convert to valid json before parsing
 	await log5(dom, channel, 5, JSON.parse(('{' + matches[1] + '}').replace('data', '"data"')).data);
+	await log6(dom, channel, 6, JSON.parse(('{' + matches[0] + '}').replace('data', '"data"')).data);
 }
 
 async function calllol(msg) {
