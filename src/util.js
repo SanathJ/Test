@@ -8,6 +8,7 @@ const { JSDOM } = jsdom;
 const d3 = require('d3');
 
 const { createCanvas, registerFont, loadImage } = require('canvas');
+
 // fonts
 registerFont(__dirname + '/../fonts/HelveticaNeue-Bold.otf', { family: 'HelveticaNeue', weight: '700' });
 registerFont(__dirname + '/../fonts/Roboto-Regular.ttf', { family: 'Roboto', weight: '400' });
@@ -170,11 +171,11 @@ async function log1(dom, channel, n) {
 
 }
 
-// draws a line in ctx at (x, y) of specified width
-function drawLine(ctx, x, y, width) {
+// draws a line in ctx from (x1, y1) to (x2, y2)
+function drawLine(ctx, x1, y1, x2, y2) {
 	ctx.beginPath();
-	ctx.moveTo(x, y);
-	ctx.lineTo(x + width, y);
+	ctx.moveTo(x1, y1);
+	ctx.lineTo(x2, y2);
 	ctx.stroke();
 }
 
@@ -221,7 +222,7 @@ async function log2(dom, channel, n) {
 
 	// divider (x = 22 to x = 525)
 	ctx.strokeStyle = LOGDividerColor;
-	drawLine(ctx, 22, 48, 525 - 22);
+	drawLine(ctx, 22, 48, 525, 48);
 
 	// get spritesheet
 	const spritesheet = await loadImage(__dirname + '/../img/log_lanes.png');
@@ -285,7 +286,7 @@ async function log2(dom, channel, n) {
 		// draw dividers only between categories
 		if (i != 4) {
 			// divider
-			drawLine(ctx, 22, 112 + 44 + yOffset, 525 - 22);
+			drawLine(ctx, 22, 112 + 44 + yOffset, 525, 112 + 44 + yOffset);
 		}
 
 		yOffset += 55;
@@ -318,7 +319,7 @@ async function log3(dom, channel, n) {
 	ctx.fillText('Damage Dealt', 20, 15);
 
 	ctx.strokeStyle = LOGDividerColor;
-	drawLine(ctx, 20 - 2, 15 + 40, 600 - 2 * (20 - 2));
+	drawLine(ctx, 20 - 2, 15 + 40, 600 - (20 - 2), 15 + 40);
 
 	// full bar width and height
 	const barWidth = 600 - 2 * (20 - 2) - 2 * 10;
@@ -392,10 +393,9 @@ function log4helper(ctx, data) {
 	}
 }
 
-function log4(dom, channel, n) {
+async function log4(dom, channel, n) {
 	const canvas = createCanvas(800, 800);
 	const ctx = canvas.getContext('2d');
-
 
 	/**
 	 * parse data
@@ -508,13 +508,106 @@ function log4(dom, channel, n) {
 
 
 	/**
-	 *
+	 * Send image
 	 */
 
 	const img = new MessageAttachment(canvas.toBuffer('image/png'), 'log' + n + '.png');
 	return channel.send('', img);
 }
 
+async function log5(dom, channel, n, data) {
+	// initialise canvas
+	const width = 500;
+	const height = 400;
+	const canvas = createCanvas(width, height);
+	const ctx = canvas.getContext('2d');
+	ctx.fillStyle = LOGBgColor;
+	ctx.fillRect(0, 0, width, height);
+
+	// Title
+	ctx.textBaseline = 'top';
+	ctx.textAlign = 'left';
+	ctx.font = '500 24px Roboto';
+	ctx.fillStyle = '#ffffff';
+	ctx.fillText('Winrate History', 23, 13);
+
+	// divider
+	ctx.strokeStyle = LOGDividerColor;
+	const margin = 30;
+	drawLine(ctx, margin, 50, width - margin, 50);
+
+	const x = d3.scaleUtc()
+		.domain(d3.extent(data, d => d[0]))
+		.range([margin, width - margin]);
+
+	const y = d3.scaleLinear()
+		.domain([d3.min(data, d => d[1]), Math.ceil(d3.max(data, d => d[1]) / 5) * 5])
+		.range([height - 30, 70]);
+
+
+	ctx.textAlign = 'center';
+	ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
+	ctx.font = '400 12px Roboto';
+
+	// y-axis
+	ctx.textBaseline = 'middle';
+	const ymin = y(d3.min(data, d => d[1]));
+	const ymax = y(Math.ceil(d3.max(data, d => d[1]) / 5) * 5);
+	const yslope = (ymax - ymin) / (Math.ceil(d3.max(data, d => d[1]) / 5) * 5 - d3.min(data, d => d[1]));
+	const yc = ymax - (Math.ceil(d3.max(data, d => d[1]) / 5) * 5) * yslope;
+	let f = d => yslope * d + yc;
+
+	for(let d = Math.ceil(d3.max(data, e => e[1]) / 5) * 5; d > d3.min(data, e => e[1]); d -= 5) {
+		drawLine(ctx, margin, f(d), width - margin, f(d));
+		ctx.fillText(d.toString() + '%', 15, f(d));
+	}
+	drawLine(ctx, margin, ymin, width - margin, ymin);
+
+	// x-axis
+	ctx.textBaseline = 'top';
+	const xmin = x(d3.min(data, d => d[0]));
+	const xmax = x(d3.max(data, d => d[0]));
+	const xslope = (xmax - xmin) / (d3.max(data, d => d[0]) - d3.min(data, d => d[0]));
+	const xc = xmax - d3.max(data, d => d[0]) * xslope;
+	f = d => xslope * d + xc;
+
+	// starts at 2015, 1 per year
+	for(let d = 1420070400000, year = 2015; d < d3.max(data, e => e[0]); d += 31536000000, year++) {
+		drawLine(ctx, f(d), height - 30, f(d), 70);
+		ctx.fillText(year.toString(), f(d), height - 30 + 6);
+	}
+	drawLine(ctx, xmin, height - 30, xmin, 70);
+	drawLine(ctx, xmax, height - 30, xmax, 70);
+
+	const line = d3.line()
+		.x(d => x(d[0]))
+		.y(d => y(d[1]))
+		.context(ctx);
+
+	ctx.strokeStyle = LOGGreen;
+	ctx.lineWidth = 2;
+	ctx.beginPath();
+	line(data);
+	ctx.stroke();
+
+	const area = d3.area()
+		.x(d => x(d[0]))
+		.y1(d => y(d[1]))
+		.y0(y(d3.min(data, d => d[1])))
+		.context(ctx);
+
+	ctx.fillStyle = 'rgba(45, 235, 144, 0.3)';
+	ctx.beginPath();
+	area(data);
+	ctx.fill();
+
+	/**
+	 * Send image
+	 */
+
+	const img = new MessageAttachment(canvas.toBuffer('image/png'), 'log' + n + '.png');
+	return channel.send('', img);
+}
 
 async function calllog(msg) {
 	const dom = await JSDOM.fromURL('https://www.leagueofgraphs.com/champions/stats/kayle', {});
@@ -524,6 +617,13 @@ async function calllog(msg) {
 	await log2(dom, channel, 2);
 	await log3(dom, channel, 3);
 	await log4(dom, channel, 4);
+
+	// data for graphs
+	const rgx = /data: \[\[.+]]/g;
+	const matches = dom.serialize().match(rgx);
+
+	// convert to valid json before parsing
+	await log5(dom, channel, 5, JSON.parse(('{' + matches[1] + '}').replace('data', '"data"')).data);
 }
 
 async function calllol(msg) {
