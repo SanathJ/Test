@@ -1,4 +1,4 @@
-const { calllog, getPatch, logChannelID } = require('../src/util.js');
+const { calllog, printDateAndPatch, logChannelID } = require('../src/util.js');
 const sites = require('../src/sites.js');
 const db = require('../src/database.js');
 
@@ -11,7 +11,7 @@ module.exports = {
 	usage: ' ',
 	description: 'Prints league of graphs data',
 	async execute(message, argsIgnore) {
-		getPatch(logChannelID, message, true);
+		await printDateAndPatch(logChannelID, message);
 		calllog(message);
 
 		db.insert('log', await sites.log());

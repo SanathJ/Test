@@ -1,4 +1,4 @@
-const { callugg, getPatch, uggChannelID } = require('../src/util.js');
+const { callugg, printDateAndPatch, uggChannelID } = require('../src/util.js');
 const sites = require('../src/sites.js');
 const db = require('../src/database.js');
 
@@ -11,7 +11,7 @@ module.exports = {
 	usage: ' ',
 	description: 'Prints u.gg data',
 	async execute(message, argsIgnore) {
-		getPatch(uggChannelID, message, true);
+		await printDateAndPatch(uggChannelID, message);
 		callugg(message);
 
 		db.insert('ugg', await sites.ugg());

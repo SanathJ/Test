@@ -1,5 +1,4 @@
 const { MessageAttachment } = require('discord.js');
-const request = require('request');
 const Jimp = require('jimp');
 const rp = require('request-promise-native');
 const fs = require('fs');
@@ -889,35 +888,36 @@ async function callugg(msg) {
 	}
 }
 
-function printDateAndPatch(pat, channel, message) {
-	const today = new Date();
-	// prints date
-	message.client.channels.fetch(channel).then(c => c.send(
-		'```' +
+function sendMessage(message, channel, image, text = '') {
+	message.client.channels.fetch(channel).then(c => c.send(text, image));
+}
+
+async function printDateAndPatch(channel = '', message = '') {
+
+	try {
+		const response = await rp(patchUrl);
+		const data = JSON.parse(response);
+
+
+		const today = new Date();
+		// prints date
+		const c = await message.client.channels.fetch(channel);
+		return await c.send(
+			'```' +
 			today.getDate() +
 			'/' +
 			(today.getMonth() + 1) +
 			'/' +
 			today.getFullYear() +
 			', Patch ' +
-			pat +
+			parseFloat(data.patches.slice(-1)[0].name).toFixed(2) +
 			'```',
-	));
+		);
+	}
+	catch (error) {
+		console.log(error);
+	}
 
-}
-
-function sendMessage(message, channel, image, text = '') {
-	message.client.channels.fetch(channel).then(c => c.send(text, image));
-}
-
-function getPatch(channel = '', message = '', print) {
-	request.get(patchUrl, function(error, response, body) {
-		if (!error && response.statusCode == 200) {
-			const data = JSON.parse(body);
-
-			if(print) {return printDateAndPatch(parseFloat(data.patches.slice(-1)[0].name).toFixed(2), channel, message);}
-		}
-	});
 }
 
 
@@ -959,7 +959,6 @@ module.exports = {
 	calllol,
 	callopgg,
 	callugg,
-	getPatch,
 	printDateAndPatch,
 	getChampionByID,
 	logChannelID,

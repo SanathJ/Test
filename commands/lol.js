@@ -1,4 +1,4 @@
-const { calllol, getPatch, lolChannelID } = require('../src/util.js');
+const { calllol, printDateAndPatch, lolChannelID } = require('../src/util.js');
 const sites = require('../src/sites.js');
 const db = require('../src/database.js');
 
@@ -11,7 +11,7 @@ module.exports = {
 	usage: ' ',
 	description: 'Prints lolalytics data',
 	async execute(message, argsIgnore) {
-		getPatch(lolChannelID, message, true);
+		await printDateAndPatch(lolChannelID, message);
 		calllol(message);
 
 		db.insert('lol', await sites.lol());
