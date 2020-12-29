@@ -35,12 +35,16 @@ const lolChannelID = config.channels.lolalytics;
 const uggChannelID = config.channels.ugg;
 
 // color constants
-const LOGBgColor = '#3a4556';
-const LOGDividerColor = '#2d3848';
-const LOGGreen = '#2DEB90';
-const LOGRed = '#ff5859';
-const LOGBlue = '#2AA3CC';
-const LOGYellow = '#FDB05F';
+const colors = {
+	log: {
+		bg: '#3a4556',
+		divider:'#2d3848',
+		green:'#2DEB90',
+		red:'#ff5859',
+		blue:'#2AA3CC',
+		yellow: '#FDB05F',
+	},
+};
 
 async function callopgg(msg) {
 	/*
@@ -120,7 +124,7 @@ async function log1(dom, channel, n) {
 	const canvas = createCanvas(800, 200);
 
 	const ctx = canvas.getContext('2d');
-	ctx.fillStyle = LOGBgColor;
+	ctx.fillStyle = colors.log.bg;
 	ctx.fillRect(0, 0, 800, 200);
 
 	const chart = d3.arc().innerRadius(55).outerRadius(60);
@@ -129,7 +133,7 @@ async function log1(dom, channel, n) {
 
 	// pie charts
 	const arr = [];
-	const chartColors = [LOGBlue, LOGGreen, LOGRed, LOGYellow];
+	const chartColors = [colors.log.blue, colors.log.green, colors.log.red, colors.log.yellow];
 	const labelArr = ['Popularity', 'Win Rate', 'Ban Rate', 'Mained By'];
 	for(let i = 0; i < 4; i++) {
 		arr[i]	= Number((dom.window.document.getElementById('graphDD' + (i + 1)).innerHTML).trim().replace('%', ''));
@@ -210,7 +214,7 @@ async function log2(dom, channel, n) {
 
 	const canvas = createCanvas(553, 389);
 	const ctx = canvas.getContext('2d');
-	ctx.fillStyle = LOGBgColor;
+	ctx.fillStyle = colors.log.bg;
 	ctx.fillRect(0, 0, 553, 389);
 
 	// Title
@@ -221,7 +225,7 @@ async function log2(dom, channel, n) {
 	ctx.fillText('Roles', 23, 13);
 
 	// divider (x = 22 to x = 525)
-	ctx.strokeStyle = LOGDividerColor;
+	ctx.strokeStyle = colors.log.divider;
 	drawLine(ctx, 22, 48, 525, 48);
 
 	// get spritesheet
@@ -263,7 +267,7 @@ async function log2(dom, channel, n) {
 		ctx.fillStyle = '#2f3b4b';
 		ctx.fillRect(171, 112 + yOffset, 150, 15);
 		// actual data bar
-		ctx.fillStyle = LOGBlue;
+		ctx.fillStyle = colors.log.blue;
 		ctx.fillRect(171, 112 + yOffset, data[i].popularity / 100 * 150, 15);
 		// label
 		ctx.fillStyle = '#ffffff';
@@ -275,7 +279,7 @@ async function log2(dom, channel, n) {
 		// grey underlying bar
 		ctx.fillRect(353, 112 + yOffset, 150, 15);
 		// actual data bar
-		ctx.fillStyle = LOGGreen;
+		ctx.fillStyle = colors.log.green;
 		ctx.fillRect(353, 112 + yOffset, data[i].winrate / 100 * 150, 15);
 		// label
 		ctx.fillStyle = '#ffffff';
@@ -308,7 +312,7 @@ async function log3(dom, channel, n) {
 
 	const canvas = createCanvas(600, 150);
 	const ctx = canvas.getContext('2d');
-	ctx.fillStyle = LOGBgColor;
+	ctx.fillStyle = colors.log.bg;
 	ctx.fillRect(0, 0, 600, 150);
 
 	// Title
@@ -318,7 +322,7 @@ async function log3(dom, channel, n) {
 	ctx.fillStyle = '#ffffff';
 	ctx.fillText('Damage Dealt', 20, 15);
 
-	ctx.strokeStyle = LOGDividerColor;
+	ctx.strokeStyle = colors.log.divider;
 	drawLine(ctx, 20 - 2, 15 + 40, 600 - (20 - 2), 15 + 40);
 
 	// full bar width and height
@@ -330,10 +334,10 @@ async function log3(dom, channel, n) {
 	ctx.fillStyle = '#aaaaaa';
 	ctx.fillRect(20 + 5, 15 + 40 + 15, barWidth, barHeight);
 	// magic damage
-	ctx.fillStyle = LOGBlue;
+	ctx.fillStyle = colors.log.blue;
 	ctx.fillRect(20 + 5, 15 + 40 + 15, ((data[0] + data[1]) / 100) * barWidth, barHeight);
 	// physical damage
-	ctx.fillStyle = LOGRed;
+	ctx.fillStyle = colors.log.red;
 	ctx.fillRect(20 + 5, 15 + 40 + 15, (data[0] / 100) * barWidth, barHeight);
 
 	// legend text
@@ -348,14 +352,14 @@ async function log3(dom, channel, n) {
 	let textWidth = ctx.measureText('Physical').width;
 	ctx.fillText('Physical', 600 / 2 - (legendSize / 2) - rightPadding - textWidth,
 		15 + 40 + 15 + barHeight + 10);
-	ctx.fillStyle = LOGRed;
+	ctx.fillStyle = colors.log.red;
 	ctx.fillRect(600 / 2 - (legendSize / 2) - rightPadding - textWidth - leftPadding - legendSize,
 		15 + 40 + 15 + barHeight + 10 - 2, legendSize, legendSize);
 
 	// magic
 	ctx.fillStyle = '#ffffff';
 	ctx.fillText('Magic', 600 / 2 + (legendSize / 2) + leftPadding, 15 + 40 + 15 + barHeight + 10);
-	ctx.fillStyle = LOGBlue;
+	ctx.fillStyle = colors.log.blue;
 	ctx.fillRect(600 / 2 - (legendSize / 2), 15 + 40 + 15 + barHeight + 10 - 2,
 		legendSize, legendSize);
 
@@ -431,11 +435,11 @@ async function log4(dom, channel, n) {
 	}
 
 	// background
-	ctx.fillStyle = LOGBgColor;
+	ctx.fillStyle = colors.log.bg;
 	ctx.fillRect(0, 0, 800, 800);
 
 	// dividers
-	ctx.fillStyle = LOGDividerColor;
+	ctx.fillStyle = colors.log.divider;
 	ctx.fillRect(0, 170, 800, 40);
 	ctx.fillRect(0, 170 + 210, 800, 40);
 	ctx.fillRect(0, 170 + 420, 800, 40);
@@ -445,7 +449,7 @@ async function log4(dom, channel, n) {
 	/**
 	 * KDA
 	 */
-	ctx.fillStyle = LOGGreen;
+	ctx.fillStyle = colors.log.green;
 	ctx.font = '400 56px Roboto';
 	ctx.textAlign = 'center';
 	ctx.textBaseline = 'bottom';
@@ -460,7 +464,7 @@ async function log4(dom, channel, n) {
 	ctx.fillText('/', 800 / 2 - fullTextWidth / 2 + partialTextWidth, 170 / 2 + 10);
 	// deaths
 	ctx.font = '400 56px Roboto';
-	ctx.fillStyle = LOGRed;
+	ctx.fillStyle = colors.log.red;
 	partialTextWidth = ctx.measureText(data.kda.kills + ' / ').width;
 	ctx.fillText(data.kda.deaths, 800 / 2 - fullTextWidth / 2 + partialTextWidth, 170 / 2 + 10);
 	// separator
@@ -470,7 +474,7 @@ async function log4(dom, channel, n) {
 	ctx.fillText('/', 800 / 2 - fullTextWidth / 2 + partialTextWidth, 170 / 2 + 10);
 	// assists
 	ctx.font = '400 56px Roboto';
-	ctx.fillStyle = LOGYellow;
+	ctx.fillStyle = colors.log.yellow;
 	partialTextWidth = ctx.measureText(data.kda.kills + ' / ' + data.kda.deaths + ' / ').width;
 	ctx.fillText(data.kda.assists, 800 / 2 - fullTextWidth / 2 + partialTextWidth, 170 / 2 + 10);
 	// label
@@ -536,7 +540,7 @@ async function postGraph(channel, n, data, options) {
 	const height = 400;
 	const canvas = createCanvas(width, height);
 	const ctx = canvas.getContext('2d');
-	ctx.fillStyle = LOGBgColor;
+	ctx.fillStyle = colors.log.bg;
 	ctx.fillRect(0, 0, width, height);
 
 	// Title
@@ -547,7 +551,7 @@ async function postGraph(channel, n, data, options) {
 	ctx.fillText(options.title, 23, 13);
 
 	// divider
-	ctx.strokeStyle = LOGDividerColor;
+	ctx.strokeStyle = colors.log.divider;
 	const margin = {
 		left: 50,
 		right: 20,
@@ -590,7 +594,7 @@ async function postGraph(channel, n, data, options) {
 		ctx.fillText(tickFormatter(d), margin.left - 5, f(d));
 	}
 
-	ctx.strokeStyle = LOGDividerColor;
+	ctx.strokeStyle = colors.log.divider;
 	drawLine(ctx, margin.left, margin.bottom, width - margin.right, margin.bottom);
 	if(options.tickStarts.y !== undefined) {
 		ctx.fillText(tickFormatter(options.tickStarts.y), margin.left - 5, f(options.tickStarts.y));
@@ -620,7 +624,7 @@ async function postGraph(channel, n, data, options) {
 		}
 	}
 
-	ctx.strokeStyle = LOGDividerColor;
+	ctx.strokeStyle = colors.log.divider;
 	drawLine(ctx, margin.left, margin.bottom, margin.left, margin.top);
 	drawLine(ctx, width - margin.right, margin.bottom, width - margin.right, margin.top);
 
@@ -685,7 +689,7 @@ async function calllog(msg) {
 		yDomainStart: undefined,
 		tickFormat: 'percent',
 		scaleFunction: 'utc',
-		color: LOGGreen,
+		color: colors.log.green,
 		tickStarts: {
 			x: 'year',
 			y: undefined,
@@ -694,14 +698,14 @@ async function calllog(msg) {
 	await postGraph(channel, 5, JSON.parse(('{' + matches[1] + '}').replace('data', '"data"')).data, options);
 
 	options.title = 'Popularity History';
-	options.color = LOGBlue;
+	options.color = colors.log.blue;
 	options.tickStarts.y = 1;
 	// may be changed by postGraph if undefined, so we reset
 	options.yDomainStart = undefined;
 	await postGraph(channel, 6, JSON.parse(('{' + matches[0] + '}').replace('data', '"data"')).data, options);
 
 	options.title = 'BanRate History';
-	options.color = LOGRed;
+	options.color = colors.log.red;
 	options.tickStarts.y = 0;
 	options.tickIntervals.y = 20;
 	// may be changed by postGraph if undefined, so we reset
@@ -709,7 +713,7 @@ async function calllog(msg) {
 	await postGraph(channel, 7, JSON.parse(('{' + matches[2] + '}').replace('data', '"data"')).data, options);
 
 	options.title = 'Gold / Game duration';
-	options.color = LOGGreen;
+	options.color = colors.log.green;
 	options.tickStarts.x = undefined;
 	options.tickStarts.y = 0;
 	options.tickIntervals = {
@@ -728,13 +732,13 @@ async function calllog(msg) {
 
 	options.title = 'Deaths / Game duration';
 	options.tickFormat = 'raw';
-	options.color = LOGRed;
+	options.color = colors.log.red;
 	options.tickIntervals.y = 1;
 	await postGraph(channel, 10, JSON.parse(('{' + matches[6] + '}').replace('data', '"data"')).data, options);
 
 	options.title = 'Winrate / Game Duration';
 	options.tickFormat = 'percent';
-	options.color = LOGGreen;
+	options.color = colors.log.green;
 	options.tickIntervals.y = 10;
 	await postGraph(channel, 11, JSON.parse(('{' + matches[7] + '}').replace('data', '"data"')).data, options);
 
