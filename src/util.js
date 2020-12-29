@@ -1341,6 +1341,112 @@ async function log12(dom, channel, n, data) {
 	return channel.send('', img);
 }
 
+async function log13(dom, channel, n, data) {
+	// initialise canvas
+	const width = 500;
+	const height = 400;
+	const canvas = createCanvas(width, height);
+	const ctx = canvas.getContext('2d');
+	ctx.fillStyle = LOGBgColor;
+	ctx.fillRect(0, 0, width, height);
+
+	// Title
+	ctx.textBaseline = 'top';
+	ctx.textAlign = 'left';
+	ctx.font = '500 24px Roboto';
+	ctx.fillStyle = '#ffffff';
+	ctx.fillText('Minions / Game duration', 23, 13);
+
+	// divider
+	ctx.strokeStyle = LOGDividerColor;
+	const margin = {
+		left: 50,
+		right: 20,
+		top: 70,
+		bottom: height - 30,
+	};
+	drawLine(ctx, margin.left / 2, 50, width - margin.right / 2, 50);
+
+	const yTickInterval = 50;
+	const xTickInterval = 5;
+
+	const x = d3.scaleLinear()
+		.domain(d3.extent(data, d => d[0]))
+		.range([margin.left, width - margin.right]);
+
+	const y = d3.scaleLinear()
+		.domain([0, Math.ceil(d3.max(data, d => d[1]) / yTickInterval) * yTickInterval])
+		.range([margin.bottom, margin.top]);
+
+	ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
+	ctx.font = '400 12px Roboto';
+
+	// y-axis
+	ctx.textBaseline = 'middle';
+	ctx.strokeStyle = 'rgba(45, 56, 72, 0.7)';
+	ctx.textAlign = 'right';
+
+	const yslope = (margin.top - margin.bottom) / (Math.ceil(d3.max(data, d => d[1]) / yTickInterval) * yTickInterval - 0);
+	const yc = margin.top - (Math.ceil(d3.max(data, d => d[1]) / yTickInterval) * yTickInterval) * yslope;
+	let f = d => yslope * d + yc;
+
+	for(let d = Math.ceil(d3.max(data, e => e[1]) / yTickInterval) * yTickInterval; f(d) < margin.bottom; d -= yTickInterval) {
+		drawLine(ctx, margin.left, f(d), width - margin.right, f(d));
+		ctx.fillText(d + '%', margin.left - 5, f(d));
+	}
+
+	ctx.strokeStyle = LOGDividerColor;
+	drawLine(ctx, margin.left, margin.bottom, width - margin.right, margin.bottom);
+	ctx.fillText('0%', margin.left - 5, f(0));
+	drawLine(ctx, margin.left, margin.top, width - margin.right, margin.top);
+
+	// x-axis
+	ctx.textBaseline = 'top';
+	ctx.strokeStyle = 'rgba(45, 56, 72, 0.7)';
+	ctx.textAlign = 'center';
+
+	const xslope = (width - margin.right - margin.left) / (d3.max(data, d => d[0]) - d3.min(data, d => d[0]));
+	const xc = width - margin.right - d3.max(data, d => d[0]) * xslope;
+	f = d => xslope * d + xc;
+
+	for(let d = d3.min(data, e => e[0]); d <= d3.max(data, e => e[0]); d += xTickInterval) {
+		drawLine(ctx, f(d), margin.bottom, f(d), margin.top);
+		ctx.fillText(d.toString(), f(d), margin.bottom + 6);
+	}
+	ctx.strokeStyle = LOGDividerColor;
+	drawLine(ctx, margin.left, margin.bottom, margin.left, margin.top);
+	drawLine(ctx, width - margin.right, margin.bottom, width - margin.right, margin.top);
+
+	const line = d3.line()
+		.x(d => x(d[0]))
+		.y(d => y(d[1]))
+		.context(ctx);
+
+	ctx.strokeStyle = LOGGreen;
+	ctx.lineWidth = 2;
+	ctx.beginPath();
+	line(data);
+	ctx.stroke();
+
+	const area = d3.area()
+		.x(d => x(d[0]))
+		.y1(d => y(d[1]))
+		.y0(margin.bottom)
+		.context(ctx);
+
+	ctx.fillStyle = 'rgba(45, 235, 144, 0.25)';
+	ctx.beginPath();
+	area(data);
+	ctx.fill();
+
+	/**
+	 * Send image
+	 */
+
+	const img = new MessageAttachment(canvas.toBuffer('image/png'), 'log' + n + '.png');
+	return channel.send('', img);
+}
+
 async function calllog(msg) {
 	const dom = await JSDOM.fromURL('https://www.leagueofgraphs.com/champions/stats/kayle', {});
 	const channel = await msg.client.channels.fetch(logChannelID);
@@ -1363,6 +1469,7 @@ async function calllog(msg) {
 	await log10(dom, channel, 10, JSON.parse(('{' + matches[6] + '}').replace('data', '"data"')).data);
 	await log11(dom, channel, 11, JSON.parse(('{' + matches[7] + '}').replace('data', '"data"')).data);
 	await log12(dom, channel, 12, JSON.parse(('{' + matches[8] + '}').replace('data', '"data"')).data);
+	await log13(dom, channel, 13, JSON.parse(('{' + matches[4] + '}').replace('data', '"data"')).data);
 }
 
 async function calllol(msg) {
