@@ -541,12 +541,15 @@ async function log5(dom, channel, n, data) {
 	};
 	drawLine(ctx, margin.left / 2, 50, width - margin.right / 2, 50);
 
+	const yTickInterval = 5;
+	const xTickInterval = 31536000000;
+
 	const x = d3.scaleUtc()
 		.domain(d3.extent(data, d => d[0]))
 		.range([margin.left, width - margin.right]);
 
 	const y = d3.scaleLinear()
-		.domain([d3.min(data, d => d[1]), Math.ceil(d3.max(data, d => d[1]) / 5) * 5])
+		.domain([d3.min(data, d => d[1]), Math.ceil(d3.max(data, d => d[1]) / yTickInterval) * yTickInterval])
 		.range([margin.bottom, margin.top]);
 
 
@@ -558,11 +561,11 @@ async function log5(dom, channel, n, data) {
 	ctx.textAlign = 'right';
 	ctx.strokeStyle = 'rgba(45, 56, 72, 0.7)';
 
-	const yslope = (margin.top - margin.bottom) / (Math.ceil(d3.max(data, d => d[1]) / 5) * 5 - d3.min(data, d => d[1]));
-	const yc = margin.top - (Math.ceil(d3.max(data, d => d[1]) / 5) * 5) * yslope;
+	const yslope = (margin.top - margin.bottom) / (Math.ceil(d3.max(data, d => d[1]) / yTickInterval) * yTickInterval - d3.min(data, d => d[1]));
+	const yc = margin.top - (Math.ceil(d3.max(data, d => d[1]) / yTickInterval) * yTickInterval) * yslope;
 	let f = d => yslope * d + yc;
 
-	for(let d = Math.ceil(d3.max(data, e => e[1]) / 5) * 5; d > d3.min(data, e => e[1]); d -= 5) {
+	for(let d = Math.ceil(d3.max(data, e => e[1]) / yTickInterval) * yTickInterval; d > d3.min(data, e => e[1]); d -= yTickInterval) {
 		drawLine(ctx, margin.left, f(d), width - margin.right, f(d));
 		ctx.fillText(d.toString() + '%', margin.left - 5, f(d));
 	}
@@ -580,7 +583,7 @@ async function log5(dom, channel, n, data) {
 	f = d => xslope * d + xc;
 
 	// starts at 2015, 1 per year
-	for(let d = 1420070400000, year = 2015; d < d3.max(data, e => e[0]); d += 31536000000, year++) {
+	for(let d = 1420070400000, year = 2015; d < d3.max(data, e => e[0]); d += xTickInterval, year++) {
 		drawLine(ctx, f(d), margin.bottom, f(d), margin.top);
 		ctx.fillText(year.toString(), f(d), margin.bottom + 6);
 	}
@@ -644,12 +647,15 @@ async function log6(dom, channel, n, data) {
 	};
 	drawLine(ctx, margin.left / 2, 50, width - margin.right / 2, 50);
 
+	const yTickInterval = 5;
+	const xTickInterval = 31536000000;
+
 	const x = d3.scaleUtc()
 		.domain(d3.extent(data, d => d[0]))
 		.range([margin.left, width - margin.right]);
 
 	const y = d3.scaleLinear()
-		.domain([d3.min(data, d => d[1]), Math.ceil(d3.max(data, d => d[1]) / 5) * 5])
+		.domain([d3.min(data, d => d[1]), Math.ceil(d3.max(data, d => d[1]) / yTickInterval) * yTickInterval])
 		.range([margin.bottom, margin.top]);
 
 
@@ -661,11 +667,11 @@ async function log6(dom, channel, n, data) {
 	ctx.strokeStyle = 'rgba(45, 56, 72, 0.7)';
 	ctx.textAlign = 'right';
 
-	const yslope = (margin.top - margin.bottom) / (Math.ceil(d3.max(data, d => d[1]) / 5) * 5 - d3.min(data, d => d[1]));
-	const yc = margin.top - (Math.ceil(d3.max(data, d => d[1]) / 5) * 5) * yslope;
+	const yslope = (margin.top - margin.bottom) / (Math.ceil(d3.max(data, d => d[1]) / yTickInterval) * yTickInterval - d3.min(data, d => d[1]));
+	const yc = margin.top - (Math.ceil(d3.max(data, d => d[1]) / yTickInterval) * yTickInterval) * yslope;
 	let f = d => yslope * d + yc;
 
-	for(let d = Math.ceil(d3.max(data, e => e[1]) / 5) * 5; d > d3.min(data, e => e[1]); d -= 5) {
+	for(let d = Math.ceil(d3.max(data, e => e[1]) / yTickInterval) * yTickInterval; d > d3.min(data, e => e[1]); d -= yTickInterval) {
 		drawLine(ctx, margin.left, f(d), width - margin.right, f(d));
 		ctx.fillText(d.toString() + '%', margin.left - 5, f(d));
 	}
@@ -684,7 +690,7 @@ async function log6(dom, channel, n, data) {
 	f = d => xslope * d + xc;
 
 	// starts at 2015, 1 per year
-	for(let d = 1420070400000, year = 2015; d < d3.max(data, e => e[0]); d += 31536000000, year++) {
+	for(let d = 1420070400000, year = 2015; d < d3.max(data, e => e[0]); d += xTickInterval, year++) {
 		drawLine(ctx, f(d), margin.bottom, f(d), margin.top);
 		ctx.fillText(year.toString(), f(d), margin.bottom + 6);
 	}
@@ -748,12 +754,15 @@ async function log7(dom, channel, n, data) {
 	};
 	drawLine(ctx, margin.left / 2, 50, width - margin.right / 2, 50);
 
+	const yTickInterval = 20;
+	const xTickInterval = 31536000000;
+
 	const x = d3.scaleUtc()
 		.domain(d3.extent(data, d => d[0]))
 		.range([margin.left, width - margin.right]);
 
 	const y = d3.scaleLinear()
-		.domain([d3.min(data, d => d[1]), Math.ceil(d3.max(data, d => d[1]) / 20) * 20])
+		.domain([d3.min(data, d => d[1]), Math.ceil(d3.max(data, d => d[1]) / yTickInterval) * yTickInterval])
 		.range([margin.bottom, margin.top]);
 
 
@@ -765,11 +774,11 @@ async function log7(dom, channel, n, data) {
 	ctx.textAlign = 'right';
 	ctx.strokeStyle = 'rgba(45, 56, 72, 0.7)';
 
-	const yslope = (margin.top - margin.bottom) / (Math.ceil(d3.max(data, d => d[1]) / 20) * 20 - d3.min(data, d => d[1]));
-	const yc = margin.top - (Math.ceil(d3.max(data, d => d[1]) / 20) * 20) * yslope;
+	const yslope = (margin.top - margin.bottom) / (Math.ceil(d3.max(data, d => d[1]) / yTickInterval) * yTickInterval - d3.min(data, d => d[1]));
+	const yc = margin.top - (Math.ceil(d3.max(data, d => d[1]) / yTickInterval) * yTickInterval) * yslope;
 	let f = d => yslope * d + yc;
 
-	for(let d = Math.ceil(d3.max(data, e => e[1]) / 20) * 20; d > d3.min(data, e => e[1]); d -= 20) {
+	for(let d = Math.ceil(d3.max(data, e => e[1]) / yTickInterval) * yTickInterval; d > d3.min(data, e => e[1]); d -= yTickInterval) {
 		drawLine(ctx, margin.left, f(d), width - margin.right, f(d));
 		ctx.fillText(d.toString() + '%', margin.left - 5, f(d));
 	}
@@ -788,7 +797,7 @@ async function log7(dom, channel, n, data) {
 	f = d => xslope * d + xc;
 
 	// starts at 2015, 1 per year
-	for(let d = 1420070400000, year = 2015; d < d3.max(data, e => e[0]); d += 31536000000, year++) {
+	for(let d = 1420070400000, year = 2015; d < d3.max(data, e => e[0]); d += xTickInterval, year++) {
 		drawLine(ctx, f(d), margin.bottom, f(d), margin.top);
 		ctx.fillText(year.toString(), f(d), margin.bottom + 6);
 	}
@@ -852,12 +861,15 @@ async function log8(dom, channel, n, data) {
 	};
 	drawLine(ctx, margin.left / 2, 50, width - margin.right / 2, 50);
 
+	const yTickInterval = 2500;
+	const xTickInterval = 5;
+
 	const x = d3.scaleLinear()
 		.domain(d3.extent(data, d => d[0]))
 		.range([margin.left, width - margin.right]);
 
 	const y = d3.scaleLinear()
-		.domain([0, Math.ceil(d3.max(data, d => d[1]) / 2500) * 2500])
+		.domain([0, Math.ceil(d3.max(data, d => d[1]) / yTickInterval) * yTickInterval])
 		.range([margin.bottom, margin.top]);
 
 
@@ -869,11 +881,11 @@ async function log8(dom, channel, n, data) {
 	ctx.strokeStyle = 'rgba(45, 56, 72, 0.7)';
 	ctx.textAlign = 'right';
 
-	const yslope = (margin.top - margin.bottom) / (Math.ceil(d3.max(data, d => d[1]) / 2500) * 2500 - 0);
-	const yc = margin.top - (Math.ceil(d3.max(data, d => d[1]) / 2500) * 2500) * yslope;
+	const yslope = (margin.top - margin.bottom) / (Math.ceil(d3.max(data, d => d[1]) / yTickInterval) * yTickInterval - 0);
+	const yc = margin.top - (Math.ceil(d3.max(data, d => d[1]) / yTickInterval) * yTickInterval) * yslope;
 	let f = d => yslope * d + yc;
 
-	for(let d = Math.ceil(d3.max(data, e => e[1]) / 2500) * 2500; d > d3.min(data, e => e[1]); d -= 2500) {
+	for(let d = Math.ceil(d3.max(data, e => e[1]) / yTickInterval) * yTickInterval; d > d3.min(data, e => e[1]); d -= yTickInterval) {
 		drawLine(ctx, margin.left, f(d), width - margin.right, f(d));
 		ctx.fillText(d.toString(), margin.left - 5, f(d));
 	}
@@ -891,7 +903,7 @@ async function log8(dom, channel, n, data) {
 	const xc = width - margin.right - d3.max(data, d => d[0]) * xslope;
 	f = d => xslope * d + xc;
 
-	for(let d = d3.min(data, e => e[0]); d <= d3.max(data, e => e[0]); d += 5) {
+	for(let d = d3.min(data, e => e[0]); d <= d3.max(data, e => e[0]); d += xTickInterval) {
 		drawLine(ctx, f(d), margin.bottom, f(d), margin.top);
 		ctx.fillText(d.toString(), f(d), margin.bottom + 6);
 	}
@@ -955,12 +967,15 @@ async function log9(dom, channel, n, data) {
 	};
 	drawLine(ctx, margin.left / 2, 50, width - margin.right / 2, 50);
 
+	const yTickInterval = 2.5;
+	const xTickInterval = 5;
+
 	const x = d3.scaleLinear()
 		.domain(d3.extent(data, d => d[0]))
 		.range([margin.left, width - margin.right]);
 
 	const y = d3.scaleLinear()
-		.domain([0.0, Math.ceil(d3.max(data, d => d[1]) / 2.5) * 2.5])
+		.domain([0.0, Math.ceil(d3.max(data, d => d[1]) / yTickInterval) * yTickInterval])
 		.range([margin.bottom, margin.top]);
 
 
@@ -972,11 +987,11 @@ async function log9(dom, channel, n, data) {
 	ctx.strokeStyle = 'rgba(45, 56, 72, 0.7)';
 	ctx.textAlign = 'right';
 
-	const yslope = (margin.top - margin.bottom) / (Math.ceil(d3.max(data, d => d[1]) / 2.5) * 2.5 - 0);
-	const yc = margin.top - (Math.ceil(d3.max(data, d => d[1]) / 2.5) * 2.5) * yslope;
+	const yslope = (margin.top - margin.bottom) / (Math.ceil(d3.max(data, d => d[1]) / yTickInterval) * yTickInterval - 0);
+	const yc = margin.top - (Math.ceil(d3.max(data, d => d[1]) / yTickInterval) * yTickInterval) * yslope;
 	let f = d => yslope * d + yc;
 
-	for(let d = Math.ceil(d3.max(data, e => e[1]) / 2.5) * 2.5; d > d3.min(data, e => e[1]); d -= 2.5) {
+	for(let d = Math.ceil(d3.max(data, e => e[1]) / yTickInterval) * yTickInterval; d > d3.min(data, e => e[1]); d -= yTickInterval) {
 		drawLine(ctx, margin.left, f(d), width - margin.right, f(d));
 		ctx.fillText(d.toFixed(1), margin.left - 5, f(d));
 	}
@@ -994,7 +1009,7 @@ async function log9(dom, channel, n, data) {
 	const xc = width - margin.right - d3.max(data, d => d[0]) * xslope;
 	f = d => xslope * d + xc;
 
-	for(let d = d3.min(data, e => e[0]); d <= d3.max(data, e => e[0]); d += 5) {
+	for(let d = d3.min(data, e => e[0]); d <= d3.max(data, e => e[0]); d += xTickInterval) {
 		drawLine(ctx, f(d), margin.bottom, f(d), margin.top);
 		ctx.fillText(d.toString(), f(d), margin.bottom + 6);
 	}
