@@ -605,7 +605,7 @@ async function log5(dom, channel, n, data) {
 	const area = d3.area()
 		.x(d => x(d[0]))
 		.y1(d => y(d[1]))
-		.y0(y(d3.min(data, d => d[1])))
+		.y0(margin.bottom)
 		.context(ctx);
 
 	ctx.fillStyle = 'rgba(45, 235, 144, 0.25)';
@@ -712,7 +712,7 @@ async function log6(dom, channel, n, data) {
 	const area = d3.area()
 		.x(d => x(d[0]))
 		.y1(d => y(d[1]))
-		.y0(y(d3.min(data, d => d[1])))
+		.y0(margin.bottom)
 		.context(ctx);
 
 	ctx.fillStyle = 'rgba(42, 163, 204, 0.25)';
@@ -819,7 +819,7 @@ async function log7(dom, channel, n, data) {
 	const area = d3.area()
 		.x(d => x(d[0]))
 		.y1(d => y(d[1]))
-		.y0(y(d3.min(data, d => d[1])))
+		.y0(margin.bottom)
 		.context(ctx);
 
 	ctx.fillStyle = 'rgba(255, 88, 89, 0.25)';
@@ -925,7 +925,7 @@ async function log8(dom, channel, n, data) {
 	const area = d3.area()
 		.x(d => x(d[0]))
 		.y1(d => y(d[1]))
-		.y0(y(0))
+		.y0(margin.bottom)
 		.context(ctx);
 
 	ctx.fillStyle = 'rgba(45, 235, 144, 0.25)';
@@ -1031,7 +1031,7 @@ async function log9(dom, channel, n, data) {
 	const area = d3.area()
 		.x(d => x(d[0]))
 		.y1(d => y(d[1]))
-		.y0(y(0))
+		.y0(margin.bottom)
 		.context(ctx);
 
 	ctx.fillStyle = 'rgba(45, 235, 144, 0.25)';
@@ -1136,7 +1136,7 @@ async function log10(dom, channel, n, data) {
 	const area = d3.area()
 		.x(d => x(d[0]))
 		.y1(d => y(d[1]))
-		.y0(y(0))
+		.y0(margin.bottom)
 		.context(ctx);
 
 	ctx.fillStyle = 'rgba(255, 88, 89, 0.25)';
