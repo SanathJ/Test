@@ -602,13 +602,18 @@ async function log5(dom, channel, n, data) {
 	line(data);
 	ctx.stroke();
 
+	// gradient
+	const gradient = ctx.createLinearGradient(margin.left, margin.bottom, margin.left, margin.top);
+	gradient.addColorStop(0, 'rgba(45, 235, 144, 0.1)');
+	gradient.addColorStop(1, 'rgba(45, 235, 144, 0.6)');
+
 	const area = d3.area()
 		.x(d => x(d[0]))
 		.y1(d => y(d[1]))
 		.y0(margin.bottom)
 		.context(ctx);
 
-	ctx.fillStyle = 'rgba(45, 235, 144, 0.25)';
+	ctx.fillStyle = gradient;
 	ctx.beginPath();
 	area(data);
 	ctx.fill();
@@ -709,13 +714,18 @@ async function log6(dom, channel, n, data) {
 	line(data);
 	ctx.stroke();
 
+	// gradient
+	const gradient = ctx.createLinearGradient(margin.left, margin.bottom, margin.left, margin.top);
+	gradient.addColorStop(0, 'rgba(42, 163, 204, 0.1)');
+	gradient.addColorStop(1, 'rgba(42, 163, 204, 0.6)');
+
 	const area = d3.area()
 		.x(d => x(d[0]))
 		.y1(d => y(d[1]))
 		.y0(margin.bottom)
 		.context(ctx);
 
-	ctx.fillStyle = 'rgba(42, 163, 204, 0.25)';
+	ctx.fillStyle = gradient;
 	ctx.beginPath();
 	area(data);
 	ctx.fill();
@@ -816,13 +826,18 @@ async function log7(dom, channel, n, data) {
 	line(data);
 	ctx.stroke();
 
+	// gradient
+	const gradient = ctx.createLinearGradient(margin.left, margin.bottom, margin.left, margin.top);
+	gradient.addColorStop(0, 'rgba(255, 88, 89, 0.1)');
+	gradient.addColorStop(1, 'rgba(255, 88, 89, 0.6)');
+
 	const area = d3.area()
 		.x(d => x(d[0]))
 		.y1(d => y(d[1]))
 		.y0(margin.bottom)
 		.context(ctx);
 
-	ctx.fillStyle = 'rgba(255, 88, 89, 0.25)';
+	ctx.fillStyle = gradient;
 	ctx.beginPath();
 	area(data);
 	ctx.fill();
@@ -922,13 +937,18 @@ async function log8(dom, channel, n, data) {
 	line(data);
 	ctx.stroke();
 
+	// gradient
+	const gradient = ctx.createLinearGradient(margin.left, margin.bottom, margin.left, margin.top);
+	gradient.addColorStop(0, 'rgba(45, 235, 144, 0.1)');
+	gradient.addColorStop(1, 'rgba(45, 235, 144, 0.6)');
+
 	const area = d3.area()
 		.x(d => x(d[0]))
 		.y1(d => y(d[1]))
 		.y0(margin.bottom)
 		.context(ctx);
 
-	ctx.fillStyle = 'rgba(45, 235, 144, 0.25)';
+	ctx.fillStyle = gradient;
 	ctx.beginPath();
 	area(data);
 	ctx.fill();
@@ -1028,13 +1048,18 @@ async function log9(dom, channel, n, data) {
 	line(data);
 	ctx.stroke();
 
+	// gradient
+	const gradient = ctx.createLinearGradient(margin.left, margin.bottom, margin.left, margin.top);
+	gradient.addColorStop(0, 'rgba(45, 235, 144, 0.1)');
+	gradient.addColorStop(1, 'rgba(45, 235, 144, 0.6)');
+
 	const area = d3.area()
 		.x(d => x(d[0]))
 		.y1(d => y(d[1]))
 		.y0(margin.bottom)
 		.context(ctx);
 
-	ctx.fillStyle = 'rgba(45, 235, 144, 0.25)';
+	ctx.fillStyle = gradient;
 	ctx.beginPath();
 	area(data);
 	ctx.fill();
@@ -1133,13 +1158,18 @@ async function log10(dom, channel, n, data) {
 	line(data);
 	ctx.stroke();
 
+	// gradient
+	const gradient = ctx.createLinearGradient(margin.left, margin.bottom, margin.left, margin.top);
+	gradient.addColorStop(0, 'rgba(255, 88, 89, 0.1)');
+	gradient.addColorStop(1, 'rgba(255, 88, 89, 0.6)');
+
 	const area = d3.area()
 		.x(d => x(d[0]))
 		.y1(d => y(d[1]))
 		.y0(margin.bottom)
 		.context(ctx);
 
-	ctx.fillStyle = 'rgba(255, 88, 89, 0.25)';
+	ctx.fillStyle = gradient;
 	ctx.beginPath();
 	area(data);
 	ctx.fill();
@@ -1239,13 +1269,18 @@ async function log11(dom, channel, n, data) {
 	line(data);
 	ctx.stroke();
 
+	// gradient
+	const gradient = ctx.createLinearGradient(margin.left, margin.bottom, margin.left, margin.top);
+	gradient.addColorStop(0, 'rgba(45, 235, 144, 0.1)');
+	gradient.addColorStop(1, 'rgba(45, 235, 144, 0.6)');
+
 	const area = d3.area()
 		.x(d => x(d[0]))
 		.y1(d => y(d[1]))
 		.y0(margin.bottom)
 		.context(ctx);
 
-	ctx.fillStyle = 'rgba(45, 235, 144, 0.25)';
+	ctx.fillStyle = gradient;
 	ctx.beginPath();
 	area(data);
 	ctx.fill();
@@ -1345,13 +1380,18 @@ async function log12(dom, channel, n, data) {
 	line(data);
 	ctx.stroke();
 
+	// gradient
+	const gradient = ctx.createLinearGradient(margin.left, margin.bottom, margin.left, margin.top);
+	gradient.addColorStop(0, 'rgba(45, 235, 144, 0.1)');
+	gradient.addColorStop(1, 'rgba(45, 235, 144, 0.6)');
+
 	const area = d3.area()
 		.x(d => x(d[0]))
 		.y1(d => y(d[1]))
 		.y0(margin.bottom)
 		.context(ctx);
 
-	ctx.fillStyle = 'rgba(45, 235, 144, 0.25)';
+	ctx.fillStyle = gradient;
 	ctx.beginPath();
 	area(data);
 	ctx.fill();
@@ -1451,13 +1491,18 @@ async function log13(dom, channel, n, data) {
 	line(data);
 	ctx.stroke();
 
+	// gradient
+	const gradient = ctx.createLinearGradient(margin.left, margin.bottom, margin.left, margin.top);
+	gradient.addColorStop(0, 'rgba(45, 235, 144, 0.1)');
+	gradient.addColorStop(1, 'rgba(45, 235, 144, 0.6)');
+
 	const area = d3.area()
 		.x(d => x(d[0]))
 		.y1(d => y(d[1]))
 		.y0(margin.bottom)
 		.context(ctx);
 
-	ctx.fillStyle = 'rgba(45, 235, 144, 0.25)';
+	ctx.fillStyle = gradient;
 	ctx.beginPath();
 	area(data);
 	ctx.fill();
