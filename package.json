@@ -16,7 +16,7 @@
     "request": "^2.88.2",
     "request-promise-native": "^1.0.9",
     "sqlite": "^4.0.14",
-    "sqlite3": "^5.0.0"
+    "sqlite3": "^5.0.1"
   },
   "repository": {
     "type": "git",
