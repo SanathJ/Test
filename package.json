@@ -1,6 +1,6 @@
 {
   "name": "megu-bot",
-  "version": "5.0.4",
+  "version": "5.1.4",
   "description": "Data collection bot for Kayle Mains discord",
   "main": "index.js",
   "scripts": {
@@ -12,12 +12,12 @@
     "canvas": "^2.6.1",
     "cron": "^1.8.2",
     "d3": "^5.16.0",
-    "discord.js": "^12.2.0",
+    "discord.js": "^12.3.1",
     "jimp": "^0.14.0",
-    "jsdom": "^16.3.0",
+    "jsdom": "^16.4.0",
     "request": "^2.88.2",
     "request-promise-native": "^1.0.9",
-    "sqlite": "^4.0.12",
+    "sqlite": "^4.0.14",
     "sqlite3": "^5.0.0"
   },
   "repository": {

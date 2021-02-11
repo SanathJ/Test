@@ -28,21 +28,23 @@ const cooldowns = new Discord.Collection();
 
 process.on('unhandledRejection', error => console.error('Uncaught Promise Rejection', error));
 
-
 bot.once('ready', () => {
 	console.log('Online!');
-	database.init();
-	// bot.user.setActivity('with explosions');
+	database.init().then(() => curr(bot));
 });
 
 bot.on('error', console.error);
 
+const escapeRegex = str => str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
 bot.on('message', async msg => {
 
-	if (!msg.content.startsWith(PREFIX) || msg.author.bot) return;
+	const prefixRegex = new RegExp(`^(<@!?${bot.user.id}>|${escapeRegex(PREFIX)})\\s*`);
 
+	if (!prefixRegex.test(msg.content)) return;
 
-	const args = msg.content.slice(PREFIX.length).split(/ +/);
+	const [, matchedPrefix] = msg.content.match(prefixRegex);
+	const args = msg.content.slice(matchedPrefix.length).trim().split(/ +/);
 	const commandName = args.shift().toLowerCase();
 
 	const command = bot.commands.get(commandName)
@@ -108,7 +110,6 @@ const job = new CronJob('0 30 23 * * *', async function() {
 job.start();
 
 const currJob = new CronJob('0 30 23 * * *', async function() {
-	const channel = await bot.channels.fetch(config.channels.general);
 	curr(bot);
 }, null, false, 'Asia/Kolkata');
 currJob.start();
