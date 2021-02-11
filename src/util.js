@@ -5,7 +5,6 @@ const fs = require('fs');
 const jsdom = require('jsdom');
 const { JSDOM } = jsdom;
 const d3 = require('d3');
-const tinycolor = require('tinycolor2');
 
 const { createCanvas, registerFont, loadImage } = require('canvas');
 
@@ -22,8 +21,7 @@ const config = JSON.parse(fs.readFileSync('config.json'));
 const lolApiUrl = 'http://api.screenshotlayer.com/api/capture?delay=3&access_key=' + config.accessKeys[0] + '&fullpage=1&force=1&viewport=3840x2160&url=https://lolalytics.com/lol/kayle/';
 
 // separate key
-const opggTrendApiUrl = 'http://api.screenshotlayer.com/api/capture?delay=3&access_key=' + config.accessKeys[1] + '&fullpage=1&force=1&viewport=3840x2160&url=https://op.gg/champion/kayle/statistics/top/trend';
-const opggStatsApiUrl = 'http://api.screenshotlayer.com/api/capture?delay=3&access_key=' + config.accessKeys[1] + '&fullpage=1&force=1&viewport=3840x2160&url=https://op.gg/champion/statistics';
+const opggStatsApiUrl = 'http://api.screenshotlayer.com/api/capture?delay=3&access_key=' + config.accessKeys[2] + '&fullpage=1&force=1&viewport=3840x2160&url=https://op.gg/champion/statistics';
 
 // URL from where patch data is received
 const patchUrl = 'https://raw.githubusercontent.com/CommunityDragon/Data/master/patches.json';
@@ -44,54 +42,269 @@ const colors = {
 		blue:'#2AA3CC',
 		yellow: '#FDB05F',
 	},
+	opgg: {
+		bg: '#FAFAFA',
+		titleBg: '#FFFFFF',
+		titleDivider: '#E7E7E7',
+		average: '#979797',
+		data: '#777777',
+		label: '#525252',
+		title: '#222222',
+		averageSubtitle: '#B6B6B6',
+		totalRankColor: '#9B9B9B',
+	},
 };
+
+async function postOpggGraph(dom, channel, n, data, options = {}) {
+	const opList = [
+		'Top Kayle Win Rate',
+		'Top Kayle Pick Rate',
+		'Kayle Ban Rate',
+		'Kayle Win Rate by Game Length',
+		'Leaderboard',
+	];
+
+	// initialise canvas
+	const width = 1000;
+	const height = options.height || 350;
+	const canvas = createCanvas(width, height);
+	const ctx = canvas.getContext('2d');
+	ctx.quality = 'best';
+	ctx.patternQuality = 'best';
+	ctx.fillStyle = colors.opgg.bg;
+	ctx.fillRect(0, 0, width, height);
+
+	const titleMargin = 40;
+	ctx.fillStyle = colors.opgg.titleBg;
+	ctx.fillRect(0, 0, width, titleMargin);
+
+	ctx.strokeStyle = colors.opgg.titleDivider;
+	drawLine(ctx, 0, titleMargin, width, titleMargin);
+
+	const margin = {
+		left: 150,
+		bottom: height - 50,
+		top: height - 210,
+		right: width - 130,
+	};
+
+	// data
+	const xLabels = data[0];
+	const dataPoints = data[1];
+	const championAverages = data[2];
+	const yLabelGen = data[3];
+	const seriesColor = data[4].seriesColor;
+
+	// helper function to add -th, -st, etc.
+	function ordinal_suffix_of(i) {
+		if (i == undefined) return undefined;
+
+		const j = i % 10,
+			k = i % 100;
+		if (j == 1 && k != 11) {
+			return 'st';
+		}
+		if (j == 2 && k != 12) {
+			return 'nd';
+		}
+		if (j == 3 && k != 13) {
+			return 'rd';
+		}
+		return 'th';
+	}
+
+	let totalRank;
+	if(n != 4) {
+		totalRank = dom.window.document.getElementsByClassName('champion-stats-trend-rank')[n - 1].innerHTML
+			.match(/<span>[\/0-9]+?<\/span>/g)[0]
+			.replace('<span>', '')
+			.replace('</span>', '');
+
+
+		// champion rank
+		let img;
+		const lastDataPoint = parseInt(dataPoints[dataPoints.length - 1].rankInt);
+		const secondLastDataPoint = parseInt(dataPoints[dataPoints.length - 2].rankInt);
+		if(lastDataPoint > secondLastDataPoint) {
+			img = await loadImage(__dirname + '/../assets/opggDownIcon.png');
+		}
+		else if (lastDataPoint < secondLastDataPoint) {
+			img = await loadImage(__dirname + '/../assets/opggUpIcon.png');
+		}
+		else {
+			img = await loadImage(__dirname + '/../assets/opggEqualIcon.png');
+		}
+
+		// calculate length of rank string and value, divided by 2 to get offset from center
+		let len = img.naturalWidth;
+		ctx.font = '700 26px Arial';
+		len += ctx.measureText(' ' + lastDataPoint + ' ').width;
+		ctx.font = '300 14px Arial';
+		len += ctx.measureText(ordinal_suffix_of(lastDataPoint) + ' ' + totalRank + ' ').width;
+		ctx.font = '300 26px Arial';
+		len += ctx.measureText(' ' + dataPoints[dataPoints.length - 1].y + '%').width;
+		len /= 2;
+
+		// line passing through center of rank string
+		const centerLineY = margin.top - 70;
+
+		// draw symbol
+		ctx.drawImage(img, width / 2 - len, centerLineY - img.naturalHeight / 2);
+		len -= img.naturalWidth;
+
+		// rank
+		ctx.font = ctx.font = '700 26px Arial';
+		ctx.fillStyle = seriesColor;
+		ctx.textBaseline = 'middle';
+		ctx.fillText(' ' + lastDataPoint + ' ', width / 2 - len, centerLineY);
+		len -= ctx.measureText(' ' + lastDataPoint + ' ').width;
+
+		// ordinal and total rank
+		ctx.font = '300 14px Arial';
+		ctx.fillText(ordinal_suffix_of(lastDataPoint), width / 2 - len, centerLineY);
+		len -= ctx.measureText(ordinal_suffix_of(lastDataPoint)).width;
+		ctx.fillStyle = colors.opgg.totalRankColor;
+		ctx.fillText(' ' + totalRank, width / 2 - len, centerLineY);
+		len -= ctx.measureText(' ' + totalRank).width;
+
+		// value
+		ctx.font = '300 26px Arial';
+		ctx.fillStyle = seriesColor;
+		ctx.fillText(' ' + dataPoints[dataPoints.length - 1].y + '%', width / 2 - len, centerLineY);
+
+
+		// champion average
+		let str = '';
+		if(n == 1 || n == 2) {
+			str = 'Top ';
+		}
+		ctx.font = '300 12px Arial';
+		ctx.fillStyle = colors.opgg.averageSubtitle;
+		ctx.textBaseline = 'bottom';
+		ctx.textAlign = 'center';
+		ctx.fillText(str + 'Champion Average ' + championAverages[championAverages.length - 1].y + '%',
+			width / 2, margin.top - 35);
+	}
+
+	// title
+	ctx.font = '700 14px Arial';
+	ctx.fillStyle = colors.opgg.title;
+	ctx.textBaseline = 'middle';
+	ctx.textAlign = 'left';
+	ctx.fillText(opList[n - 1], titleMargin / 2, titleMargin / 2);
+
+	const x = d3.scaleLinear()
+		.domain([0, xLabels.length - 1])
+		.range([margin.left, margin.right]);
+
+	const maxYVal = Math.max(d3.max(dataPoints, d => d.y), d3.max(championAverages, d => d.y));
+	const y = d3.scaleLinear()
+		.domain([Math.floor(parseFloat(yLabelGen[0]) / yLabelGen[2]) * yLabelGen[2], Math.ceil(maxYVal / yLabelGen[2]) * yLabelGen[2]])
+		.range([margin.bottom, margin.top]);
+
+	// main line
+	let line = d3.line()
+		.x((d, i) => x(i))
+		.y(d => y(d.y))
+		.context(ctx);
+
+	ctx.strokeStyle = seriesColor;
+	ctx.beginPath();
+	line(dataPoints);
+	ctx.stroke();
+
+	// champ average line
+	line = d3.line()
+		.x((d, i) => x(i))
+		.y(d => y(d.y))
+		.context(ctx);
+
+	ctx.strokeStyle = colors.opgg.average;
+	ctx.beginPath();
+	ctx.setLineDash([5, 4]);
+	line(championAverages);
+	ctx.stroke();
+
+	// labels
+	ctx.font = '700 11px "Lucida Sans Unicode"';
+	ctx.textAlign = 'center';
+	ctx.fillStyle = colors.opgg.label;
+	for (const label of xLabels) {
+		ctx.fillText(label, x(xLabels.indexOf(label)), margin.bottom + 20);
+	}
+
+	ctx.textAlign = 'right';
+	for(let i = Math.floor(parseFloat(yLabelGen[0]) / yLabelGen[2]) * yLabelGen[2]; i <= Math.ceil(maxYVal / yLabelGen[2]) * yLabelGen[2]; i += yLabelGen[2]) {
+		ctx.fillText(i + '%', margin.left - 50, y(i));
+	}
+
+	ctx.textAlign = 'center';
+	ctx.font = '700 12px "Lucida Sans Unicode"';
+
+
+	// symbols
+	const sym = d3.symbol()
+		.context(ctx);
+
+	for (const datum of dataPoints) {
+		ctx.fillStyle = colors.opgg.data;
+		ctx.fillText(((datum.rankInt + ordinal_suffix_of(datum.rankInt)) || datum.rank.replace('<b>', '').replace('<\/b>', '')), x(dataPoints.indexOf(datum)), y(datum.y) - 12);
+
+		// translate to get ready to draw symbols
+		ctx.translate(x(dataPoints.indexOf(datum)), y(datum.y));
+
+		ctx.fillStyle = seriesColor;
+		sym.size(60);
+		ctx.beginPath();
+		sym();
+		ctx.fill();
+
+		ctx.fillStyle = '#FFFFFF';
+		sym.size(25);
+		ctx.beginPath();
+		sym();
+		ctx.fill();
+
+		// reset translate
+		ctx.setTransform(1, 0, 0, 1, 0, 0);
+	}
+
+	/**
+	 * Send image
+	 */
+
+	const img = new MessageAttachment(canvas.toBuffer('image/png'), 'op' + n + '.png');
+	return channel.send(opList[n - 1], img);
+}
 
 async function callopgg(msg) {
 	/*
      * op.gg
      */
 
-	const opList = [
-		'Win Rate',
-		'Pick Rate',
-		'Ban Rate',
-		'Win Rate / Game Length',
-		// 'Trends',
-		'Leaderboard',
-	];
+	const dom = await JSDOM.fromURL('https://na.op.gg/champion/kayle/statistics/top/trend', {});
+	const channel = await msg.client.channels.fetch(opggChannelID);
 
-
-	Jimp.read(opggTrendApiUrl, (err, image) => {
-		if (err) {
-			console.log(err);
-			return;
-		}
-		// winrate
-		let imageCopy = image.clone();
-		imageCopy.crop(1379, 727, 2460 - 1379, 1061 - 727);
-		// imageCopy.normalize();
-		imageCopy.write('./img/op1.png');
-
-		// pickrate
-		imageCopy = image.clone();
-		imageCopy.crop(1379, 1070, 2460 - 1379, 1406 - 1070);
-		// imageCopy.normalize();
-		imageCopy.write('./img/op2.png');
-
-		// banrate
-		imageCopy = image.clone();
-		imageCopy.crop(1379, 1415, 2460 - 1379, 1751 - 1415);
-		// imageCopy.normalize();
-		imageCopy.write('./img/op3.png');
-
-		// winrate / game length
-		imageCopy = image.clone();
-		imageCopy.crop(1379, 1760, 2460 - 1379, 2042 - 1760);
-		// imageCopy.normalize();
-		imageCopy.write('./img/op4.png');
+	const rgx = /\["[0-9][a-zA-Z"0-9.,\] \[{:<>\\/}\-+\n\t\r'#]{10,}}\)/g;
+	let matches = dom.serialize().match(rgx);
+	// converts to valid json
+	matches = matches.map(s => {
+		s = s.replace('name', '"name"');
+		s = s.replace('seriesColor', '"seriesColor"');
+		s = s.replace('position', '"position"');
+		s = s.replace('type', '"type"');
+		s = s.replace('enableLegend', '"enableLegend"');
+		s = s.replace('undefined', 'null');
+		s = s.replace(/'/g, '"');
+		return JSON.parse('{"data":[' + s.slice(0, -1) + ']}');
 	});
 
-	Jimp.read(opggStatsApiUrl, (err, image) => {
+	await postOpggGraph(dom, channel, 1, matches[0].data);
+	await postOpggGraph(dom, channel, 2, matches[1].data);
+	await postOpggGraph(dom, channel, 3, matches[2].data);
+	await postOpggGraph(dom, channel, 4, matches[3].data, { height: 300 });
+
+	Jimp.read(opggStatsApiUrl, async (err, image) => {
 		if (err) {
 			console.log(err);
 			return;
@@ -99,24 +312,14 @@ async function callopgg(msg) {
 
 		// leaderboards
 		const imageCopy = image.clone();
-		imageCopy.crop(1984, 445, 2460 - 1985, 1286 - 444);
+		imageCopy.crop(1984, 535, 2460 - 1985, 1376 - 535);
 		// imageCopy.normalize();
-		imageCopy.write('./img/op5.png');
+		await imageCopy.writeAsync('./img/op5.png');
+		const img = new MessageAttachment(
+			__dirname + '/../img/op5.png',
+		);
+		sendMessage(msg, opggChannelID, img, 'Leaderboard');
 	});
-
-	// post images
-	// has a very high timeout to make sure image processing is complete
-	// can have weird errors if this value isnt high enough
-	setTimeout(function() {
-		for (let i = 1; i <= opList.length; i++) {
-			const img = new MessageAttachment(
-				__dirname + '/../img/op' + i + '.png',
-			);
-			setTimeout(sendMessage, (i * 1000), msg, opggChannelID, img, opList[i - 1]);
-
-		}
-	}, 100000);
-
 }
 
 // pie charts for stats
@@ -519,7 +722,7 @@ async function log4(dom, channel, n) {
 	return channel.send('', img);
 }
 
-async function postGraph(channel, n, data, options) {
+async function postLogGraph(channel, n, data, options) {
 	// initialise options
 	if(options.yDomainStart === undefined) {
 		options.yDomainStart = d3.min(data, d => d[1]);
@@ -641,11 +844,11 @@ async function postGraph(channel, n, data, options) {
 
 	// gradient
 	const gradient = ctx.createLinearGradient(margin.left, margin.bottom, margin.left, margin.top);
-	const gradColor = tinycolor(options.color);
-	gradColor.setAlpha(0.1);
-	gradient.addColorStop(0, gradColor.toRgbString());
-	gradColor.setAlpha(0.6);
-	gradient.addColorStop(1, gradColor.toRgbString());
+	const gradColor = d3.color(options.color);
+	gradColor.opacity = 0.1;
+	gradient.addColorStop(0, gradColor.toString());
+	gradColor.opacity = 0.6;
+	gradient.addColorStop(1, gradColor.toString());
 
 	const area = d3.area()
 		.x(d => x(d[0]))
@@ -695,22 +898,22 @@ async function calllog(msg) {
 			y: undefined,
 		},
 	};
-	await postGraph(channel, 5, JSON.parse(('{' + matches[1] + '}').replace('data', '"data"')).data, options);
+	await postLogGraph(channel, 5, JSON.parse(('{' + matches[1] + '}').replace('data', '"data"')).data, options);
 
 	options.title = 'Popularity History';
 	options.color = colors.log.blue;
 	options.tickStarts.y = 1;
-	// may be changed by postGraph if undefined, so we reset
+	// may be changed by postLogGraph if undefined, so we reset
 	options.yDomainStart = undefined;
-	await postGraph(channel, 6, JSON.parse(('{' + matches[0] + '}').replace('data', '"data"')).data, options);
+	await postLogGraph(channel, 6, JSON.parse(('{' + matches[0] + '}').replace('data', '"data"')).data, options);
 
 	options.title = 'BanRate History';
 	options.color = colors.log.red;
 	options.tickStarts.y = 0;
 	options.tickIntervals.y = 20;
-	// may be changed by postGraph if undefined, so we reset
+	// may be changed by postLogGraph if undefined, so we reset
 	options.yDomainStart = undefined;
-	await postGraph(channel, 7, JSON.parse(('{' + matches[2] + '}').replace('data', '"data"')).data, options);
+	await postLogGraph(channel, 7, JSON.parse(('{' + matches[2] + '}').replace('data', '"data"')).data, options);
 
 	options.title = 'Gold / Game duration';
 	options.color = colors.log.green;
@@ -723,24 +926,24 @@ async function calllog(msg) {
 	options.yDomainStart = 0;
 	options.tickFormat = 'raw';
 	options.scaleFunction = 'linear';
-	await postGraph(channel, 8, JSON.parse(('{' + matches[3] + '}').replace('data', '"data"')).data, options);
+	await postLogGraph(channel, 8, JSON.parse(('{' + matches[3] + '}').replace('data', '"data"')).data, options);
 
 	options.title = 'Kills + Assists / Game duration';
 	options.tickFormat = 'float';
 	options.tickIntervals.y = 2.5;
-	await postGraph(channel, 9, JSON.parse(('{' + matches[5] + '}').replace('data', '"data"')).data, options);
+	await postLogGraph(channel, 9, JSON.parse(('{' + matches[5] + '}').replace('data', '"data"')).data, options);
 
 	options.title = 'Deaths / Game duration';
 	options.tickFormat = 'raw';
 	options.color = colors.log.red;
 	options.tickIntervals.y = 1;
-	await postGraph(channel, 10, JSON.parse(('{' + matches[6] + '}').replace('data', '"data"')).data, options);
+	await postLogGraph(channel, 10, JSON.parse(('{' + matches[6] + '}').replace('data', '"data"')).data, options);
 
 	options.title = 'Winrate / Game Duration';
 	options.tickFormat = 'percent';
 	options.color = colors.log.green;
 	options.tickIntervals.y = 10;
-	await postGraph(channel, 11, JSON.parse(('{' + matches[7] + '}').replace('data', '"data"')).data, options);
+	await postLogGraph(channel, 11, JSON.parse(('{' + matches[7] + '}').replace('data', '"data"')).data, options);
 
 	options.title = 'Winrate / Ranked Games Played';
 	options.tickIntervals = {
@@ -749,14 +952,14 @@ async function calllog(msg) {
 	};
 	options.tickStarts.y = undefined;
 	options.yDomainStart = undefined;
-	await postGraph(channel, 12, JSON.parse(('{' + matches[8] + '}').replace('data', '"data"')).data, options);
+	await postLogGraph(channel, 12, JSON.parse(('{' + matches[8] + '}').replace('data', '"data"')).data, options);
 
 	options.title = 'Minions / Game duration';
 	options.tickIntervals.y = 50;
 	options.tickStarts.y = 0;
 	options.yDomainStart = 0;
 	options.tickFormat = 'raw';
-	await postGraph(channel, 13, JSON.parse(('{' + matches[4] + '}').replace('data', '"data"')).data, options);
+	await postLogGraph(channel, 13, JSON.parse(('{' + matches[4] + '}').replace('data', '"data"')).data, options);
 }
 
 async function calllol(msg) {
@@ -923,7 +1126,6 @@ async function printDateAndPatch(channel = '', message = '') {
 	}
 
 }
-
 
 const championJson = {};
 
