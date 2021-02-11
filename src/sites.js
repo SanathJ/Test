@@ -22,9 +22,6 @@ async function ugg() {
 
 	const rank = 'platinum_plus';
 	const positions = ['jungle', 'supp', 'adc', 'top', 'mid'];
-
-	// TODO: dynamically figure out id
-
 	const champId = (await getChampionByID('Kayle')).key;
 
 	// figure out popular position
@@ -67,7 +64,7 @@ async function lol() {
 	let data = JSON.parse(JSONstr);
 	const patch = parseFloat(data.patches.slice(-1)[0].name).toFixed(2);
 
-	const APIurl = 'https://api.op.lol/champion/3/?patch=' + patch + '&cid=10&lane=default&tier=platinum_plus&queue=420&region=all';
+	const APIurl = 'https://apix1.op.lol/mega/?ep=champion&p=d&v=8&patch=' + patch + '&cid=10&lane=default&tier=platinum_plus&queue=420&region=all';
 	JSONstr = await rp(APIurl);
 	data = JSON.parse(JSONstr);
 
@@ -77,11 +74,9 @@ async function lol() {
 	}
 
 	const arr = [];
-	arr[0] = data.display.winRate;
-	arr[1] = data.display.pickRate;
-
-	// for some reason banrate is a float while the rest are strings
-	arr[2] = parseFloat(data.display.banRate).toFixed(2);
+	arr[0] = parseFloat(data.header.wr).toFixed(2);
+	arr[1] = parseFloat(data.header.pr).toFixed(2);
+	arr[2] = parseFloat(data.header.br).toFixed(2);
 	return arr;
 }
 

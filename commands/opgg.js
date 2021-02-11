@@ -1,4 +1,4 @@
-const { callopgg, getPatch, opggChannelID } = require('../src/util.js');
+const { callopgg, printDateAndPatch, opggChannelID } = require('../src/util.js');
 const sites = require('../src/sites.js');
 const db = require('../src/database.js');
 
@@ -11,7 +11,7 @@ module.exports = {
 	usage: ' ',
 	description: 'Prints opgg data',
 	async execute(message, argsIgnore) {
-		getPatch(opggChannelID, message, true);
+		await printDateAndPatch(opggChannelID, message);
 		callopgg(message);
 
 		db.insert('opgg', await sites.opgg());

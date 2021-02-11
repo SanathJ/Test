@@ -2,9 +2,8 @@
 /img
 .vscode
 .travis.yml
-*.png
+*.db
 config.json
 .eslintrc.json
 commands/test.js
 commands/reload.js
-data.db
