@@ -973,15 +973,15 @@ async function calllol(msg) {
 		image2.contrast(+0.1);
 
 		let imageCopy = image2.clone();
-		imageCopy.crop(1998, 47, 2473 - 1998, 203 - 47);
+		imageCopy.crop(1979, 47, 2477 - 1979, 201 - 47);
 		imageCopy.write('./img/lol1.png');
 
 		imageCopy = image2.clone();
-		imageCopy.crop(1434, 731, 2471 - 1434, 1054 - 731);
+		imageCopy.crop(1434, 879, 2471 - 1434, 1223 - 879);
 		imageCopy.write('./img/lol2.png');
 
 		imageCopy = image2.clone();
-		imageCopy.crop(2170, 1061, 2471 - 2170, 1522 - 1061);
+		imageCopy.crop(2170, 1652, 2471 - 2170, 2113 - 1652);
 		imageCopy.write('./img/lol3.png');
 	});
 

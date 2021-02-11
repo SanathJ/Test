@@ -62,9 +62,9 @@ async function log() {
 async function lol() {
 	let JSONstr = await rp(patchUrl);
 	let data = JSON.parse(JSONstr);
-	const patch = parseFloat(data.patches.slice(-1)[0].name).toFixed(2);
+	const patch = data.patches.slice(-1)[0].name;
 
-	const APIurl = 'https://apix1.op.lol/mega/?ep=champion&p=d&v=8&patch=' + patch + '&cid=10&lane=default&tier=platinum_plus&queue=420&region=all';
+	const APIurl = 'https://apix1.op.lol/mega/?ep=champion&p=d&v=9&patch=' + patch + '&cid=10&lane=default&tier=platinum_plus&queue=420&region=all';
 	JSONstr = await rp(APIurl);
 	data = JSON.parse(JSONstr);
 
@@ -72,11 +72,10 @@ async function lol() {
 	if(Object.keys(data).length === 0) {
 		return {};
 	}
-
 	const arr = [];
-	arr[0] = parseFloat(data.header.wr).toFixed(2);
-	arr[1] = parseFloat(data.header.pr).toFixed(2);
-	arr[2] = parseFloat(data.header.br).toFixed(2);
+	arr[0] = data.header.wr;
+	arr[1] = data.header.pr;
+	arr[2] = data.header.br;
 	return arr;
 }
 
