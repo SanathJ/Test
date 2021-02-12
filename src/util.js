@@ -432,7 +432,7 @@ async function log2(dom, channel, n) {
 	drawLine(ctx, 22, 48, 525, 48);
 
 	// get spritesheet
-	const spritesheet = await loadImage(__dirname + '/../img/log_lanes.png');
+	const spritesheet = await loadImage(__dirname + '/../assets/logLanes.png');
 
 	// headers
 	const start = 37;
