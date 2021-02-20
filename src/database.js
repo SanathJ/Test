@@ -43,7 +43,7 @@ function insert(table, values) {
 	request.get(patchUrl, async function(error, response, body) {
 		if (!error && response.statusCode == 200) {
 			const data = JSON.parse(body);
-			const patch = parseFloat(data.patches.slice(-1)[0].name).toFixed(2);
+			const patch = data.patches.slice(-1)[0].name;
 			await db.run(format('INSERT OR REPLACE INTO %s VALUES(?, ?, ?, ?, ?)', table), chk, patch, values[0], values[1], values[2]);
 		}
 	});
