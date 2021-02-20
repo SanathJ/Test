@@ -60,15 +60,6 @@ async function curr(client) {
 			continue;
 		}
 
-		// todays date (formatted DD-MM-YYYY)
-		const today = new Date();
-		const currDate =
-				('0' + today.getDate()).slice(-2) + '-'
-				+ ('0' + (today.getMonth() + 1)).slice(-2) + '-'
-				+ today.getFullYear();
-
-		row.Date = currDate;
-
 		// current patch
 		const JSONstr = await rp(patchUrl);
 		const data = JSON.parse(JSONstr);
@@ -84,7 +75,7 @@ async function curr(client) {
 			.setTitle('Kayle Data')
 			.setURL(url)
 			.setImage(image)
-			.addField('Date', row.Date, true)
+			.addField('Date', new Intl.DateTimeFormat('default', { day: 'numeric', month: 'short', year: 'numeric' }).format(new Date()), true)
 			.addField('Patch', row.Patch, true)
 			.addField('\u200b', '\u200b')
 			.addField('Winrate', row.Winrate + '%', true)

@@ -1111,13 +1111,9 @@ async function printDateAndPatch(channel = '', message = '') {
 		const c = await message.client.channels.fetch(channel);
 		return await c.send(
 			'```' +
-			today.getDate() +
-			'/' +
-			(today.getMonth() + 1) +
-			'/' +
-			today.getFullYear() +
-			', Patch ' +
-			parseFloat(data.patches.slice(-1)[0].name).toFixed(2) +
+			new Intl.DateTimeFormat('default', { day: 'numeric', month: 'short', year: 'numeric' }).format(today) +
+			' - Patch ' +
+			data.patches.slice(-1)[0].name +
 			'```',
 		);
 	}
