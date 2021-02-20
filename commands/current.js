@@ -72,7 +72,7 @@ async function curr(client) {
 		// current patch
 		const JSONstr = await rp(patchUrl);
 		const data = JSON.parse(JSONstr);
-		row.Patch = parseFloat(data.patches.slice(-1)[0].name).toFixed(2);
+		row.Patch = data.patches.slice(-1)[0].name;
 
 		// data
 		row.Winrate = dataArr[0];
