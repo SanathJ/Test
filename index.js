@@ -9,8 +9,9 @@ bot.commands = new Discord.Collection();
 
 const database = require('./src/database.js');
 
-const { execute } = require('./commands/megu.js');
+const { execute: megu } = require('./commands/megu.js');
 const { curr } = require('./commands/current.js');
+const { execute: backup } = require('./commands/backup.js');
 
 const config = JSON.parse(fs.readFileSync('config.json'));
 
@@ -105,7 +106,7 @@ bot.on('message', async msg => {
 
 const job = new CronJob('0 30 23 * * *', async function() {
 	const channel = await bot.channels.fetch(config.channels.general);
-	execute(channel.lastMessage, undefined);
+	megu(channel.lastMessage, undefined);
 }, null, false, 'Asia/Kolkata');
 job.start();
 
@@ -113,5 +114,10 @@ const currJob = new CronJob('0 30 23 * * *', async function() {
 	curr(bot);
 }, null, false, 'Asia/Kolkata');
 currJob.start();
+
+const backupJob = new CronJob('0 0 0 * * 3', async function() {
+	backup(undefined, bot);
+}, null, false, 'Asia/Kolkata');
+backupJob.start();
 
 bot.login(token);
