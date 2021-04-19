@@ -1,6 +1,7 @@
 const db = require('../src/database.js');
 const fs = require('fs');
 const { MessageAttachment } = require('discord.js');
+const { ownerID } = require('../config.json');
 
 
 module.exports = {
@@ -17,6 +18,16 @@ module.exports = {
 		const file = new MessageAttachment(
 			__dirname + '/../backup.db',
 		);
+
+		if(message === undefined) {
+			const owner = await argsIgnore.users.fetch(ownerID);
+			owner.send('Backup of the database:', file)
+				.finally(() =>{
+					fs.unlinkSync(__dirname + '/../backup.db');
+				});
+
+			return;
+		}
 
 		message.author.send('Backup of the database:', file)
 			.then(() => {
