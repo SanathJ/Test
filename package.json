@@ -9,7 +9,7 @@
   "author": "SanathJ",
   "license": "ISC",
   "dependencies": {
-    "canvas": "^2.7.0",
+    "canvas": "^2.8.0",
     "cron": "^1.8.2",
     "d3": "^5.16.0",
     "discord.js": "^12.3.1",
