@@ -17,7 +17,7 @@
     "jsdom": "^16.5.3",
     "request": "^2.88.2",
     "request-promise-native": "^1.0.9",
-    "sqlite": "^4.0.21",
+    "sqlite": "^4.0.23",
     "sqlite3": "^5.0.2"
   },
   "repository": {
